@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 1: Controlar la Luz - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css"> <link rel="stylesheet" href="tomo-style.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1>Tomo 1: ¡Tu Primera Misión - Controlar la Luz!</h1>
+        </div>
+    </header>
+
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+
+        <h2>🧠 El Cerebro de la Operación: El Código</h2>
+        <p>
+            Todo lo que hacemos con Arduino necesita un plan, y ese plan es el código. Este es el "idioma" que usaremos para darle instrucciones a nuestra placa. A continuación, analizaremos el código completo línea por línea.
+        </p>
+
+        <pre class="code-block"><code>
+/*
+ * Misión 01: Blink - Hacer parpadear un LED
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+// El bloque setup() se ejecuta UNA SOLA VEZ cuando enciendes
+// o reseteas tu Arduino. Es para configurar lo que vamos a usar.
+void setup() {
+  // Le decimos al Arduino: "Oye, el Pin número 13 será una SALIDA".
+  // Es como abrir una compuerta para que la electricidad pueda salir.
+  pinMode(13, OUTPUT);
+}
+
+// El bloque loop() es un ciclo infinito. ¡Se repite para siempre!
+// Aquí ocurre toda la acción principal de nuestro programa.
+void loop() {
+  // 1. Encendemos el LED:
+  // Enviamos una señal ALTA (HIGH) de 5V al Pin 13. ¡Luz!
+  digitalWrite(13, HIGH);
+
+  // 2. Esperamos un segundo:
+  // Pausa de 1000 milisegundos (1 segundo).
+  delay(1000);
+
+  // 3. Apagamos el LED:
+  // Enviamos una señal BAJA (LOW) de 0V al Pin 13. ¡Oscuridad!
+  digitalWrite(13, LOW);
+
+  // 4. Esperamos otro segundo:
+  delay(1000);
+
+  // Y... el loop() vuelve a empezar. ¡Para siempre!
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>
+            Ahora vamos a construir el cuerpo de nuestra operación. Necesitamos darle al código algo físico que controlar. ¡Recuerda que el LED tiene una pata larga (+) y una corta (-)!
+        </p>
+
+        <div class="image-container">
+            <h3>Diagrama del Circuito</h3>
+            <p>Puedes hacer clic en el enlace para ver la imagen en alta resolución y descargarla.</p>
+            <a href="https://i.imgur.com/8YjJ3a5.png" target="_blank" class="image-link">Ver Diagrama del Circuito 1</a>
+            <img src="https://i.imgur.com/8YjJ3a5.png" alt="Diagrama de conexión para la práctica de Blink con un LED y una resistencia">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Resistencia:</strong> Actúa como un "guardaespaldas" que limita la corriente para que el LED no se queme. ¡Siempre úsala!</li>
+            <li><strong>GND (Tierra):</strong> Es el camino de regreso para la electricidad. Sin él, no hay flujo y nada funciona.</li>
+            <li><strong>HIGH y LOW:</strong> Son las órdenes digitales básicas. HIGH es "encendido" (5V) y LOW es "apagado" (0V).</li>
+        </ul>
+
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+
+</body>
+</html>
