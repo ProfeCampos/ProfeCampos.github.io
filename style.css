@@ -24,14 +24,15 @@ header {
 }
 
 .logo {
-    height: 150px; /* Ajusta la altura de los logos */
+    height: 90px; /* Ajusta la altura de los logos */
     width: auto;
+    flex-shrink: 0; /* Evita que los logos se encojan */
 }
 
 .header-titles {
     text-align: center;
     flex-grow: 1;
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
 
 header h1 {
@@ -116,9 +117,8 @@ main {
     font-size: 0.95rem;
 }
 
-/* Estilo especial para los proyectos */
 .tomo-card.project {
-    background-color: #FFF3E0; /* Un naranja muy pálido */
+    background-color: #FFF3E0;
     border-left-color: #F58220;
 }
 
@@ -135,5 +135,59 @@ footer {
     background-color: #343a40;
     color: #FFFFFF;
     margin-top: 2rem;
+}
 
+/* --- ESTILOS RESPONSIVOS --- */
+
+/* Para Tablets (hasta 768px de ancho) */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    header h2 {
+        font-size: 1.1rem;
+    }
+    .logo {
+        height: 70px;
+    }
+    .parcial h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Para Celulares (hasta 480px de ancho) */
+@media (max-width: 480px) {
+    .header-container {
+        flex-direction: column; /* Apila los logos y títulos verticalmente */
+        gap: 1rem; /* Añade espacio entre los elementos apilados */
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    header h2 {
+        font-size: 1rem;
+    }
+
+    .logo {
+        height: 60px; /* Reduce aún más el tamaño de los logos */
+    }
+
+    main {
+        padding: 0 0.5rem;
+    }
+
+    .parcial {
+        padding: 1rem;
+    }
+
+    .parcial h2 {
+        font-size: 1.5rem;
+    }
+
+    .tomo-grid {
+        /* Muestra una sola columna de tarjetas */
+        grid-template-columns: 1fr; 
+    }
 }
