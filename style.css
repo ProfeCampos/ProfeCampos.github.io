@@ -11,21 +11,33 @@ body {
 header {
     background-color: #0A2A4E; /* Azul oscuro CECyTEM */
     color: #FFFFFF;
-    padding: 4rem 1rem;
+    padding: 3rem 1rem;
     text-align: center;
     border-bottom: 5px solid #F58220; /* Naranja CECyTEM */
 }
 
 header h1 {
     font-family: 'Montserrat', sans-serif;
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+header h2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 0;
+    opacity: 0.9;
+    margin-bottom: 1rem;
 }
 
 header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+    font-size: 1.1rem;
+    margin: 0;
+    opacity: 0.8;
 }
+
 
 /* Contenido Principal */
 main {
@@ -65,6 +77,7 @@ main {
     padding: 1.5rem;
     border-radius: 5px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .tomo-card:hover {
