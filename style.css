@@ -24,7 +24,7 @@ header {
 }
 
 .logo {
-    height: 90px; /* Ajusta la altura de los logos */
+    height: 150px; /* Ajusta la altura de los logos */
     width: auto;
 }
 
@@ -135,4 +135,5 @@ footer {
     background-color: #343a40;
     color: #FFFFFF;
     margin-top: 2rem;
+
 }
