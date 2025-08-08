@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 10: Proyecto 2 - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 10: ¡PROYECTO INTEGRADOR 2! - Estación de Control Térmico</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 La Lógica del Proyecto: Control por Niveles</h2><p>Construiremos un dispositivo que usa el LM35 para medir temperatura y toma diferentes acciones según el calor. Si supera un primer umbral, activa un ventilador (con transistor). Si supera un segundo umbral de peligro, activa una alarma de alto poder (con relé).</p><pre class="code-block"><code>/* PROYECTO INTEGRADOR 2: Estación de Control Térmico */
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+const int pinSensor = A0;
+const int pinVentilador = 9;
+const int pinFoco = 7;
+const float UMBRAL_VENTILADOR = 28.0;
+const float UMBRAL_PELIGRO = 35.0;
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  pinMode(pinVentilador, OUTPUT);
+  pinMode(pinFoco, OUTPUT);
+  lcd.init();
+  lcd.backlight();
+}
+void loop() {
+  float temp = ((analogRead(pinSensor)/1023.0)*5.0)*100;
+  lcd.clear();
+  lcd.print("Temp: "); lcd.print(temp); lcd.print(" C");
+  
+  if (temp > UMBRAL_PELIGRO) {
+    lcd.setCursor(0,1); lcd.print("PELIGRO");
+    digitalWrite(pinVentilador, HIGH);
+    digitalWrite(pinFoco, HIGH);
+  } else if (temp > UMBRAL_VENTILADOR) {
+    lcd.setCursor(0,1); lcd.print("Enfriando...");
+    digitalWrite(pinVentilador, HIGH);
+    digitalWrite(pinFoco, LOW);
+  } else {
+    lcd.setCursor(0,1); lcd.print("Estado: Normal");
+    digitalWrite(pinVentilador, LOW);
+    digitalWrite(pinFoco, LOW);
+  }
+  delay(1000);
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Integraremos el circuito del LM35 + Transistor con el de la LCD + Relé, creando un sistema de control autónomo y con múltiples niveles de acción.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/G5c9r8F.png" target="_blank" class="image-link">Ver Diagrama del Circuito 10</a><img src="https://i.imgur.com/G5c9r8F.png" alt="Diagrama de conexión del proyecto final del segundo parcial"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Lógica `if / else if / else`:</strong> Permite crear una cadena de decisiones para manejar múltiples estados o niveles en un sistema.</li><li><strong>Sistemas Embebidos:</strong> Un dispositivo con una computadora dedicada a una tarea específica, como nuestro termostato, que es un prototipo de un sistema embebido real.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>

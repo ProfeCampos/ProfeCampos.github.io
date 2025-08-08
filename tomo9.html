@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 9: DHT11, Relé, LCD - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 9: El Panorama Completo - DHT11, Relés y LCD</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 Los Protagonistas: DHT11, Relé y LCD I2C</h2><p>El DHT11 mide temperatura y humedad con un solo pin digital. El Relé es un interruptor electromagnético que nos permite controlar aparatos de alto voltaje (como los de casa) de forma segura. La pantalla LCD con módulo I2C nos permite mostrar información usando solo 2 pines de datos.</p><pre class="code-block"><code>/* Misión 09: El Panorama Completo */
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include "DHT.h"
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+const int pinRele = 7;
+
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  dht.begin();
+  lcd.init();
+  lcd.backlight();
+  pinMode(pinRele, OUTPUT);
+}
+void loop() {
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  lcd.clear();
+  lcd.print("Temp: "); lcd.print(t); lcd.print(" C");
+  lcd.setCursor(0, 1);
+  lcd.print("Hum:  "); lcd.print(h); lcd.print(" %");
+  delay(2000);
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Crearemos una estación de monitoreo que muestra los datos en la LCD. El relé se conecta al aparato a controlar interrumpiendo uno de sus cables de alimentación y conectando los extremos a los puertos COM y NO (Normalmente Abierto).</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/1E6gE9j.png" target="_blank" class="image-link">Ver Diagrama del Circuito 9</a><img src="https://i.imgur.com/1E6gE9j.png" alt="Diagrama de conexión de un sensor DHT11, una pantalla LCD I2C y un módulo de relé"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Aislamiento Eléctrico:</strong> El relé aísla completamente el circuito de control de bajo voltaje del Arduino del circuito de potencia de alto voltaje, lo que es crucial por seguridad.</li><li><strong>Comunicación I2C:</strong> Un protocolo de comunicación que permite conectar múltiples dispositivos (sensores, pantallas) usando solo dos pines (SDA y SCL).</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 2: Escuchar - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 2: ¡El Arduino Aprende a Escuchar! - El Pulsador</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 El Protagonista de Hoy: El Pulsador Táctil</h2><p>Un pulsador es un interruptor momentáneo. Aprenderemos sobre los estados "flotantes" y cómo solucionarlos con resistencias Pull-up o Pull-down para obtener una lectura digital clara y sin errores.</p><pre class="code-block"><code>/* Misión 02: Controlar un LED con un Pulsador */
+const int pinBoton = 2;
+const int pinLed = 13;
+int estadoBoton = 0;
+
+void setup() {
+  pinMode(pinLed, OUTPUT);
+  pinMode(pinBoton, INPUT_PULLUP); 
+}
+void loop() {
+  estadoBoton = digitalRead(pinBoton);
+  if (estadoBoton == LOW) {
+    digitalWrite(pinLed, HIGH);
+  } else {
+    digitalWrite(pinLed, LOW);
+  }
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos un circuito donde al presionar un botón, se encienda un LED. Usaremos la resistencia PULL-UP interna de Arduino para simplificar el montaje.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/QkH9u47.png" target="_blank" class="image-link">Ver Diagrama del Circuito 2</a><img src="https://i.imgur.com/QkH9u47.png" alt="Diagrama de conexión de un botón y un LED"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Pull-up / Pull-down:</strong> Resistencias usadas para asegurar que un pin de entrada tenga un estado lógico definido (HIGH o LOW) cuando no está activo.</li><li><strong>INPUT_PULLUP:</strong> Configuración de Arduino que activa una resistencia interna conectada a 5V, simplificando el cableado.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 8: LM35 y Transistor - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 8: Sintiendo el Calor - Sensor LM35 y Transistores</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 Los Protagonistas: LM35 y Transistor</h2><p>El LM35 es un sensor de temperatura de precisión cuyo voltaje de salida es proporcional a los grados Celsius. El transistor actúa como un interruptor electrónico, permitiéndonos usar una señal pequeña de Arduino para controlar un dispositivo de mayor potencia, como un ventilador.</p><pre class="code-block"><code>/* Misión 08: Sintiendo el Calor */
+const int pinSensor = A0;
+const int pinVentilador = 9;
+float voltaje;
+float temperaturaC;
+const float umbralTemp = 28.0;
+
+void setup() {
+  pinMode(pinVentilador, OUTPUT);
+}
+void loop() {
+  voltaje = (analogRead(pinSensor) / 1023.0) * 5.0;
+  temperaturaC = voltaje * 100;
+  
+  if (temperaturaC > umbralTemp) {
+    digitalWrite(pinVentilador, HIGH);
+  } else {
+    digitalWrite(pinVentilador, LOW);
+  }
+  delay(1000);
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos un termostato automático. Es crucial incluir un diodo en "paralelo inverso" con el motor para proteger el transistor de picos de voltaje.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/7b3O4wR.png" target="_blank" class="image-link">Ver Diagrama del Circuito 8</a><img src="https://i.imgur.com/7b3O4wR.png" alt="Diagrama de conexión de un sensor LM35 y un transistor controlando un motor"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Transistor como Interruptor:</strong> Usar una pequeña corriente en la 'Base' para controlar un flujo grande de corriente entre el 'Colector' y el 'Emisor'.</li><li><strong>Diodo de Protección (Flyback):</strong> Absorbe la energía que un motor genera al apagarse, protegiendo los componentes del circuito.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 4: Sensor PIR - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 4: El Guardián Silencioso - Sensor de Movimiento PIR</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 El Protagonista de Hoy: El Sensor PIR</h2><p>El sensor PIR (Sensor Infrarrojo Pasivo) detecta cambios en la radiación infrarroja (calor) del entorno. Es el mismo tipo de sensor que usan las luces automáticas y los sistemas de alarma para detectar la presencia de personas.</p><pre class="code-block"><code>/* Misión 04: El Guardián Silencioso */
+const int pinPir = 2;
+const int pinLed = 13;
+int estadoPir = 0; 
+
+void setup() {
+  pinMode(pinLed, OUTPUT);
+  pinMode(pinPir, INPUT);
+}
+void loop() {
+  estadoPir = digitalRead(pinPir);
+  if (estadoPir == HIGH) {
+    digitalWrite(pinLed, HIGH);
+  } else {
+    digitalWrite(pinLed, LOW);
+  }
+  delay(500);
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Crearemos un sistema de alarma básico donde al detectar movimiento, se encienda un LED de alerta. El sensor es digital, por lo que su lectura es directa.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/z4OqT1m.png" target="_blank" class="image-link">Ver Diagrama del Circuito 4</a><img src="https://i.imgur.com/z4OqT1m.png" alt="Diagrama de conexión del sensor de movimiento PIR"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Sensor Pasivo:</strong> No emite energía, solo la recibe, lo que lo hace de muy bajo consumo.</li><li><strong>Calibración:</strong> Al encenderse, el sensor necesita un tiempo para "aprender" el estado normal del ambiente antes de detectar cambios.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>

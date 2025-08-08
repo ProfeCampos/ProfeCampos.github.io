@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 7: Servos - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 7: El Control Fino - Potenciómetros y Servomotores</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 Los Protagonistas: Potenciómetro y Servo</h2><p>Un potenciómetro nos da una entrada analógica variable (0-1023). Un servomotor nos da una salida de movimiento angular preciso (0-180°). El reto es "mapear" o traducir el rango del potenciómetro al rango del servo para un control intuitivo.</p><pre class="code-block"><code>/* Misión 07: Control Fino */
+#include <Servo.h>
+Servo miServo;
+const int pinPot = A0;
+const int pinServo = 9;
+int valorPot;
+int angulo;
+
+void setup() {
+  miServo.attach(pinServo); 
+}
+void loop() {
+  valorPot = analogRead(pinPot);
+  angulo = map(valorPot, 0, 1023, 0, 180);
+  miServo.write(angulo);
+  delay(15); 
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos un circuito donde al girar la perilla de un potenciómetro, controlemos la posición de un servomotor en tiempo real.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/wP4Q9wY.png" target="_blank" class="image-link">Ver Diagrama del Circuito 7</a><img src="https://i.imgur.com/wP4Q9wY.png" alt="Diagrama de conexión de un potenciómetro y un servomotor"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Librerías (`#include`):</strong> Bloques de código pre-hecho que nos dan funcionalidades extra, como controlar servos de manera sencilla.</li><li><strong>Función `map()`:</strong> Una herramienta muy útil que re-escala un número de un rango a otro.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>

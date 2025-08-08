@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 11: Ultrasonido - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 11: Viendo con Sonido - Sensor Ultrasónico HC-SR04</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 El Protagonista de Hoy: El Sensor HC-SR04</h2><p>Este sensor funciona como un sonar: emite un pulso de sonido ultrasónico y mide el tiempo que tarda en regresar el eco. Conociendo la velocidad del sonido, podemos calcular la distancia a un objeto con gran precisión.</p><pre class="code-block"><code>/* Misión 11: Viendo con Sonido */
+const int pinTrig = 9;
+const int pinEcho = 10;
+long duracion;
+int distancia;
+
+void setup() {
+  pinMode(pinTrig, OUTPUT);
+  pinMode(pinEcho, INPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  digitalWrite(pinTrig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pinTrig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pinTrig, LOW);
+  
+  duracion = pulseIn(pinEcho, HIGH);
+  distancia = duracion * 0.0343 / 2;
+  
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+  delay(500);
+}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos una cinta métrica digital. El pin `Trig` envía el sonido y el pin `Echo` lo recibe. Es importante conectarlos a los pines correctos de Arduino.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/b9e2wHj.png" target="_blank" class="image-link">Ver Diagrama del Circuito 11</a><img src="https://i.imgur.com/b9e2wHj.png" alt="Diagrama de conexión del sensor ultrasónico HC-SR04"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Ecolocalización:</strong> El principio de usar ondas (de sonido, en este caso) y sus ecos para localizar objetos en el espacio.</li><li><strong>Función `pulseIn()`:</strong> Mide la duración de un pulso (cuánto tiempo un pin se mantiene en estado `HIGH` o `LOW`), ideal para este sensor.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
