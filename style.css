@@ -110,3 +110,9 @@ footer {
     color: #FFFFFF;
     margin-top: 2rem;
 }
+/* Enlace para las tarjetas */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
