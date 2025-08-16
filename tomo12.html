@@ -14,14 +14,26 @@
         </div>
     </header>
     <main class="tomo-content">
-        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+ <div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo13.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
         <p>Hoy vamos a subir de nivel en la precisión de nuestras mediciones y en la calidad de nuestra interfaz visual. Crearemos un termómetro de alta precisión con el sensor <strong>DS18B20</strong>, mostraremos los datos en una nítida <strong>pantalla OLED</strong> y usaremos un <strong>Joystick</strong> para navegar entre múltiples pantallas, como si fuera un dispositivo profesional.</p>
 
         <div class="protagonista-section">
             <h3>🧠 Protagonistas de la Misión</h3>
             <p><strong>DS18B20:</strong> Un termómetro digital de alta precisión que se comunica por el protocolo "One-Wire", permitiendo conectar varios sensores a un solo pin.<br>
+            <div class="image-container">
+            <img src="ds18b20 piout.png" alt="pinout ds18b20">
+            </div>
             <strong>Pantalla OLED:</strong> Una pantalla de alto contraste que no necesita luz de fondo, perfecta para gráficos nítidos y de bajo consumo.<br>
+            <div class="image-container">
+            <img src="I2C-OLED-Display-Pinout.png" alt="pinout oled">
+            </div>
             <strong>Módulo Joystick:</strong> Nuestro dispositivo de entrada, que combina dos potenciómetros (ejes X/Y) y un botón para navegar por los menús.</p>
+             <div class="image-container">
+            <img src="Pinout-PS2-Joystick-Module.png" alt="pinout oled">
+            </div>        
         </div>
 
         <h2>🧠 El Código: El Sistema Operativo del Termómetro</h2>
@@ -61,7 +73,7 @@ float tempC, tempF, tempK, tempR;
         <p>Este circuito integra los tres módulos principales. La conexión más importante es la resistencia de <strong>4.7kΩ</strong>, que es obligatoria para que el protocolo One-Wire del sensor DS18B20 funcione correctamente.</p>
         <div class="image-container">
             <h3>Diagrama del Circuito 12</h3>
-            <img src="https://i.imgur.com/hY2P3wD.png" alt="Diagrama de conexión de un sensor DS18B20, una pantalla OLED y un joystick">
+            <img src="Tomo 12.png" alt="Diagrama de conexión de un sensor DS18B20, una pantalla OLED y un joystick">
         </div>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
@@ -77,10 +89,14 @@ float tempC, tempF, tempK, tempR;
             <li><strong>Registrador de Datos:</strong> Programa una cuarta pantalla en el menú que muestre las temperaturas máxima y mínima registradas. Usa el botón del joystick para reiniciar estos valores.</li>
             <li><strong>Alarma Visual de Temperatura:</strong> En la pantalla de los termómetros gráficos, haz que si la temperatura supera un umbral (ej. 30°C), el contorno del termómetro de Celsius comience a parpadear.</li>
         </ul>
-        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
-    </main>
+<div class="nav-links bottom-nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo1.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
+</main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
 </body>
+
 </html>
