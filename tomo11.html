@@ -14,7 +14,10 @@
         </div>
     </header>
     <main class="tomo-content">
-        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+<div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo12.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
         <p>¡Bienvenidos al tercer parcial y a los sistemas avanzados! Hoy le daremos a nuestro Arduino un súper poder digno de un murciélago o un submarino: la <strong>ecolocalización</strong>. Usaremos un sensor ultrasónico no solo para medir distancias, sino para visualizar esa información de múltiples maneras: en una pantalla, con un indicador físico (servo) y en una barra de LEDs. ¡Construiremos un radar interactivo completo!</p>
 
         <div class="protagonista-section">
@@ -100,7 +103,7 @@ void loop() {
         <p>Este es nuestro circuito más poblado hasta ahora. Integraremos el sensor ultrasónico, el servo, la pantalla LCD y los 8 LEDs. La clave es la organización de los cables.</p>
         <div class="image-container">
             <h3>Diagrama del Circuito 11</h3>
-            <img src="https://i.imgur.com/b9e2wHj.png" alt="Diagrama de conexión del sensor ultrasónico, servo, LCD y 8 LEDs">
+            <img src="Tomo 11.png" alt="Diagrama de conexión del sensor ultrasónico, servo, LCD y 8 LEDs">
         </div>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
@@ -116,10 +119,13 @@ void loop() {
             <li><strong>Barrera de Estacionamiento Automática:</strong> Programa el servo para que simule una barrera. Cuando un objeto se acerque a menos de 10 cm, la barrera debe bajar (0 grados) y no subir hasta que el objeto se aleje.</li>
             <li><strong>Radar Acústico de Mapeo:</strong> Añade un buzzer y sincronízalo con el servo. Haz que el servo "escanee" de 0 a 180 grados y que el buzzer emita "pings" cuyo tono cambie según la distancia detectada.</li>
         </ul>
-        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
-    </main>
+<div class="nav-links bottom-nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo12.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>    </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
 </body>
+
 </html>
