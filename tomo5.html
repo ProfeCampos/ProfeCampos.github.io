@@ -14,7 +14,10 @@
         </div>
     </header>
     <main class="tomo-content">
-        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo6.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
         <p>Nuestros proyectos ya pueden reaccionar al tacto y al movimiento. Hoy les daremos la capacidad de "ver" la luz. Usaremos una LDR (Fotoresistencia) para crear un sistema que sepa si es de día o de noche, sentando las bases para proyectos como luces nocturnas automáticas o robots que siguen la luz.</p>
 
         <div class="protagonista-section">
@@ -81,7 +84,10 @@ void loop() {
             <li><strong>Luz Regulable:</strong> En lugar de solo encender o apagar el LED, usa `analogWrite()` para que el brillo del LED aumente a medida que se hace más oscuro.</li>
             <li><strong>Calibración Automática:</strong> Al inicio del programa, haz que el Arduino mida la luz por 5 segundos y use ese valor promedio para establecer el `umbralOscuridad` automáticamente.</li>
         </ul>
-        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+        <div class="nav-links bottom-nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo6.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
     </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
@@ -89,3 +95,4 @@ void loop() {
 </body>
 
 </html>
+
