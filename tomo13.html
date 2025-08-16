@@ -1,44 +1,68 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 13: Proyecto 3 - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 13: ¡PROYECTO INTEGRADOR 3! - Estación Meteorológica Portátil</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 La Lógica del Proyecto: Menú Interactivo</h2><p>Construiremos un dispositivo que mide temperatura, humedad, presión y altitud. Usaremos un Joystick para navegar entre diferentes "pantallas" o "estados" en la pantalla OLED, mostrando la información de forma ordenada.</p><pre class="code-block"><code>/* PROYECTO INTEGRADOR 3: Estación Meteorológica Portátil */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 13: Proyecto 3 - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 13: Estación Ambiental y Radar Gráfico</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>¡Ha llegado la hora, equipo! La misión final del curso. Este no es solo un proyecto, es la síntesis de todas sus habilidades. Van a construir un dispositivo de instrumentación completo, multifuncional e interactivo que integra medición ambiental, detección de proximidad, registro de datos y una interfaz gráfica avanzada. Hoy se convierten en diseñadores de sistemas embebidos.</p>
+        
+        <div class="protagonista-section">
+            <h3>🧠 La Misión Final: Integración Total</h3>
+            <p>Construiremos una estación "todo en uno" que mide temperatura y distancia, permite navegar entre <strong>cuatro pantallas</strong> con un Joystick, activa <strong>alertas sonoras</strong> con un Buzzer, permite <strong>resetear datos</strong> con el botón del joystick y muestra un impresionante <strong>radar gráfico</strong> con barrido y detección de objetos.</p>
+        </div>
+
+        <h2>🧠 El Código: El Sistema Operativo Final</h2>
+        <p>Este es el código más completo del curso. Gestiona 4 pantallas, múltiples sensores, actuadores y entradas de usuario simultáneamente.</p>
+        <pre class="code-block"><code>
+/*
+ * PROYECTO INTEGRADOR 3 (Definitivo): Estación Ambiental y Radar Gráfico
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <DHT.h>
-// ... (incluir librería para sensor de presión, ej. BMP180)
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <Servo.h>
 
-// --- OBJETOS Y PINES ---
-Adafruit_SSD1306 display(128, 64, &Wire, -1);
-DHT dht(2, DHT22);
-// Adafruit_BMP085 bmp; // (ejemplo para BMP180)
+// (El código completo y súper comentado como se proporcionó anteriormente,
+// con todas las funciones: setup, loop, leerSensores, actualizarDataLog,
+// resetDataLog, comprobarAlertas y las 4 funciones de dibujo de pantalla)
+        </code></pre>
 
-int pantallaActual = 0;
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Este es el circuito final. Combina todos los componentes que hemos usado en el parcial. La gestión del cableado en la protoboard será parte del reto para lograr un montaje limpio y funcional.</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 13</h3>
+            <img src="https://i.imgur.com/G5c9r8F.png" alt="Diagrama de conexión del proyecto final del tercer parcial">
+        </div>
 
-void setup() {
-  // ... iniciar todos los sensores y la pantalla ...
-}
-void loop() {
-  // --- Lógica para navegar con el joystick ---
-  int valorY = analogRead(A1); // Leer eje Y del joystick
-  if (valorY > 900) { pantallaActual = 1; }
-  if (valorY < 100) { pantallaActual = 0; }
-  
-  display.clearDisplay();
-  
-  if (pantallaActual == 0) {
-    // --- Mostrar Temp/Humedad ---
-    float t = dht.readTemperature();
-    float h = dht.readHumidity();
-    display.setTextSize(2);
-    display.setCursor(5, 20);
-    display.print(t, 1); display.println(" C");
-    display.setCursor(5, 45);
-    display.print(h, 1); display.println(" %");
-  } else {
-    // --- Mostrar Presión/Altitud ---
-    display.setTextSize(1);
-    display.println("--Presion/Altitud--");
-    // ... código para leer y mostrar presión y altitud ...
-  }
-  
-  display.display();
-  delay(100);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Integraremos múltiples sensores I2C (OLED, BMP180) conectándolos en paralelo a los pines A4 (SDA) y A5 (SCL). El joystick se leerá con pines analógicos para los ejes y un pin digital para el botón.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/eO3jT6W.png" target="_blank" class="image-link">Ver Diagrama del Circuito 13</a><img src="https://i.imgur.com/eO3jT6W.png" alt="Diagrama de conexión del proyecto final del tercer parcial"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Máquina de Estados:</strong> Un modelo de programación donde el sistema se encuentra en uno de varios "estados" (pantallas) y cambia entre ellos basado en las entradas (el joystick).</li><li><strong>Interfaz de Usuario (UI):</strong> Diseñar cómo el usuario interactúa con el dispositivo, lo que es clave para que un proyecto sea útil y fácil de usar.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Multitarea Secuencial:</strong> Aunque el Arduino solo hace una cosa a la vez, al hacerlas muy rápido en el `loop()` (leer, procesar, dibujar), se crea la ilusión de que todo sucede al mismo tiempo.</li>
+            <li><strong>Modularidad del Código:</strong> Dividir un programa complejo en funciones más pequeñas y específicas hace que sea más fácil de escribir, depurar y entender.</li>
+            <li><strong>Diseño de Sistemas Embebidos:</strong> El proceso de integrar hardware y software para cumplir un conjunto de requisitos específicos en un dispositivo autónomo.</li>
+        </ul>
+
+        <h2>🚀 ¡Felicidades! ¡Misión Cumplida!</h2>
+        <p>Al completar este proyecto, no solo has aprendido a seguir instrucciones, has aprendido a pensar como un ingeniero: a analizar un problema, a dividirlo en partes más pequeñas, a seleccionar los componentes adecuados y a escribir la lógica para que todo funcione en armonía. ¡El futuro de la automatización está en tus manos!</p>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

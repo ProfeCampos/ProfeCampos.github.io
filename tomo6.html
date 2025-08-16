@@ -1,24 +1,92 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 6: Proyecto 1 - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 6: ¡PROYECTO INTEGRADOR 1! - Iluminación Inteligente</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 La Lógica del Proyecto: El Poder del `&&` (Y)</h2><p>Vamos a combinar todo lo aprendido en el primer parcial. La luz del pasillo solo debe encenderse si se cumplen DOS condiciones a la vez: que se detecte movimiento Y que esté oscuro. Esto se logra con el operador lógico `&&` (AND).</p><pre class="code-block"><code>/* PROYECTO INTEGRADOR 1: Iluminación Inteligente de Pasillos */
-const int pinPir = 2;
-const int pinLdr = A0;
-const int pinLed = 9;
-int valorLuz;
-boolean hayMovimiento;
-int umbralOscuridad = 400; 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device--width, initial-scale=1.0">
+    <title>Tomo 6: Proyecto 1 - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 6: ¡PROYECTO INTEGRADOR 1! - Iluminación Inteligente</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>¡Felicidades por llegar al primer proyecto integrador! Es hora de combinar todo lo que hemos aprendido. Ya no trabajaremos con sensores por separado; los uniremos para crear un sistema más inteligente y útil. Construiremos un sistema de iluminación automática que solo se enciende cuando es necesario: cuando alguien está presente Y está oscuro.</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 La Lógica del Proyecto: El Poder del `&&` (Y)</h3>
+            <p>La clave de este proyecto es la toma de decisiones basada en múltiples condiciones. En programación, usamos <strong>operadores lógicos</strong> para esto. El más importante hoy es el operador "Y" lógico, que en C++ se escribe como <code>&&</code>. La condición <code>if (condicion1 && condicion2)</code> solo será verdadera si AMBAS condiciones son verdaderas al mismo tiempo. Es la base para crear sistemas que responden a situaciones complejas del mundo real.</p>
+        </div>
+
+        <h2>🧠 El Código: El Cerebro del Sistema</h2>
+        <p>Este código lee los dos sensores (PIR y LDR) y usa una sola declaración `if` con el operador `&&` para controlar el LED.</p>
+        <pre class="code-block"><code>
+/*
+ * PROYECTO INTEGRADOR 1: Iluminación Inteligente de Pasillos
+ * Descripción: Enciende una luz si se detecta movimiento Y está oscuro.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+const int pinPir = 2;       // Pin del sensor de movimiento
+const int pinLdr = A0;      // Pin del sensor de luz
+const int pinLed = 9;       // Pin del LED que simula la luz del pasillo
+
+int valorLuz;               // Variable para la lectura del LDR
+boolean hayMovimiento;      // Variable para la lectura del PIR (true/false)
+int umbralOscuridad = 400;  // Umbral de oscuridad (ajustable)
 
 void setup() {
   pinMode(pinLed, OUTPUT);
   pinMode(pinPir, INPUT);
+  // El pin A0 ya es una entrada por defecto
 }
+
 void loop() {
+  // Leemos ambos sensores en cada ciclo
   valorLuz = analogRead(pinLdr);
   hayMovimiento = digitalRead(pinPir);
   
+  // Aquí está la magia: la condición IF con el operador AND (&&)
+  // SI (hayMovimiento es VERDADERO Y el valorLuz es MENOR que el umbral)...
   if (hayMovimiento == true && valorLuz < umbralOscuridad) {
-    digitalWrite(pinLed, HIGH);
-    delay(5000); // Mantiene la luz encendida 5 segundos
-  } else {
-    digitalWrite(pinLed, LOW);
+    digitalWrite(pinLed, HIGH); // ...entonces enciende la luz.
+    // Opcional: un delay aquí mantendría la luz encendida un tiempo fijo
+    // después de la última detección, pero el PIR ya tiene un ajuste para esto.
+  } else { // SI NO se cumplen AMBAS condiciones...
+    digitalWrite(pinLed, LOW); // ...asegúrate de que la luz esté apagada.
   }
-  delay(300);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Integraremos los circuitos del sensor PIR y la LDR para controlar un solo LED, que simula la iluminación de un pasillo.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/dK5z59b.png" target="_blank" class="image-link">Ver Diagrama del Circuito 6</a><img src="https://i.imgur.com/dK5z59b.png" alt="Diagrama de conexión del proyecto final del primer parcial"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Lógica Booleana:</strong> Usar operadores como AND (`&&`), OR (`||`) y NOT (`!`) para tomar decisiones basadas en múltiples condiciones.</li><li><strong>Integración de Sistemas:</strong> Combinar diferentes subsistemas (sensores, actuadores) para crear un proyecto funcional y complejo.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+  delay(300); // Pequeña pausa
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Integraremos los circuitos del sensor PIR y la LDR para controlar un solo LED, que simula la iluminación de un pasillo. La clave es organizar bien el cableado en la protoboard.</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 6</h3>
+            <img src="https://i.imgur.com/dK5z59b.png" alt="Diagrama de conexión del proyecto final del primer parcial">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Lógica Booleana:</strong> Usar operadores como AND (`&&`), OR (`||`) y NOT (`!`) para tomar decisiones basadas en múltiples condiciones.</li>
+            <li><strong>Integración de Sistemas:</strong> Combinar diferentes subsistemas (sensores, actuadores) para crear un proyecto funcional y complejo.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Modo Manual:</strong> Añade un botón al circuito. Si el botón es presionado, la luz debe encenderse sin importar lo que digan los sensores.</li>
+            <li><strong>Indicador de Estado:</strong> Añade un segundo LED (de otro color). Este LED debe estar siempre encendido si el sistema está en modo "automático" y parpadear si está en modo "manual".</li>
+            <li><strong>Ajuste de Sensibilidad:</strong> Añade un potenciómetro que permita ajustar el `umbralOscuridad` en tiempo real, sin tener que cambiar el código y volver a subirlo.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

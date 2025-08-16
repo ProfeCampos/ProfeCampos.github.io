@@ -1,18 +1,87 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 4: Sensor PIR - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 4: El Guardián Silencioso - Sensor de Movimiento PIR</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 El Protagonista de Hoy: El Sensor PIR</h2><p>El sensor PIR (Sensor Infrarrojo Pasivo) detecta cambios en la radiación infrarroja (calor) del entorno. Es el mismo tipo de sensor que usan las luces automáticas y los sistemas de alarma para detectar la presencia de personas.</p><pre class="code-block"><code>/* Misión 04: El Guardián Silencioso */
-const int pinPir = 2;
-const int pinLed = 13;
-int estadoPir = 0; 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 4: Sensor PIR - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 4: El Guardián Silencioso - Sensor de Movimiento PIR</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>Ahora que nuestro Arduino puede ver la luz, le daremos la habilidad de detectar movimiento. Usaremos un sensor PIR, el mismo que utilizan las luces automáticas y los sistemas de alarma. Este es un paso crucial para crear proyectos que reaccionen a la presencia de personas.</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista de Hoy: El Sensor PIR (Infrarrojo Pasivo)</h3>
+            <p>El sensor PIR no emite nada, por eso es "pasivo". Lo que hace es medir la radiación infrarroja (el calor) que emiten los objetos en su campo de visión. Cuando un cuerpo caliente, como una persona, se mueve a través de su área de detección, el sensor nota este cambio brusco de calor y envía una señal ALTA (HIGH) a nuestro Arduino.</p>
+        </div>
+
+        <h2>🧠 El Código: Detectando Presencia</h2>
+        <p>El código para el sensor PIR es muy sencillo porque es un dispositivo digital. Simplemente leemos si su señal es ALTA o BAJA y actuamos en consecuencia.</p>
+        <pre class="code-block"><code>
+/*
+ * Misión 04: El Guardián Silencioso
+ * Descripción: Enciende un LED al detectar movimiento con un sensor PIR.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+const int pinPir = 2;   // Pin donde conectamos la señal del sensor PIR.
+const int pinLed = 13;  // Pin para el LED de alerta.
+
+int estadoPir = 0; // Variable para guardar el estado del sensor.
 
 void setup() {
   pinMode(pinLed, OUTPUT);
-  pinMode(pinPir, INPUT);
+  pinMode(pinPir, INPUT); // El sensor PIR es una entrada.
+  Serial.begin(9600);
+  Serial.println("Sensor PIR Calibrando...");
+  delay(20000); // IMPORTANTE: El sensor necesita unos segundos para calibrarse.
+  Serial.println("Sensor Activado.");
 }
+
 void loop() {
-  estadoPir = digitalRead(pinPir);
-  if (estadoPir == HIGH) {
-    digitalWrite(pinLed, HIGH);
-  } else {
-    digitalWrite(pinLed, LOW);
+  estadoPir = digitalRead(pinPir); // Leemos el estado del sensor.
+
+  if (estadoPir == HIGH) { // Si detecta movimiento...
+    digitalWrite(pinLed, HIGH); // ...encendemos el LED.
+    Serial.println("¡Movimiento Detectado!");
+  } else { // Si no...
+    digitalWrite(pinLed, LOW); // ...mantenemos el LED apagado.
   }
-  delay(500);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Crearemos un sistema de alarma básico donde al detectar movimiento, se encienda un LED de alerta. El sensor es digital, por lo que su lectura es directa.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/z4OqT1m.png" target="_blank" class="image-link">Ver Diagrama del Circuito 4</a><img src="https://i.imgur.com/z4OqT1m.png" alt="Diagrama de conexión del sensor de movimiento PIR"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Sensor Pasivo:</strong> No emite energía, solo la recibe, lo que lo hace de muy bajo consumo.</li><li><strong>Calibración:</strong> Al encenderse, el sensor necesita un tiempo para "aprender" el estado normal del ambiente antes de detectar cambios.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+  delay(500); // Pequeña pausa para no saturar el monitor serial.
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Crearemos un sistema de alarma básico. El sensor tiene dos potenciómetros pequeños para ajustar la sensibilidad y el tiempo que la señal se mantiene alta tras detectar movimiento.</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 4</h3>
+            <img src="https://i.imgur.com/z4OqT1m.png" alt="Diagrama de conexión del sensor de movimiento PIR">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Sensor Pasivo:</strong> No emite energía, solo la recibe, lo que lo hace de muy bajo consumo.</li>
+            <li><strong>Calibración:</strong> Al encenderse, el sensor necesita un tiempo para "aprender" el estado normal del ambiente antes de detectar cambios.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Alarma Sonora:</strong> Añade un buzzer al circuito. ¿Puedes hacer que, además de encender el LED, suene una alarma cuando se detecte movimiento?</li>
+            <li><strong>Contador de Intrusos:</strong> Modifica el código para que cuente cuántas veces se ha detectado movimiento y lo muestre en el Monitor Serial.</li>
+            <li><strong>Alarma con Reset:</strong> Haz que una vez que se detecte movimiento, el LED se quede encendido para siempre hasta que presiones un botón de "reset" que añadas al circuito.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

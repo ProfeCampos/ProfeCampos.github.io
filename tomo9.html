@@ -1,4 +1,45 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 9: DHT11, Relé, LCD - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 9: El Panorama Completo - DHT11, Relés y LCD</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 Los Protagonistas: DHT11, Relé y LCD I2C</h2><p>El DHT11 mide temperatura y humedad con un solo pin digital. El Relé es un interruptor electromagnético que nos permite controlar aparatos de alto voltaje (como los de casa) de forma segura. La pantalla LCD con módulo I2C nos permite mostrar información usando solo 2 pines de datos.</p><pre class="code-block"><code>/* Misión 09: El Panorama Completo */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 9: DHT11, Relé, LCD - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 9: El Panorama Completo - DHT11, Relés y LCD</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>¡Saludos, futuros ingenieros! Hoy vamos a dar un salto gigante: aprenderemos a leer dos variables ambientales con un solo sensor, a controlar aparatos del mundo real (como los que se conectan a la pared) y a mostrar toda esa información de manera profesional en una pantalla de cristal líquido (LCD).</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista 1: Sensor DHT11 (El Combo Digital 2x1)</h3>
+            <p>El DHT11 es un sensor increíblemente práctico. Es como tener un termómetro y un medidor de humedad en un solo paquete digital. Con un solo pin de datos obtenemos dos mediciones.</p>
+        </div>
+        <div class="protagonista-section">
+            <h3>⚙️ Protagonista 2: El Módulo de Relé (El Interruptor de Alto Voltaje)</h3>
+            <p>¿Qué pasa si queremos controlar una lámpara de 120V? ¡NUNCA la conectes a tu Arduino! Para eso usamos un <strong>Relé</strong>. Es un interruptor electromagnético que usa una señal segura de 5V de Arduino para activar un interruptor interno, completamente aislado, que puede manejar alto voltaje de forma segura.</p>
+        </div>
+        <div class="protagonista-section">
+            <h3>🖥️ Protagonista 3: La Pantalla LCD 16x2 con I2C</h3>
+            <p>Para que nuestro proyecto sea independiente de la computadora, necesitamos una pantalla. La LCD 16x2 puede mostrar 2 filas de 16 caracteres. Para no usar todos nuestros pines, usamos un pequeño módulo <strong>I2C</strong> soldado detrás, que reduce los cables necesarios a solo 4: VCC, GND, SDA (A4) y SCL (A5).</p>
+        </div>
+
+        <h2>🧠 El Código: El Centro de Comando</h2>
+        <p>Este código necesita varias librerías. Asegúrate de instalarlas desde el Gestor de Librerías de Arduino IDE: <em>DHT sensor library (de Adafruit)</em> y <em>LiquidCrystal_I2C</em>.</p>
+        <pre class="code-block"><code>
+/*
+ * Misión 09: El Panorama Completo
+ * Descripción: Muestra Temp/Humedad del DHT11 en una LCD y activa un relé.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
@@ -11,17 +52,70 @@ DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup() {
+  pinMode(pinRele, OUTPUT);
+  digitalWrite(pinRele, LOW); // Asegurarse que el relé empiece apagado.
+
   dht.begin();
+  
   lcd.init();
   lcd.backlight();
-  pinMode(pinRele, OUTPUT);
+  lcd.setCursor(0, 0);
+  lcd.print("Estacion CTEC");
+  lcd.setCursor(0, 1);
+  lcd.print("Iniciando...");
+  delay(2000);
+  lcd.clear();
 }
+
 void loop() {
+  delay(2000); // Esperamos 2 segundos entre lecturas.
+
   float h = dht.readHumidity();
   float t = dht.readTemperature();
+
+  if (isnan(h) || isnan(t)) {
+    lcd.clear();
+    lcd.print("Error de Sensor");
+    return;
+  }
+
   lcd.clear();
+  lcd.setCursor(0, 0);
   lcd.print("Temp: "); lcd.print(t); lcd.print(" C");
   lcd.setCursor(0, 1);
   lcd.print("Hum:  "); lcd.print(h); lcd.print(" %");
-  delay(2000);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Crearemos una estación de monitoreo que muestra los datos en la LCD. El relé se conecta al aparato a controlar interrumpiendo uno de sus cables de alimentación y conectando los extremos a los puertos COM y NO (Normalmente Abierto).</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/1E6gE9j.png" target="_blank" class="image-link">Ver Diagrama del Circuito 9</a><img src="https://i.imgur.com/1E6gE9j.png" alt="Diagrama de conexión de un sensor DHT11, una pantalla LCD I2C y un módulo de relé"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Aislamiento Eléctrico:</strong> El relé aísla completamente el circuito de control de bajo voltaje del Arduino del circuito de potencia de alto voltaje, lo que es crucial por seguridad.</li><li><strong>Comunicación I2C:</strong> Un protocolo de comunicación que permite conectar múltiples dispositivos (sensores, pantallas) usando solo dos pines (SDA y SCL).</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+
+  if (t > 30.0) {
+    digitalWrite(pinRele, HIGH);
+  } else {
+    digitalWrite(pinRele, LOW);
+  }
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Conectaremos los tres módulos principales. La parte más delicada es la conexión del foco al lado de potencia del relé. <strong>¡Pide supervisión del Profe Campos para este paso!</strong></p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 9</h3>
+            <img src="https://i.imgur.com/1E6gE9j.png" alt="Diagrama de conexión de un sensor DHT11, una pantalla LCD I2C y un módulo de relé">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Aislamiento Eléctrico:</strong> El relé aísla completamente el circuito de control de bajo voltaje del circuito de potencia de alto voltaje, lo que es crucial por seguridad.</li>
+            <li><strong>Comunicación I2C:</strong> Un protocolo que permite conectar múltiples dispositivos (sensores, pantallas) usando solo dos pines (SDA y SCL).</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Control de Humedad:</strong> Modifica la lógica para que el relé se active si la humedad supera el 70%, simulando un deshumidificador.</li>
+            <li><strong>Doble Condición:</strong> Cambia el código para que el relé solo se active si la temperatura es alta Y la humedad también es alta (operador `&&`).</li>
+            <li><strong>Mensajes en LCD:</strong> Haz que en la pantalla LCD aparezca un mensaje como "Ventilador ON" o "Ventilador OFF" según el estado del relé.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

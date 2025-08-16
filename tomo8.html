@@ -1,21 +1,97 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 8: LM35 y Transistor - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 8: Sintiendo el Calor - Sensor LM35 y Transistores</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 Los Protagonistas: LM35 y Transistor</h2><p>El LM35 es un sensor de temperatura de precisión cuyo voltaje de salida es proporcional a los grados Celsius. El transistor actúa como un interruptor electrónico, permitiéndonos usar una señal pequeña de Arduino para controlar un dispositivo de mayor potencia, como un ventilador.</p><pre class="code-block"><code>/* Misión 08: Sintiendo el Calor */
-const int pinSensor = A0;
-const int pinVentilador = 9;
-float voltaje;
-float temperaturaC;
-const float umbralTemp = 28.0;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 8: LM35 y Transistor - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 8: Sintiendo el Calor - Sensor LM35 y Transistores</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>Ya sabemos medir luz y movimiento. Hoy aprenderemos a medir temperatura con el sensor de precisión LM35. Pero no nos detendremos ahí. ¿Qué pasa si la señal de Arduino no es suficiente para activar un componente más grande, como un motor? Introduciremos al <strong>Transistor</strong>, el componente fundamental de la electrónica moderna, que actuará como un "amplificador" o interruptor electrónico para controlar cargas de mayor potencia.</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista 1: El Sensor de Temperatura LM35</h3>
+            <p>El LM35 es un sensor analógico muy preciso. Su magia reside en que su voltaje de salida es linealmente proporcional a la temperatura en grados Celsius. Específicamente, por cada grado Celsius, el voltaje en su pin de salida aumenta en 10 milivoltios (0.01V). Esto hace que calcular la temperatura sea una simple operación matemática.</p>
+        </div>
+        <div class="protagonista-section">
+            <h3>⚙️ Protagonista 2: El Transistor NPN (2N2222)</h3>
+            <p>Un transistor es un interruptor controlado por electricidad. Tiene tres patas: Base, Colector y Emisor. Piensa en él como una llave de agua: al aplicar una pequeña corriente al pin de la <strong>Base</strong> (la perilla de la llave), permitimos que una corriente mucho más grande fluya desde el <strong>Colector</strong> hacia el <strong>Emisor</strong> (el tubo principal). Esto nos permite usar un pin de 5V de Arduino, que solo da unos 40mA, para controlar un motor que podría necesitar 200mA o más.</p>
+        </div>
+
+        <h2>🧠 El Código: Un Termostato Automático</h2>
+        <p>El código leerá el voltaje del LM35, lo convertirá a grados Celsius, y si la temperatura supera un umbral, activará el pin de la Base del transistor para encender un ventilador.</p>
+        <pre class="code-block"><code>
+/*
+ * Misión 08: Sintiendo el Calor
+ * Descripción: Activa un ventilador con un transistor si la temperatura del LM35 supera un umbral.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+const int pinSensor = A0;       // Pin para leer el LM35.
+const int pinVentilador = 9;    // Pin para controlar la base del transistor.
+
+float voltaje;            // Para guardar el voltaje leído.
+float temperaturaC;       // Para guardar la temperatura calculada.
+const float umbralTemp = 28.0; // Umbral de temperatura en Celsius.
 
 void setup() {
   pinMode(pinVentilador, OUTPUT);
+  Serial.begin(9600);
 }
+
 void loop() {
+  // 1. Leemos el valor analógico (0-1023) y lo convertimos a voltaje (0-5V).
   voltaje = (analogRead(pinSensor) / 1023.0) * 5.0;
-  temperaturaC = voltaje * 100;
   
+  // 2. Convertimos el voltaje a grados Celsius (10mV por grado -> V * 100).
+  temperaturaC = voltaje * 100;
+
+  Serial.print("Temperatura: ");
+  Serial.print(temperaturaC);
+  Serial.println(" C");
+  
+  // 3. Tomamos la decisión.
   if (temperaturaC > umbralTemp) {
-    digitalWrite(pinVentilador, HIGH);
+    digitalWrite(pinVentilador, HIGH); // Activamos el transistor.
   } else {
-    digitalWrite(pinVentilador, LOW);
+    digitalWrite(pinVentilador, LOW); // Lo desactivamos.
   }
-  delay(1000);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos un termostato automático. Es crucial incluir un diodo en "paralelo inverso" con el motor para proteger el transistor de picos de voltaje.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/7b3O4wR.png" target="_blank" class="image-link">Ver Diagrama del Circuito 8</a><img src="https://i.imgur.com/7b3O4wR.png" alt="Diagrama de conexión de un sensor LM35 y un transistor controlando un motor"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Transistor como Interruptor:</strong> Usar una pequeña corriente en la 'Base' para controlar un flujo grande de corriente entre el 'Colector' y el 'Emisor'.</li><li><strong>Diodo de Protección (Flyback):</strong> Absorbe la energía que un motor genera al apagarse, protegiendo los componentes del circuito.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+  delay(1000); // Leemos la temperatura cada segundo.
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Construiremos un termostato automático. Es crucial incluir un <strong>diodo</strong> en "paralelo inverso" con el motor. Este diodo protege al transistor de picos de voltaje que el motor genera al apagarse (fuerza contraelectromotriz).</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 8</h3>
+            <img src="https://i.imgur.com/7b3O4wR.png" alt="Diagrama de conexión de un sensor LM35 y un transistor controlando un motor">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Transistor como Interruptor:</strong> Usar una pequeña corriente en la 'Base' para controlar un flujo grande de corriente entre el 'Colector' y el 'Emisor'.</li>
+            <li><strong>Diodo de Protección (Flyback):</strong> Absorbe la energía que un motor genera al apagarse, protegiendo los componentes del circuito.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Modo Frío:</strong> Modifica el código para que en lugar de un ventilador, active un foco (simulado con un LED) si la temperatura baja de cierto punto (como un calentador).</li>
+            <li><strong>Control de Velocidad:</strong> Usa `analogWrite()` en el pin 9. ¿Puedes hacer que la velocidad del ventilador aumente a medida que sube la temperatura?</li>
+            <li><strong>Termostato con Histéresis:</strong> Para evitar que el ventilador se encienda y apague constantemente, crea una "zona muerta": que se encienda a los 28°C pero no se apague hasta que baje de 26°C.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

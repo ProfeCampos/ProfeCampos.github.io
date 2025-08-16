@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 0: El Kit del Inventor - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 0: ¡El Kit de Inicio del Inventor!</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+
+        <h2>¿Qué es Arduino? 🤔</h2>
+        <p>Imagina que quieres construir un robot, unas luces que reaccionen a la música o un sistema que riegue tus plantas automáticamente. Todos esos proyectos necesitan un <strong>cerebro</strong> que tome decisiones. Arduino es exactamente eso: un pequeño cerebro programable para tus proyectos de electrónica. La plataforma se divide en dos partes: el <strong>Hardware</strong> (la placa azul) y el <strong>Software</strong> (el IDE en tu computadora).</p>
+
+        <h2>Anatomía de un Héroe: Partes del Arduino UNO</h2>
+        <p>Tu placa Arduino UNO puede parecer compleja, pero cada parte tiene una función específica.</p>
+        <div class="image-container">
+            <h3>Diagrama del Arduino UNO</h3>
+            <img src="https://i.imgur.com/g8vBw2I.png" alt="Diagrama de un Arduino UNO con sus partes etiquetadas">
+            <p><strong>El Cerebro (Microcontrolador):</strong> El chip negro grande donde se ejecuta tu código.<br>
+            <strong>Puerto USB:</strong> Por donde se comunica con la PC y recibe energía.<br>
+            <strong>Pines Digitales (0-13):</strong> Como interruptores, solo entienden ENCENDIDO (HIGH) o APAGADO (LOW).<br>
+            <strong>Pines Analógicos (A0-A5):</strong> Como perillas de volumen, leen un rango de valores (0-1023).<br>
+            <strong>Pines de Alimentación:</strong> 5V, 3.3V, y GND (Tierra) para energizar tus componentes.</p>
+        </div>
+
+        <h2>Tu Taller Digital: El IDE de Arduino</h2>
+        <p>El IDE (Entorno de Desarrollo Integrado) es el programa en tu computadora donde escribimos, revisamos y enviamos el código a la placa.</p>
+        <div class="image-container">
+            <h3>Interfaz del IDE de Arduino</h3>
+            <img src="https://i.imgur.com/Yj6J1g3.png" alt="Interfaz del software IDE de Arduino con sus botones principales etiquetados">
+            <p><strong>1. Verificar (✔️):</strong> El corrector ortográfico de tu código.<br>
+            <strong>2. Subir (➡️):</strong> Envía tu código al cerebro del Arduino.<br>
+            <strong>3. Área de Código:</strong> Donde escribes tus programas (sketches).<br>
+            <strong>4. Consola de Mensajes:</strong> Te informa si hay errores.<br>
+            <strong>5. Monitor Serie (🔍):</strong> Una ventana de chat para ver los datos que tu Arduino envía.</p>
+        </div>
+        
+        <h2>La Estructura de un Sketch: `setup()` y `loop()`</h2>
+        <div class="protagonista-section">
+            <h3><code>void setup() { ... }</code></h3>
+            <p>Esta función es como la <strong>preparación antes de una fiesta</strong>. Se ejecuta <strong>una sola vez</strong> cuando el Arduino se enciende. Aquí ponemos todo lo que necesitamos configurar: qué pines serán entradas, cuáles serán salidas, etc.</p>
+        </div>
+        <div class="protagonista-section">
+            <h3><code>void loop() { ... }</code></h3>
+            <p>Esta función es <strong>la fiesta en sí</strong>. Una vez que el `setup()` termina, el código dentro del `loop()` se ejecuta una y otra vez, en un ciclo infinito. Aquí va toda la acción principal: leer sensores, tomar decisiones y controlar actuadores.</p>
+        </div>
+
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

@@ -1,17 +1,91 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 7: Servos - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 7: El Control Fino - Potenciómetros y Servomotores</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 Los Protagonistas: Potenciómetro y Servo</h2><p>Un potenciómetro nos da una entrada analógica variable (0-1023). Un servomotor nos da una salida de movimiento angular preciso (0-180°). El reto es "mapear" o traducir el rango del potenciómetro al rango del servo para un control intuitivo.</p><pre class="code-block"><code>/* Misión 07: Control Fino */
-#include <Servo.h>
-Servo miServo;
-const int pinPot = A0;
-const int pinServo = 9;
-int valorPot;
-int angulo;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 7: Servos - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 7: El Control Fino - Potenciómetros y Servomotores</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>¡Bienvenidos al segundo parcial! Hasta ahora hemos trabajado con salidas digitales (encendido/apagado). Hoy nos adentramos en el mundo del control analógico y el movimiento de precisión. Aprenderemos a leer una perilla (potenciómetro) y a controlar un servomotor, un componente clave en robótica, automatización y cualquier proyecto que requiera mover algo a una posición exacta.</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista 1: El Potenciómetro</h3>
+            <p>Es una resistencia variable con tres pines. Los dos extremos se conectan a 5V y GND. El pin central (cursor) se mueve a lo largo de la resistencia, actuando como un divisor de voltaje. Al girar la perilla, el voltaje en el pin central cambia, y al leerlo con un pin analógico de Arduino, obtenemos un valor de 0 a 1023.</p>
+        </div>
+        <div class="protagonista-section">
+            <h3>⚙️ Protagonista 2: El Micro Servomotor SG90</h3>
+            <p>Un servomotor no gira continuamente como un motor normal. Es un motor de "posición". Le puedes ordenar que se mueva a un ángulo específico (entre 0 y 180 grados) y un circuito interno se encargará de mover el eje a esa posición y mantenerla, incluso si hay algo que intente moverlo.</p>
+        </div>
+
+        <h2>🧠 El Código: Mapeando la Realidad</h2>
+        <p>El reto es que el potenciómetro nos da un valor de 0 a 1023, pero el servo entiende ángulos de 0 a 180. Usaremos la poderosa función `map()` para "traducir" o re-escalar un rango de valores a otro.</p>
+        <pre class="code-block"><code>
+/*
+ * Misión 07: Control Fino
+ * Descripción: Controla la posición de un servomotor usando un potenciómetro.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+#include <Servo.h> // Incluimos la librería para controlar servos.
+
+Servo miServo;         // Creamos un objeto de tipo Servo.
+const int pinPot = A0;   // Pin analógico para el potenciómetro.
+const int pinServo = 9;  // Pin PWM para la señal del servo.
+
+int valorPot; // Para guardar la lectura del potenciómetro (0-1023).
+int angulo;   // Para guardar el ángulo calculado para el servo (0-180).
 
 void setup() {
-  miServo.attach(pinServo); 
+  miServo.attach(pinServo); // Asociamos nuestro objeto servo al pin 9.
 }
+
 void loop() {
+  // 1. Leemos el valor del potenciómetro.
   valorPot = analogRead(pinPot);
+  
+  // 2. Usamos map() para convertir el rango de lectura al rango del servo.
+  // map(valor_a_convertir, min_original, max_original, min_nuevo, max_nuevo)
   angulo = map(valorPot, 0, 1023, 0, 180);
+  
+  // 3. Le damos la orden al servo de moverse al ángulo calculado.
   miServo.write(angulo);
-  delay(15); 
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos un circuito donde al girar la perilla de un potenciómetro, controlemos la posición de un servomotor en tiempo real.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/wP4Q9wY.png" target="_blank" class="image-link">Ver Diagrama del Circuito 7</a><img src="https://i.imgur.com/wP4Q9wY.png" alt="Diagrama de conexión de un potenciómetro y un servomotor"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Librerías (`#include`):</strong> Bloques de código pre-hecho que nos dan funcionalidades extra, como controlar servos de manera sencilla.</li><li><strong>Función `map()`:</strong> Una herramienta muy útil que re-escala un número de un rango a otro.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+  
+  delay(15); // Pequeña pausa recomendada para que el servo tenga tiempo de moverse.
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Construiremos un circuito donde al girar la perilla de un potenciómetro, controlemos la posición de un servomotor en tiempo real. ¡Asegúrate de conectar correctamente los 3 cables del servo!</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 7</h3>
+            <img src="https://i.imgur.com/wP4Q9wY.png" alt="Diagrama de conexión de un potenciómetro y un servomotor">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Librerías (`#include`):</strong> Bloques de código pre-hecho que nos dan funcionalidades extra, como controlar servos de manera sencilla.</li>
+            <li><strong>Función `map()`:</strong> Una herramienta muy útil que re-escala un número de un rango a otro.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Rango Limitado:</strong> Modifica el código para que el servo solo se mueva en un rango más pequeño, por ejemplo, solo entre 45 y 135 grados, aunque gires toda la perilla.</li>
+            <li><strong>Barrido Automático:</strong> Desconecta el potenciómetro. ¿Puedes programar el servo para que se mueva lentamente de 0 a 180 grados, y luego de regreso, una y otra vez, como un limpiaparabrisas?</li>
+            <li><strong>Control por Botones:</strong> Añade dos botones. Uno debe mover el servo 10 grados a la derecha cada vez que se presiona, y el otro 10 grados a la izquierda.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

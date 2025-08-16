@@ -1,18 +1,90 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 5: Sensor LDR - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 5: El Ojo de la Noche - El Sensor de Luz LDR</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 El Protagonista de Hoy: La Fotoresistencia (LDR)</h2><p>Una LDR (Light Dependent Resistor) es una resistencia que cambia su valor según la cantidad de luz que recibe. Para leerla, usamos un "divisor de voltaje", que nos permite convertir ese cambio de resistencia en un voltaje que Arduino sí puede medir con un pin analógico.</p><pre class="code-block"><code>/* Misión 05: El Ojo de la Noche */
-const int pinLdr = A0;
-const int pinLed = 9;
-int valorLuz = 0;
-int umbralOscuridad = 300;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 5: Sensor LDR - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 5: El Ojo de la Noche - El Sensor de Luz LDR</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>Nuestros proyectos ya pueden reaccionar al tacto y al movimiento. Hoy les daremos la capacidad de "ver" la luz. Usaremos una LDR (Fotoresistencia) para crear un sistema que sepa si es de día o de noche, sentando las bases para proyectos como luces nocturnas automáticas o robots que siguen la luz.</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista de Hoy: La Fotoresistencia (LDR)</h3>
+            <p>Una LDR (Light Dependent Resistor) es una resistencia muy especial: su valor en Ohms cambia drásticamente según la cantidad de luz que la ilumina. A más luz, menor resistencia; a mayor oscuridad, mayor resistencia. El Arduino no puede medir resistencia directamente, pero sí puede medir voltaje. Por eso, usamos un <strong>Divisor de Voltaje</strong> (la LDR y una resistencia fija de 10kΩ) para convertir ese cambio de resistencia en un cambio de voltaje que podemos leer con un pin analógico.</p>
+        </div>
+
+        <h2>🧠 El Código: Midiendo la Oscuridad</h2>
+        <p>Usaremos la función `analogRead()` para obtener un valor entre 0 y 1023 que representa el nivel de luz. Luego, con un `if`, decidiremos si hay suficiente oscuridad para encender un LED.</p>
+        <pre class="code-block"><code>
+/*
+ * Misión 05: El Ojo de la Noche
+ * Descripción: Enciende un LED automáticamente cuando está oscuro.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+const int pinLdr = A0;      // Pin analógico para leer el divisor de voltaje.
+const int pinLed = 9;       // Usamos el pin 9 que es PWM (~).
+
+int valorLuz = 0;           // Variable para guardar la lectura del LDR.
+int umbralOscuridad = 300; // Umbral. Si la lectura es MENOR a esto, está oscuro.
+                            // Este valor puede necesitar ajuste.
 
 void setup() {
   pinMode(pinLed, OUTPUT);
+  Serial.begin(9600); // Para poder ver los valores del sensor.
 }
+
 void loop() {
+  // Leemos el valor del pin analógico y lo guardamos.
   valorLuz = analogRead(pinLdr);
+  
+  // Imprimimos el valor en el Monitor Serial para poder calibrar el umbral.
+  Serial.print("Valor de Luz: ");
+  Serial.println(valorLuz);
+
+  // Si el valor de luz es menor que nuestro umbral...
   if (valorLuz < umbralOscuridad) {
-    digitalWrite(pinLed, HIGH);
-  } else {
-    digitalWrite(pinLed, LOW);
+    digitalWrite(pinLed, HIGH); // ...encendemos la luz.
+  } else { // Si no...
+    digitalWrite(pinLed, LOW); // ...la apagamos.
   }
-  delay(200);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos una lámpara nocturna automática. Usaremos una lectura analógica (`analogRead`) para obtener un valor entre 0 y 1023 que representa la cantidad de luz.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/g8uX6qZ.png" target="_blank" class="image-link">Ver Diagrama del Circuito 5</a><img src="https://i.imgur.com/g8uX6qZ.png" alt="Diagrama de conexión del sensor de luz LDR"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Lectura Analógica:</strong> Medición de un voltaje continuo que se convierte a un valor numérico (0-1023 en Arduino).</li><li><strong>Divisor de Voltaje:</strong> Un circuito simple con dos resistencias en serie que nos permite obtener un voltaje de salida proporcional a la relación entre las resistencias.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+  delay(200); // Pequeña pausa.
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Construiremos una lámpara nocturna automática. El corazón del circuito es el divisor de voltaje formado por la LDR y la resistencia de 10kΩ. El punto medio es el que conectamos al pin A0.</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 5</h3>
+            <img src="https://i.imgur.com/g8uX6qZ.png" alt="Diagrama de conexión del sensor de luz LDR">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Lectura Analógica:</strong> Medición de un voltaje continuo que el Arduino convierte a un valor numérico (0-1023).</li>
+            <li><strong>Divisor de Voltaje:</strong> Un circuito simple con dos resistencias en serie que nos permite obtener un voltaje de salida proporcional a la relación entre las resistencias.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Luz de Emergencia Inversa:</strong> Haz que el LED se encienda cuando haya MUCHA luz, como una alarma que te avisa si alguien enciende la luz de tu cuarto.</li>
+            <li><strong>Luz Regulable:</strong> En lugar de solo encender o apagar el LED, usa `analogWrite()` para que el brillo del LED aumente a medida que se hace más oscuro.</li>
+            <li><strong>Calibración Automática:</strong> Al inicio del programa, haz que el Arduino mida la luz por 5 segundos y use ese valor promedio para establecer el `umbralOscuridad` automáticamente.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>

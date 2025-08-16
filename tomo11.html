@@ -1,26 +1,125 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tomo 11: Ultrasonido - Manual de Instrumentación</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="tomo-style.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&family=Source+Code+Pro&display=swap" rel="stylesheet"></head><body><header><div class="header-content"><h1>Tomo 11: Viendo con Sonido - Sensor Ultrasónico HC-SR04</h1></div></header><main class="tomo-content"><a href="index.html" class="back-link">&larr; Volver al Índice Principal</a><h2>🧠 El Protagonista de Hoy: El Sensor HC-SR04</h2><p>Este sensor funciona como un sonar: emite un pulso de sonido ultrasónico y mide el tiempo que tarda en regresar el eco. Conociendo la velocidad del sonido, podemos calcular la distancia a un objeto con gran precisión.</p><pre class="code-block"><code>/* Misión 11: Viendo con Sonido */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 11: Radar Visual - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 11: Radar Visual de Proximidad</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
+        <p>¡Bienvenidos al tercer parcial y a los sistemas avanzados! Hoy le daremos a nuestro Arduino un súper poder digno de un murciélago o un submarino: la <strong>ecolocalización</strong>. Usaremos un sensor ultrasónico no solo para medir distancias, sino para visualizar esa información de múltiples maneras: en una pantalla, con un indicador físico (servo) y en una barra de LEDs. ¡Construiremos un radar interactivo completo!</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista de Hoy: El Sensor Ultrasónico HC-SR04</h3>
+            <p>Este sensor funciona como un sonar: emite un pulso de sonido a una frecuencia tan alta que no podemos oírla (ultrasonido) desde su pin <strong>Trig</strong> (Disparador). Luego, escucha el "eco" de ese sonido rebotando en un objeto con su pin <strong>Echo</strong> (Eco). El tiempo que tarda el eco en regresar nos permite calcular la distancia con gran precisión usando la velocidad del sonido.</p>
+        </div>
+
+        <h2>🧠 El Código: El Cerebro del Radar Visual</h2>
+        <p>Este código integra la lectura del sensor, el control de la pantalla, el movimiento del servo y la lógica para la barra de LEDs, todo en un solo sketch.</p>
+        <pre class="code-block"><code>
+/*
+ * Misión 11 (Final): Radar Visual de Proximidad
+ * Descripción: Mide distancia, la muestra en LCD, mueve un servo y
+ * controla una barra de 8 LEDs de forma proporcional.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Servo.h>
+
 const int pinTrig = 9;
 const int pinEcho = 10;
+const int pinServo = 6;
+const int pinesLeds[] = {2, 3, 4, 5, 7, 8, 11, 12};
+const int numLeds = 8;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+Servo miServo;
+
 long duracion;
 int distancia;
+int angulo;
 
 void setup() {
   pinMode(pinTrig, OUTPUT);
   pinMode(pinEcho, INPUT);
-  Serial.begin(9600);
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(pinesLeds[i], OUTPUT);
+  }
+  miServo.attach(pinServo);
+  lcd.init();
+  lcd.backlight();
+  lcd.print("Radar Activado");
+  delay(1500);
 }
+
 void loop() {
   digitalWrite(pinTrig, LOW);
   delayMicroseconds(2);
   digitalWrite(pinTrig, HIGH);
   delayMicroseconds(10);
   digitalWrite(pinTrig, LOW);
-  
   duracion = pulseIn(pinEcho, HIGH);
   distancia = duracion * 0.0343 / 2;
-  
-  Serial.print("Distancia: ");
-  Serial.print(distancia);
-  Serial.println(" cm");
-  delay(500);
-}</code></pre><h2>🔌 Manos a la Obra: El Circuito</h2><p>Construiremos una cinta métrica digital. El pin `Trig` envía el sonido y el pin `Echo` lo recibe. Es importante conectarlos a los pines correctos de Arduino.</p><div class="image-container"><h3>Diagrama del Circuito</h3><a href="https://i.imgur.com/b9e2wHj.png" target="_blank" class="image-link">Ver Diagrama del Circuito 11</a><img src="https://i.imgur.com/b9e2wHj.png" alt="Diagrama de conexión del sensor ultrasónico HC-SR04"></div><h2>💡 Conceptos Clave de la Misión</h2><ul><li><strong>Ecolocalización:</strong> El principio de usar ondas (de sonido, en este caso) y sus ecos para localizar objetos en el espacio.</li><li><strong>Función `pulseIn()`:</strong> Mide la duración de un pulso (cuánto tiempo un pin se mantiene en estado `HIGH` o `LOW`), ideal para este sensor.</li></ul><a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a></main><footer><p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p></footer></body></html>
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Distancia:");
+  lcd.setCursor(0, 1);
+  lcd.print(distancia);
+  lcd.print(" cm");
+
+  angulo = map(distancia, 4, 50, 0, 180);
+  miServo.write(angulo);
+
+  int ledsEncendidos = map(distancia, 50, 4, 0, numLeds);
+  ledsEncendidos = constrain(ledsEncendidos, 0, numLeds);
+
+  for (int i = 0; i < numLeds; i++) {
+    if (i < ledsEncendidos) {
+      digitalWrite(pinesLeds[i], HIGH);
+    } else {
+      digitalWrite(pinesLeds[i], LOW);
+    }
+  }
+  delay(100);
+}
+        </code></pre>
+
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Este es nuestro circuito más poblado hasta ahora. Integraremos el sensor ultrasónico, el servo, la pantalla LCD y los 8 LEDs. La clave es la organización de los cables.</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 11</h3>
+            <img src="https://i.imgur.com/b9e2wHj.png" alt="Diagrama de conexión del sensor ultrasónico, servo, LCD y 8 LEDs">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Ecolocalización:</strong> El principio de usar ondas (de sonido, en este caso) y sus ecos para localizar objetos en el espacio.</li>
+            <li><strong>Función `pulseIn()`:</strong> Mide la duración de un pulso, ideal para este sensor.</li>
+            <li><strong>Visualización de Datos:</strong> Representar una variable (distancia) de múltiples formas (numérica, posicional, gráfica) para una mejor interpretación.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Indicador Visual de Estado:</strong> Transforma la barra de LEDs en un indicador de estado. Usa LEDs de diferentes colores (verdes, amarillos, rojos) para crear una escala de advertencia visual.</li>
+            <li><strong>Barrera de Estacionamiento Automática:</strong> Programa el servo para que simule una barrera. Cuando un objeto se acerque a menos de 10 cm, la barrera debe bajar (0 grados) y no subir hasta que el objeto se aleje.</li>
+            <li><strong>Radar Acústico de Mapeo:</strong> Añade un buzzer y sincronízalo con el servo. Haz que el servo "escanee" de 0 a 180 grados y que el buzzer emita "pings" cuyo tono cambie según la distancia detectada.</li>
+        </ul>
+        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>
