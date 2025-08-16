@@ -14,8 +14,10 @@
         </div>
     </header>
     <main class="tomo-content">
-        <a href="index.html" class="back-link">&larr; Volver al Índice Principal</a>
-        <p>Ya sabemos medir luz y movimiento. Hoy aprenderemos a medir temperatura con el sensor de precisión LM35. Pero no nos detendremos ahí. ¿Qué pasa si la señal de Arduino no es suficiente para activar un componente más grande, como un motor? Introduciremos al <strong>Transistor</strong>, el componente fundamental de la electrónica moderna, que actuará como un "amplificador" o interruptor electrónico para controlar cargas de mayor potencia.</p>
+<div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo9.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>        <p>Ya sabemos medir luz y movimiento. Hoy aprenderemos a medir temperatura con el sensor de precisión LM35. Pero no nos detendremos ahí. ¿Qué pasa si la señal de Arduino no es suficiente para activar un componente más grande, como un motor? Introduciremos al <strong>Transistor</strong>, el componente fundamental de la electrónica moderna, que actuará como un "amplificador" o interruptor electrónico para controlar cargas de mayor potencia.</p>
 
         <div class="protagonista-section">
             <h3>🧠 Protagonista 1: El Sensor de Temperatura LM35</h3>
@@ -88,7 +90,10 @@ void loop() {
             <li><strong>Control de Velocidad:</strong> Usa `analogWrite()` en el pin 9. ¿Puedes hacer que la velocidad del ventilador aumente a medida que sube la temperatura?</li>
             <li><strong>Termostato con Histéresis:</strong> Para evitar que el ventilador se encienda y apague constantemente, crea una "zona muerta": que se encienda a los 28°C pero no se apague hasta que baje de 26°C.</li>
         </ul>
-        <a href="index.html" class="back-link bottom-link">&larr; Volver al Índice Principal</a>
+        <div class="nav-links bottom-nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo9.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
     </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
@@ -96,3 +101,4 @@ void loop() {
 </body>
 
 </html>
+
