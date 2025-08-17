@@ -26,7 +26,12 @@
 
         <h2>🧠 El Código: El Sistema Operativo Final</h2>
         <p>Este es el código más completo del curso. Gestiona 4 pantallas, múltiples sensores, actuadores y entradas de usuario simultáneamente.</p>
-        <pre class="code-block"><code>
+        <div class="code-container">
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div>
+    <pre class="code-block"><code>
 /*
  * PROYECTO INTEGRADOR 3 (Definitivo): Estación Ambiental y Radar Gráfico
  * Por: Profe Campos
@@ -44,6 +49,7 @@
 // con todas las funciones: setup, loop, leerSensores, actualizarDataLog,
 // resetDataLog, comprobarAlertas y las 4 funciones de dibujo de pantalla)
         </code></pre>
+</div>
 
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Este es el circuito final. Combina todos los componentes que hemos usado en el parcial. La gestión del cableado en la protoboard será parte del reto para lograr un montaje limpio y funcional.</p>
@@ -69,7 +75,37 @@
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
+
 </body>
 
 </html>
+
 
