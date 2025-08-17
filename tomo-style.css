@@ -37,47 +37,50 @@
     text-decoration: underline;
 }
 
-/* --- NUEVO: Estilo Profesional para Bloques de Código --- */
+/* --- NUEVO: Estilo Sketch de Arduino --- */
 .code-container {
     border-radius: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     margin: 2rem 0;
-    overflow: hidden; /* Para que el radio se aplique a los hijos */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .code-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #e9ecef;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #ddd;
+    background-color: #00828A; /* Color azul-verde del IDE de Arduino */
+    padding: 0.6rem 1.2rem;
+    border-bottom: 1px solid #006C73;
 }
 .code-header span {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
-    color: #495057;
+    color: white;
+    font-size: 1rem;
 }
 .copy-btn {
-    background-color: #0A2A4E;
+    background-color: rgba(255, 255, 255, 0.2);
     color: white;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 0.4rem 0.8rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 .copy-btn:hover {
-    background-color: #F58220;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 .code-block {
-    background-color: #2d2d2d;
-    color: #f8f8f2;
+    background-color: #f7f7f7; /* Fondo claro como el sketch */
+    color: #434f54; /* Texto oscuro */
     font-family: 'Source Code Pro', monospace;
     padding: 1.5rem;
-    margin: 0; /* Reseteamos el margen del <pre> */
+    margin: 0;
     overflow-x: auto;
     white-space: pre-wrap;
+    font-size: 0.95rem; /* Un poco más grande para legibilidad */
+    line-height: 1.5;
 }
 /* --- Fin de los nuevos estilos --- */
 
