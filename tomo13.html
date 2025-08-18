@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
     
 </head>
 <body>
@@ -35,7 +34,7 @@
         <span>Código Arduino</span>
         <button class="copy-btn">Copiar</button>
     </div>
-    <code class="language-cpp">
+    <pre class="code-block"><code class="language-cpp">
 /*
  * PROYECTO INTEGRADOR 3 (Definitivo): Estación Ambiental y Radar Gráfico
  * Por: Profe Campos
@@ -84,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Busca todos los botones de copiar
     const allCopyButtons = document.querySelectorAll('.copy-btn');
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+    
     allCopyButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Encuentra el contenedor de código más cercano
@@ -111,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
 
 
 
