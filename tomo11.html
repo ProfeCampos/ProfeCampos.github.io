@@ -6,6 +6,8 @@
     <title>Tomo 11: Radar Visual - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
     <header>
@@ -30,7 +32,12 @@
 
         <h2>🧠 El Código: El Cerebro del Radar Visual</h2>
         <p>Este código integra la lectura del sensor, el control de la pantalla, el movimiento del servo y la lógica para la barra de LEDs, todo en un solo sketch.</p>
-        <pre class="code-block"><code>
+        <div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">
 /*
  * Misión 11 (Final): Radar Visual de Proximidad
  * Descripción: Mide distancia, la muestra en LCD, mueve un servo y
@@ -39,37 +46,50 @@
  * CECyTEM 05 Guacamayas
 */
 
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include <Servo.h>
+// --- LIBRERÍAS ---
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+#include &lt;Servo.h&gt;
 
-const int pinTrig = 9;
-const int pinEcho = 10;
-const int pinServo = 6;
-const int pinesLeds[] = {2, 3, 4, 5, 7, 8, 11, 12};
+// --- PINES ---
+const int pinTrig = 3;
+const int pinEcho = 2;
+const int pinServo = 5;
+// Array para los pines de los 8 LEDs
+const int pinesLeds[] = {6, 7, 8, 9, 10, 11, 12, 13};
 const int numLeds = 8;
 
+// --- OBJETOS ---
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 Servo miServo;
 
+// --- VARIABLES ---
 long duracion;
 int distancia;
 int angulo;
 
 void setup() {
+  Serial.begin(9600);
+  
   pinMode(pinTrig, OUTPUT);
   pinMode(pinEcho, INPUT);
+  
+  // Configurar todos los pines de los LEDs como salida
   for (int i = 0; i < numLeds; i++) {
     pinMode(pinesLeds[i], OUTPUT);
   }
+  
   miServo.attach(pinServo);
+  
   lcd.init();
   lcd.backlight();
   lcd.print("Radar Activado");
   delay(1500);
+  lcd.clear();
 }
 
 void loop() {
+  // --- PASO 1: MEDIR LA DISTANCIA ---
   digitalWrite(pinTrig, LOW);
   delayMicroseconds(2);
   digitalWrite(pinTrig, HIGH);
@@ -78,6 +98,11 @@ void loop() {
   duracion = pulseIn(pinEcho, HIGH);
   distancia = duracion * 0.0343 / 2;
 
+  // --- PASO 2: MOSTRAR EN MONITOR Y LCD ---
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+  
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Distancia:");
@@ -85,23 +110,31 @@ void loop() {
   lcd.print(distancia);
   lcd.print(" cm");
 
+  // --- PASO 3: MOVER EL SERVO ---
   angulo = map(distancia, 4, 50, 0, 180);
   miServo.write(angulo);
 
+  // --- PASO 4: CONTROLAR LA BARRA DE LEDS ---
+  // Mapeamos la distancia (de 50 a 4 cm) al número de LEDs (0 a 8)
+  // Nota: Los valores de distancia están invertidos para que a menor distancia, más LEDs se enciendan.
   int ledsEncendidos = map(distancia, 50, 4, 0, numLeds);
+  
+  // Nos aseguramos que el valor esté siempre entre 0 y 8
   ledsEncendidos = constrain(ledsEncendidos, 0, numLeds);
 
+  // Recorremos todos los LEDs y los encendemos o apagamos según corresponda
   for (int i = 0; i < numLeds; i++) {
     if (i < ledsEncendidos) {
-      digitalWrite(pinesLeds[i], HIGH);
+      digitalWrite(pinesLeds[i], HIGH); // Encendemos si su índice es menor
     } else {
-      digitalWrite(pinesLeds[i], LOW);
+      digitalWrite(pinesLeds[i], LOW); // Apagamos si su índice es mayor
     }
   }
+
   delay(100);
 }
         </code></pre>
-
+         </div>
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Este es nuestro circuito más poblado hasta ahora. Integraremos el sensor ultrasónico, el servo, la pantalla LCD y los 8 LEDs. La clave es la organización de los cables.</p>
         <div class="image-container">
@@ -129,9 +162,39 @@ void loop() {
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+        <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>
+
 
 
 
