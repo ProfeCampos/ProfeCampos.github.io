@@ -23,14 +23,23 @@
         <div class="protagonista-section">
             <h3>🧠 Protagonista 1: Sensor DHT11 (El Combo Digital 2x1)</h3>
             <p>El DHT11 es un sensor increíblemente práctico. Es como tener un termómetro y un medidor de humedad en un solo paquete digital. Con un solo pin de datos obtenemos dos mediciones.</p>
+       <div class="image-container">
+            <img src="dht11-pinout-o-patillaje-700x569.png" alt="pin out DTH11">
+        </div>
         </div>
         <div class="protagonista-section">
             <h3>⚙️ Protagonista 2: El Módulo de Relé (El Interruptor de Alto Voltaje)</h3>
             <p>¿Qué pasa si queremos controlar una lámpara de 120V? ¡NUNCA la conectes a tu Arduino! Para eso usamos un <strong>Relé</strong>. Es un interruptor electromagnético que usa una señal segura de 5V de Arduino para activar un interruptor interno, completamente aislado, que puede manejar alto voltaje de forma segura.</p>
+                <div class="image-container">
+            <img src="Single-Channel-Relay-Module-Pinout.jpg" alt="pin out RELE">
+                  </div>
         </div>
         <div class="protagonista-section">
             <h3>🖥️ Protagonista 3: La Pantalla LCD 16x2 con I2C</h3>
             <p>Para que nuestro proyecto sea independiente de la computadora, necesitamos una pantalla. La LCD 16x2 puede mostrar 2 filas de 16 caracteres. Para no usar todos nuestros pines, usamos un pequeño módulo <strong>I2C</strong> soldado detrás, que reduce los cables necesarios a solo 4: VCC, GND, SDA (A4) y SCL (A5).</p>
+               <div class="image-container">
+            <img src="I2C-LCD-Display-Pinout.png" alt="pin out LDC con I2C">
+                  </div>
         </div>
 
         <h2>🧠 El Código: El Centro de Comando</h2>
@@ -125,6 +134,7 @@ void loop() {
 </body>
 
 </html>
+
 
 
 
