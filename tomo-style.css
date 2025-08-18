@@ -72,14 +72,14 @@
     background-color: rgba(255, 255, 255, 0.4);
 }
 .code-block {
-    background-color: #f7f7f7; /* Fondo claro como el sketch */
-    color: #434f54; /* Texto oscuro */
+    background-color: #f5f2f0; /* Color de fondo del tema claro de Prism */
+    color: #434f54;
     font-family: 'Source Code Pro', monospace;
     padding: 1.5rem;
     margin: 0;
     overflow-x: auto;
     white-space: pre-wrap;
-    font-size: 0.95rem; /* Un poco más grande para legibilidad */
+    font-size: 0.95rem;
     line-height: 1.5;
 }
 /* --- Fin de los nuevos estilos --- */
@@ -117,3 +117,4 @@
 .tomo-content li {
     margin-bottom: 0.5rem;
 }
+
