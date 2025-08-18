@@ -22,10 +22,16 @@
         <div class="protagonista-section">
             <h3>🧠 Protagonista 1: El Sensor de Temperatura LM35</h3>
             <p>El LM35 es un sensor analógico muy preciso. Su magia reside en que su voltaje de salida es linealmente proporcional a la temperatura en grados Celsius. Específicamente, por cada grado Celsius, el voltaje en su pin de salida aumenta en 10 milivoltios (0.01V). Esto hace que calcular la temperatura sea una simple operación matemática.</p>
+                    <div class="image-container">
+                    <img src="LM35-Sensor-de-Temperatura-PINOUT.png" alt="pinout 2n2222">
+                    </div>   
         </div>
         <div class="protagonista-section">
             <h3>⚙️ Protagonista 2: El Transistor NPN (2N2222)</h3>
             <p>Un transistor es un interruptor controlado por electricidad. Tiene tres patas: Base, Colector y Emisor. Piensa en él como una llave de agua: al aplicar una pequeña corriente al pin de la <strong>Base</strong> (la perilla de la llave), permitimos que una corriente mucho más grande fluya desde el <strong>Colector</strong> hacia el <strong>Emisor</strong> (el tubo principal). Esto nos permite usar un pin de 5V de Arduino, que solo da unos 40mA, para controlar un motor que podría necesitar 200mA o más.</p>
+                   <div class="image-container">
+                    <img src="2N2222-NPN.png" alt="pinout 2n2222">
+                    </div>     
         </div>
 
         <h2>🧠 El Código: Un Termostato Automático</h2>
@@ -101,4 +107,5 @@ void loop() {
 </body>
 
 </html>
+
 
