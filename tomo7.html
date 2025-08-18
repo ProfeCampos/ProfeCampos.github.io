@@ -23,11 +23,16 @@
         <div class="protagonista-section">
             <h3>🧠 Protagonista 1: El Potenciómetro</h3>
             <p>Es una resistencia variable con tres pines. Los dos extremos se conectan a 5V y GND. El pin central (cursor) se mueve a lo largo de la resistencia, actuando como un divisor de voltaje. Al girar la perilla, el voltaje en el pin central cambia, y al leerlo con un pin analógico de Arduino, obtenemos un valor de 0 a 1023.</p>
+                   <div class="image-container">
+                   <img src="pot.png" alt="Diagrama de conexión de un potenciómetro y un servomotor">
+        </div>
         </div>
         <div class="protagonista-section">
             <h3>⚙️ Protagonista 2: El Micro Servomotor SG90</h3>
             <p>Un servomotor no gira continuamente como un motor normal. Es un motor de "posición". Le puedes ordenar que se mueva a un ángulo específico (entre 0 y 180 grados) y un circuito interno se encargará de mover el eje a esa posición y mantenerla, incluso si hay algo que intente moverlo.</p>
-        </div>
+                   <div class="image-container">
+                   <img src="Servo-Motor-Pinout.png" alt="Diagrama de conexión de un potenciómetro y un servomotor">
+                    </div>
 
         <h2>🧠 El Código: Mapeando la Realidad</h2>
         <p>El reto es que el potenciómetro nos da un valor de 0 a 1023, pero el servo entiende ángulos de 0 a 180. Usaremos la poderosa función `map()` para "traducir" o re-escalar un rango de valores a otro.</p>
@@ -96,4 +101,5 @@ void loop() {
 </body>
 
 </html>
+
 
