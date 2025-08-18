@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
 
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
-    
+   
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -34,7 +36,8 @@
                 <span>Código Arduino</span>
                 <button class="copy-btn">Copiar</button>
             </div>
-            <pre class="code-block"><code class="language-cpp">
+            
+                <pre><code class="language-cpp code-block">
 /*
  * PROYECTO INTEGRADOR 3 (Definitivo): Estación Ambiental y Radar Gráfico
  * Descripción: Mide temp/distancia, muestra en 4 pantallas OLED navegables,
@@ -344,8 +347,7 @@ void dibujarPantallaRadarNumerico() {
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+  <script>hljs.highlightAll();</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -378,6 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
 
 
 
