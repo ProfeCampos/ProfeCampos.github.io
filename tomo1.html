@@ -6,6 +6,9 @@
     <title>Tomo 1: Controlar la Luz - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -23,8 +26,13 @@
 
         <h2>🧠 El Cerebro de la Operación: El Código</h2>
         <p>Todo lo que hacemos con Arduino necesita un plan, y ese plan es el código. Este es el "idioma" que usaremos para darle instrucciones a nuestra placa.</p>
-        <pre class="code-block"><code>
-/*
+<div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">
+ /*
  * Misión 01: Blink - Hacer parpadear un LED
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
@@ -59,7 +67,7 @@ void loop() {
   // Y... el loop() vuelve a empezar. ¡Para siempre!
 }
         </code></pre>
-
+</div>
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Ahora vamos a construir el cuerpo de nuestra operación. Necesitamos darle al código algo físico que controlar. ¡Recuerda que el LED tiene una pata larga (+) y una corta (-)!</p>
          <div class="image-container">
@@ -91,9 +99,39 @@ void loop() {
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+    <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>
+
 
 
 
