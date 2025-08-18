@@ -23,6 +23,9 @@
         <div class="protagonista-section">
             <h3>🧠 Protagonista de Hoy: La Fotoresistencia (LDR)</h3>
             <p>Una LDR (Light Dependent Resistor) es una resistencia muy especial: su valor en Ohms cambia drásticamente según la cantidad de luz que la ilumina. A más luz, menor resistencia; a mayor oscuridad, mayor resistencia. El Arduino no puede medir resistencia directamente, pero sí puede medir voltaje. Por eso, usamos un <strong>Divisor de Voltaje</strong> (la LDR y una resistencia fija de 10kΩ) para convertir ese cambio de resistencia en un cambio de voltaje que podemos leer con un pin analógico.</p>
+            <div class="image-container">
+            <img src="LDR_Esquema.png" alt="pinout LDR">
+        </div>
         </div>
 
         <h2>🧠 El Código: Midiendo la Oscuridad</h2>
@@ -95,4 +98,5 @@ void loop() {
 </body>
 
 </html>
+
 
