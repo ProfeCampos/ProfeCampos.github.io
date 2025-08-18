@@ -6,6 +6,10 @@
     <title>Tomo 12: Termómetro Multiescala - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -38,18 +42,25 @@
 
         <h2>🧠 El Código: El Sistema Operativo del Termómetro</h2>
         <p>Este código avanzado usa una variable para saber qué menú mostrar (`pantallaActual`). El joystick cambia el valor de esta variable, y una estructura `if/else if` en el `loop` se encarga de dibujar la pantalla correcta.</p>
-        <pre class="code-block"><code>
+        
+ <div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">       
+        
 /*
  * Misión 12 (Modificada): Termómetro Multiescala con UI
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include &lt;OneWire.h&gt;
+#include &lt;DallasTemperature.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -68,7 +79,7 @@ float tempC, tempF, tempK, tempR;
 // setup(), loop(), dibujarPantallaCR(), dibujarPantallaFK(),
 // dibujarPantallaGrafica() y dibujarTermometro())
         </code></pre>
-
+        </div>
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Este circuito integra los tres módulos principales. La conexión más importante es la resistencia de <strong>4.7kΩ</strong>, que es obligatoria para que el protocolo One-Wire del sensor DS18B20 funcione correctamente.</p>
         <div class="image-container">
@@ -97,7 +108,38 @@ float tempC, tempF, tempK, tempR;
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+<script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
+
 </body>
 
 </html>
+
 
