@@ -37,21 +37,287 @@
     <pre class="code-block"><code class="language-cpp">
 /*
  * PROYECTO INTEGRADOR 3 (Definitivo): Estación Ambiental y Radar Gráfico
+ * Descripción: Mide temp/distancia, muestra en 4 pantallas OLED navegables,
+ * registra datos, controla servo y tiene alertas sonoras.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-#include &ltWire.h&gt
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include <Servo.h>
+// --- INCLUSIÓN DE LIBRERÍAS (NUESTRAS "CAJAS DE HERRAMIENTAS") ---
+#include <Wire.h>                // Necesaria para la comunicación I2C (la usan la pantalla y el sensor de presión).
+#include <Adafruit_GFX.h>        // Librería gráfica base de Adafruit. Nos da las funciones para dibujar formas (líneas, círculos, etc.).
+#include <Adafruit_SSD1306.h>    // Librería específica para controlar nuestra pantalla OLED.
+#include <OneWire.h>             // Librería para el protocolo de comunicación de 1 solo cable del sensor de temperatura.
+#include <DallasTemperature.h>   // Librería que simplifica la lectura del sensor DS18B20.
+#include <Servo.h>               // Librería para controlar fácilmente el servomotor.
 
-// (El código completo y súper comentado como se proporcionó anteriormente,
-// con todas las funciones: setup, loop, leerSensores, actualizarDataLog,
-// resetDataLog, comprobarAlertas y las 4 funciones de dibujo de pantalla)
-        </code></pre>
+// --- OBJETOS Y PINES (DEFINIENDO NUESTRO HARDWARE) ---
+// Creamos un "objeto" para la pantalla, le damos sus dimensiones y le decimos que use I2C.
+Adafruit_SSD1306 display(128, 64, &Wire, -1); 
+// Creamos los objetos para el protocolo One-Wire y el sensor de temperatura en el pin 2.
+OneWire oneWire(2);
+DallasTemperature sensors(&oneWire);
+// Creamos un objeto para nuestro servomotor.
+Servo miServo;
+
+// Definimos constantes para los pines. Es una excelente práctica de programación
+// para hacer el código más legible y fácil de modificar en el futuro.
+const int pinTrig = 9;
+const int pinEcho = 10;
+const int pinJoyY = A0;
+const int pinJoySW = 3;   // Pin para el botón del Joystick.
+const int pinServo = 6;
+const int pinBuzzer = 4;
+
+// --- VARIABLES GLOBALES (LA MEMORIA DE NUESTRO PROGRAMA) ---
+// Esta variable es el "cerebro" de nuestro menú. Guarda en qué pantalla estamos.
+int pantallaActual = 0; // 0=Principal, 1=DataLog, 2=Radar Gráfico, 3=Radar Numérico
+
+// Variables para almacenar las lecturas de los sensores.
+float distanciaCm = 0;
+float tempC = 0;
+long duracion; // Necesita ser 'long' para guardar valores grandes de microsegundos.
+
+// Variables para el registro de datos (Data Logging).
+// Las inicializamos con valores "imposibles" para que la primera lectura real los reemplace.
+float tempMax = -100; // Un valor muy bajo para asegurar que la primera lectura sea mayor.
+float tempMin = 200;  // Un valor muy alto para asegurar que la primera lectura sea menor.
+float distMax = 0;
+float distMin = 500; // Un valor alto para asegurar que la primera lectura sea menor.
+
+//=============================================================================
+// FUNCIÓN SETUP: Se ejecuta UNA SOLA VEZ al encender o resetear el Arduino.
+//=============================================================================
+void setup() {
+  // Iniciamos la comunicación con la computadora para poder ver mensajes de depuración.
+  Serial.begin(9600);
+  
+  // Iniciamos cada componente de hardware.
+  sensors.begin(); // Inicia la comunicación con el sensor de temperatura.
+  miServo.attach(pinServo); // Asocia nuestro objeto servo al pin físico 6.
+  
+  // Configuramos los pines (INPUT o OUTPUT).
+  pinMode(pinTrig, OUTPUT);
+  pinMode(pinEcho, INPUT);
+  pinMode(pinBuzzer, OUTPUT);
+  // Configuramos el pin del botón del joystick como entrada con una resistencia PULL-UP interna.
+  // Esto significa que el pin estará en HIGH por defecto, y en LOW cuando se presione (lo conecta a GND).
+  pinMode(pinJoySW, INPUT_PULLUP); 
+  
+  // Intentamos iniciar la pantalla OLED y mostramos un error si no se encuentra.
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("Fallo al iniciar SSD1306"));
+    for(;;); // Detiene el programa si no hay pantalla.
+  }
+  
+  // Mostramos una pantalla de bienvenida.
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(10, 10);
+  display.println("SISTEMA");
+  display.setCursor(10, 35);
+  display.println("INICIADO");
+  display.display(); // ¡Crucial! Este comando dibuja todo lo preparado en la pantalla.
+  delay(2000);
+}
+
+//=============================================================================
+// FUNCIÓN LOOP: El corazón del programa. Se repite infinitamente.
+//=============================================================================
+void loop() {
+  // --- NAVEGACIÓN Y ACCIONES DEL JOYSTICK ---
+  // Leemos el valor analógico del eje Y del joystick (0-1023).
+  int valorJoy = analogRead(pinJoyY);
+  if (valorJoy < 100) { // Si el joystick se mueve hacia abajo...
+    pantallaActual++; // ...pasamos a la siguiente pantalla.
+    if (pantallaActual > 3) pantallaActual = 0; // Si nos pasamos de la 3, volvemos a la 0.
+    delay(200); // Pequeña pausa para evitar que un solo toque cambie varias pantallas.
+  }
+  if (valorJoy > 900) { // Si el joystick se mueve hacia arriba...
+    pantallaActual--; // ...vamos a la pantalla anterior.
+    if (pantallaActual < 0) pantallaActual = 3; // Si nos pasamos de la 0, vamos a la 3.
+    delay(200);
+  }
+  // Si estamos en la pantalla de Data Log (1) y el botón se presiona (estado LOW)...
+  if (pantallaActual == 1 && digitalRead(pinJoySW) == LOW) {
+    resetDataLog(); // ...llamamos a la función para reiniciar los datos.
+  }
+
+  // --- LECTURA DE SENSORES ---
+  leerSensores(); // Llamamos a una función para mantener el loop limpio y ordenado.
+
+  // --- ACTUALIZACIÓN DE DATOS MÁXIMOS Y MÍNIMOS ---
+  actualizarDataLog(); // Llamamos a la función que compara y actualiza los registros.
+
+  // --- COMPROBACIÓN DE ALERTAS (SIEMPRE ACTIVA) ---
+  comprobarAlertas(); // Esta función revisa si hay condiciones de peligro en cada ciclo.
+
+  // --- ACTUALIZAR PANTALLA ---
+  display.clearDisplay(); // Limpiamos el buffer de la pantalla antes de dibujar de nuevo.
+  
+  // Decidimos qué pantalla dibujar basándonos en la variable 'pantallaActual'.
+  if (pantallaActual == 0) dibujarPantallaPrincipal();
+  else if (pantallaActual == 1) dibujarPantallaDataLog();
+  else if (pantallaActual == 2) dibujarPantallaRadarGrafico();
+  else if (pantallaActual == 3) dibujarPantallaRadarNumerico();
+  
+  display.display(); // Mostramos en la pantalla física todo lo que dibujamos.
+  delay(100); // Pausa general para dar estabilidad al ciclo.
+}
+
+//=============================================================================
+// --- FUNCIONES AUXILIARES ---
+// Dividir el código en funciones más pequeñas lo hace más legible y reutilizable.
+//=============================================================================
+
+// Función para leer todos los sensores y actualizar sus variables.
+void leerSensores() {
+  sensors.requestTemperatures(); 
+  tempC = sensors.getTempCByIndex(0);
+  
+  digitalWrite(pinTrig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pinTrig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pinTrig, LOW);
+  duracion = pulseIn(pinEcho, HIGH);
+  distanciaCm = duracion * 0.0343 / 2.0;
+  distanciaCm = constrain(distanciaCm, 0, 200); // Limitamos la lectura a un máximo de 200cm para evitar valores erróneos.
+}
+
+// Función para comparar las lecturas actuales con los máximos/mínimos guardados.
+void actualizarDataLog() {
+  if (tempC > tempMax) tempMax = tempC;
+  if (tempC < tempMin) tempMin = tempC;
+  if (distanciaCm > distMax) distMax = distanciaCm;
+  // Solo actualizamos el mínimo si la distancia es mayor a 0 para ignorar lecturas fallidas.
+  if (distanciaCm < distMin && distanciaCm > 0) distMin = distanciaCm; 
+}
+
+// Función para reiniciar los datos del Data Logger.
+void resetDataLog() {
+  tempMax = tempC; // Reinicia al valor actual.
+  tempMin = tempC; // Reinicia al valor actual.
+  distMax = distanciaCm;
+  distMin = distanciaCm;
+  
+  // Damos una retroalimentación al usuario para que sepa que la acción se realizó.
+  tone(pinBuzzer, 1500, 100); // Un "bip" agudo y corto.
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(15,25);
+  display.print("DATOS");
+  display.setCursor(5,45);
+  display.print("REINICIADOS");
+  display.display();
+  delay(1000); // Mostramos el mensaje por 1 segundo.
+}
+
+// Función que revisa las condiciones de peligro en cada ciclo del loop.
+void comprobarAlertas() {
+  // La condición es: si la temperatura supera 40 grados O (||) la distancia es menor a 10cm (y no es 0).
+  if (tempC > 40.0 || (distanciaCm < 10 && distanciaCm > 0)) {
+    // Indicador visual: un triángulo parpadeante en la esquina superior izquierda.
+    display.fillTriangle(0,0, 10,0, 0,10, SSD1306_WHITE);
+    // Alerta sonora: un tono de 2000 Hz por 150 milisegundos.
+    tone(pinBuzzer, 2000, 150);
+  }
+}
+
+// --- FUNCIONES DE DIBUJO DE PANTALLAS ---
+
+// Dibuja la pantalla principal (Temperatura).
+void dibujarPantallaPrincipal() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- MONitoreo AMBIENTAL ---");
+  display.setTextSize(2);
+  display.setCursor(5, 20);
+  display.print(tempC, 1);
+  display.print(" ");
+  display.setTextSize(1);
+  display.drawCircle(75, 22, 3, SSD1306_WHITE); // Símbolo de grados.
+  display.setTextSize(2);
+  display.print("C");
+  // El servo actúa como una aguja, mapeando un rango de temperatura (0-50°C) al rango del servo (0-180°).
+  int anguloTemp = map(tempC, 0, 50, 0, 180);
+  miServo.write(anguloTemp);
+  display.setTextSize(1);
+  display.setCursor(0, 55);
+  display.print("Mover Joystick para ver mas");
+}
+
+// Dibuja la pantalla de registro de datos.
+void dibujarPantallaDataLog() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- REGISTRO DE DATOS ---");
+  display.setCursor(0, 15);
+  display.print("T.Max: "); display.print(tempMax, 1); display.print("C");
+  display.setCursor(0, 28);
+  display.print("T.Min: "); display.print(tempMin, 1); display.print("C");
+  display.setCursor(0, 41);
+  display.print("D.Max: "); display.print(distMax, 0); display.print("cm");
+  display.setCursor(0, 54);
+  display.print("D.Min: "); display.print(distMin, 0); display.print("cm");
+}
+
+// Dibuja la pantalla del radar gráfico.
+void dibujarPantallaRadarGrafico() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- RADAR GRAFICO ---");
+  
+  // Esta lógica crea un barrido continuo del servo de 0 a 180 y de regreso.
+  static int anguloScan = 0; // 'static' hace que la variable recuerde su valor entre llamadas a la función.
+  static int direccion = 1; // 1 para adelante, -1 para atrás.
+  anguloScan += direccion;
+  if (anguloScan >= 180 || anguloScan <= 0) {
+    direccion *= -1; // Invierte la dirección al llegar a los extremos.
+  }
+  miServo.write(anguloScan);
+
+  // Dibujar el arco del radar usando una función de la librería GFX.
+  display.drawArc(64, 63, 60, 60, 0, 180, SSD1306_WHITE);
+
+  // Dibujar la línea de barrido. Requiere algo de trigonometría (seno y coseno) para
+  // calcular el punto final (x2, y2) de la línea basándose en el ángulo del servo.
+  float anguloRad = anguloScan * PI / 180.0; // Convertimos el ángulo a radianes.
+  int x2 = 64 - cos(anguloRad) * 60;
+  int y2 = 63 - sin(anguloRad) * 60;
+  display.drawLine(64, 63, x2, y2, SSD1306_WHITE);
+
+  // Si detectamos un objeto dentro del rango del radar (60cm)...
+  if (distanciaCm < 60) {
+    // ...calculamos su posición en la pantalla basándonos en el ángulo actual del servo y la distancia medida.
+    float anguloBlip = miServo.read() * PI / 180.0;
+    int xBlip = 64 - cos(anguloBlip) * distanciaCm;
+    int yBlip = 63 - sin(anguloBlip) * distanciaCm;
+    display.fillCircle(xBlip, yBlip, 3, SSD1306_WHITE); // Dibujamos el "blip" del objeto.
+  }
+}
+
+// Dibuja la pantalla del radar numérico.
+void dibujarPantallaRadarNumerico() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- RADAR DE PROXIMIDAD ---");
+  display.setTextSize(3);
+  display.setCursor(5, 25);
+  display.print(distanciaCm, 0);
+  display.setTextSize(2);
+  display.print("cm");
+  // La barra se llena a medida que el objeto se acerca (mapeo inverso de distancia).
+  int barra = map(distanciaCm, 100, 5, 0, 128);
+  barra = constrain(barra, 0, 128);
+  display.fillRect(0, 58, barra, 6, SSD1306_WHITE);
+  // El servo actúa como un indicador de aguja, también inverso a la distancia.
+  int anguloDist = map(distanciaCm, 5, 100, 180, 0);
+  miServo.write(anguloDist);
+}
+
+
 </div>
 
         <h2>🔌 Manos a la Obra: El Circuito</h2>
@@ -113,6 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
 
 
 
