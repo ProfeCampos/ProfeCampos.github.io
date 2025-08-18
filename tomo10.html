@@ -6,6 +6,8 @@
     <title>Tomo 10: Proyecto 2 - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
     <header>
@@ -27,62 +29,96 @@
 
         <h2>🧠 El Código: Un Sistema de Alerta Multinivel</h2>
         <p>Construiremos un termostato que lee la temperatura con el LM35, la muestra en la LCD, y toma acciones por niveles: si hace un poco de calor, enciende un ventilador (con transistor); si hace mucho calor, además del ventilador, activa una alarma (con un relé).</p>
-        <pre class="code-block"><code>
+        <div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">
 /*
  * PROYECTO INTEGRADOR 2: Estación de Control Térmico
- * Descripción: Sistema de control con dos umbrales de temperatura
- * que activa diferentes actuadores.
+ * Descripción: Controla un ventilador y una alarma de foco según la temperatura.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
 
-const int pinSensor = A0;         // Pin del sensor LM35.
-const int pinVentilador = 9;      // Pin para el transistor del ventilador.
-const int pinAlarma = 7;          // Pin para el relé de la alarma.
-const float UMBRAL_VENTILADOR = 28.0; // 1er nivel de alerta.
-const float UMBRAL_PELIGRO = 35.0;    // 2do nivel de alerta.
+// --- PINES ---
+const int pinSensor = A0;
+const int pinVentilador = 9; // Controla el transistor
+const int pinFoco = 7;       // Controla el relé
 
+// --- UMBRALES ---
+const float UMBRAL_VENTILADOR = 30.0;
+const float UMBRAL_PELIGRO = 38.0;
+
+// --- OBJETOS ---
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup() {
   pinMode(pinVentilador, OUTPUT);
-  pinMode(pinAlarma, OUTPUT);
-  digitalWrite(pinVentilador, LOW);
-  digitalWrite(pinAlarma, LOW);
+  pinMode(pinFoco, OUTPUT);
+  
   lcd.init();
   lcd.backlight();
+  lcd.print("Control de Clima");
+  lcd.setCursor(0, 1);
+  lcd.print("    V 1.0");
+  delay(2000);
+  lcd.clear();
 }
 
 void loop() {
-  // Leemos y convertimos la temperatura del LM35.
-  float temp = ((analogRead(pinSensor) / 1023.0) * 5.0) * 100;
-  
-  // Mostramos la temperatura en la LCD.
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Temp: "); lcd.print(temp, 1); lcd.print(" C");
-  
-  // Cadena de decisiones:
-  if (temp > UMBRAL_PELIGRO) { // 1. ¿Supera el umbral de peligro?
-    lcd.setCursor(0, 1); lcd.print(">> PELIGRO <<");
-    digitalWrite(pinVentilador, HIGH);
-    digitalWrite(pinAlarma, HIGH);
-  } else if (temp > UMBRAL_VENTILADOR) { // 2. Si no, ¿supera el umbral del ventilador?
-    lcd.setCursor(0, 1); lcd.print("Enfriando...");
-    digitalWrite(pinVentilador, HIGH);
-    digitalWrite(pinAlarma, LOW);
-  } else { // 3. Si no se cumple ninguna de las anteriores...
-    lcd.setCursor(0, 1); lcd.print("Estado: Normal");
+  // --- LECTURA Y CÁLCULO DE TEMPERATURA (LM35) ---
+  int valorSensor = analogRead(pinSensor);
+  float voltaje = (valorSensor / 1023.0) * 5.0;
+  float temperatura = voltaje * 100;
+
+  // --- LÓGICA DE CONTROL POR NIVELES ---
+  if (temperatura < UMBRAL_VENTILADOR) {
+    // Nivel 1: Normal
+    lcd.setCursor(0, 0);
+    lcd.print("Temp: ");
+    lcd.print(temperatura);
+    lcd.print(" C ");
+    lcd.setCursor(0, 1);
+    lcd.print("Estado: Normal  ");
+    
     digitalWrite(pinVentilador, LOW);
-    digitalWrite(pinAlarma, LOW);
+    digitalWrite(pinFoco, LOW);
+
+  } else if (temperatura >= UMBRAL_VENTILADOR && temperatura < UMBRAL_PELIGRO) {
+    // Nivel 2: Enfriando
+    lcd.setCursor(0, 0);
+    lcd.print("Temp: ");
+    lcd.print(temperatura);
+    lcd.print(" C ");
+    lcd.setCursor(0, 1);
+    lcd.print("Estado: Enfriando");
+
+    digitalWrite(pinVentilador, HIGH); // Ventilador ON
+    digitalWrite(pinFoco, LOW);      // Foco OFF
+
+  } else {
+    // Nivel 3: Peligro
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("!!! ALERTA !!!");
+    lcd.setCursor(0, 1);
+    lcd.print("Temp: ");
+    lcd.print(temperatura);
+    lcd.print(" C");
+
+    digitalWrite(pinVentilador, HIGH); // Ventilador ON
+    digitalWrite(pinFoco, HIGH);     // Foco ON (Alarma)
   }
+
   delay(1000);
 }
         </code></pre>
-
+</div>
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Integraremos el circuito del LM35 + Transistor con el de la LCD + Relé, creando un sistema de control autónomo y con múltiples niveles de acción.</p>
         <div class="image-container">
@@ -109,7 +145,37 @@ void loop() {
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+      <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>
+
 
