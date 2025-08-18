@@ -21,8 +21,11 @@
         <p>En nuestra misión anterior, le dimos "voz" al Arduino para que controlara un LED. Ahora, le daremos "oídos". Aprenderemos a usar un pulsador, un componente fundamental que permite al usuario interactuar con el circuito. Haremos que nuestro Arduino reaccione a nuestras órdenes.</p>
 
         <div class="protagonista-section">
-            <h3>🧠 Protagonista de Hoy: El Pulsador Táctil</h3>
+            <h3>🧠 Protagonista de Hoy: El Push Botton</h3>
             <p>Un pulsador es un interruptor momentáneo. Cuando lo presionas, cierra un circuito y deja pasar la corriente. Cuando lo sueltas, se abre de nuevo. El reto es que, cuando el botón está abierto, el pin de Arduino queda "flotando", sin un estado claro. Para solucionar esto, usamos una resistencia <strong>PULL-UP</strong>, que mantiene el pin en estado ALTO (HIGH) por defecto, y al presionar el botón (conectado a GND), lo llevamos a BAJO (LOW). Afortunadamente, ¡Arduino tiene una resistencia PULL-UP interna que podemos activar por software!</p>
+            <div class="image-container">
+            <img src="pulsadores_protoboard.jpg" alt="forma de conectar botón">
+        </div>
         </div>
 
         <h2>🧠 El Código: Leyendo el Mundo Exterior</h2>
@@ -93,4 +96,5 @@ void loop() {
 </body>
 
 </html>
+
 
