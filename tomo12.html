@@ -49,8 +49,7 @@
         <button class="copy-btn">Copiar</button>
     </div> 
 <pre><code class="language-cpp code-block">       
-        
-/*
+ /*
  * Misión 12 (Modificada): Termómetro Multiescala con UI
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
@@ -62,22 +61,195 @@
 #include &lt;Adafruit_GFX.h&gt;
 #include &lt;Adafruit_SSD1306.h&gt;
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
+// --- CONFIGURACIÓN DE PANTALLA ---
+// Definimos constantes para el tamaño de nuestra pantalla. Es una buena práctica
+// para no tener "números mágicos" esparcidos por el código.
+#define SCREEN_WIDTH 128 // Ancho de la pantalla OLED en píxeles.
+#define SCREEN_HEIGHT 64 // Alto de la pantalla OLED en píxeles.
+
+// Creamos un "objeto" para nuestra pantalla. Piensa en esto como darle un nombre
+// y asignarle sus características para poder darle órdenes después.
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-#define ONE_WIRE_BUS 2
+// --- CONFIGURACIÓN DEL SENSOR ---
+#define ONE_WIRE_BUS 2 // Le decimos al programa que nuestro sensor DS18B20 está en el Pin Digital 2.
+
+// Creamos los objetos necesarios para manejar la comunicación One-Wire y el sensor.
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-const int pinJoyY = A0;
+// --- CONFIGURACIÓN DEL JOYSTICK ---
+const int pinJoyY = A0; // Le decimos al programa que leeremos el eje Y del joystick en el Pin Analógico 0.
 
-int pantallaActual = 0;
-float tempC, tempF, tempK, tempR;
+// --- VARIABLES GLOBALES ---
+// Estas variables son "globales" porque se pueden usar en cualquier parte del programa.
 
-// (El resto del código como se proporcionó anteriormente, con las funciones
-// setup(), loop(), dibujarPantallaCR(), dibujarPantallaFK(),
-// dibujarPantallaGrafica() y dibujarTermometro())
+// Esta es la variable MÁS IMPORTANTE para el menú. Actúa como un "marcador de página".
+// Nos dice en qué pantalla estamos actualmente. 0=C/R, 1=F/K, 2=Gráficos.
+int pantallaActual = 0; 
+
+// Variables para almacenar las temperaturas en las diferentes escalas.
+// Usamos el tipo "float" porque las temperaturas pueden tener decimales.
+float tempC = 0.0; // Grados Celsius
+float tempF = 0.0; // Grados Fahrenheit
+float tempK = 0.0; // Grados Kelvin
+float tempR = 0.0; // Grados Rankine
+
+// La función setup() se ejecuta UNA SOLA VEZ al inicio del programa.
+void setup() {
+  // Iniciamos la comunicación con el Monitor Serial de la computadora. Es útil para depurar.
+  Serial.begin(9600);
+  
+  // Iniciamos el sensor de temperatura.
+  sensors.begin();
+
+  // Intentamos iniciar la pantalla OLED.
+  // Si la función 'begin' devuelve 'false' (falso), significa que no encontró la pantalla.
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
+    Serial.println(F("Fallo al iniciar SSD1306")); // Mandamos un mensaje de error al monitor serial.
+    for(;;); // Creamos un bucle infinito para detener el programa si la pantalla no funciona.
+  }
+  
+  // Mostramos un mensaje de bienvenida en la pantalla OLED.
+  display.clearDisplay();       // Primero, nos aseguramos de que la pantalla esté limpia.
+  display.println("Iniciando..."); // Escribimos el texto.
+  display.display();            // ¡Muy importante! Este comando "dibuja" en la pantalla física lo que preparamos.
+  delay(1000);                  // Esperamos un segundo para que se pueda leer.
+}
+
+// La función loop() se repite infinitamente mientras el Arduino tenga energía.
+void loop() {
+  // --- PASO 1: LEER TEMPERATURA Y HACER LAS CONVERSIONES ---
+  // Le pedimos a todos los sensores en el bus One-Wire que midan la temperatura.
+  sensors.requestTemperatures(); 
+  
+  // Obtenemos la temperatura en Celsius del primer sensor que encuentre (índice 0).
+  tempC = sensors.getTempCByIndex(0);
+  
+  // Calculamos las otras escalas a partir de los grados Celsius.
+  tempF = tempC * 9.0 / 5.0 + 32.0;       // Fórmula de conversión a Fahrenheit.
+  tempK = tempC + 273.15;                 // Fórmula de conversión a Kelvin.
+  tempR = (tempC + 273.15) * 9.0 / 5.0;   // Fórmula de conversión a Rankine.
+
+  // --- PASO 2: LEER EL JOYSTICK PARA NAVEGAR ENTRE PANTALLAS ---
+  // Leemos el valor analógico del eje Y del joystick. Será un número entre 0 y 1023.
+  int valorJoy = analogRead(pinJoyY);
+  
+  // Si el valor es muy bajo (joystick movido hacia abajo)...
+  if (valorJoy < 100) {
+    pantallaActual++; // ...incrementamos nuestro "marcador de página".
+    // Si nos pasamos de la última página (2), volvemos a la primera (0).
+    if (pantallaActual > 2) pantallaActual = 0;
+    delay(200); // Pequeño delay para evitar que cambie de pantalla múltiples veces con un solo toque.
+  }
+  
+  // Si el valor es muy alto (joystick movido hacia arriba)...
+  if (valorJoy > 900) {
+    pantallaActual--; // ...decrementamos nuestro "marcador de página".
+    // Si nos pasamos de la primera página (0), vamos a la última (2).
+    if (pantallaActual < 0) pantallaActual = 2;
+    delay(200); // Pequeño delay para evitar saltos múltiples.
+  }
+
+  // --- PASO 3: DIBUJAR LA PANTALLA CORRESPONDIENTE ---
+  display.clearDisplay();            // Limpiamos lo que había antes en la pantalla.
+  display.setTextColor(SSD1306_WHITE); // Fijamos el color del texto a blanco.
+
+  // Usando 'if / else if', decidimos qué función de dibujo llamar
+  // basándonos en el valor de nuestro "marcador de página".
+  if (pantallaActual == 0) {
+    dibujarPantallaCR();
+  } else if (pantallaActual == 1) {
+    dibujarPantallaFK();
+  } else if (pantallaActual == 2) {
+    dibujarPantallaGrafica();
+  }
+
+  // Finalmente, después de preparar todo, actualizamos la pantalla física.
+  display.display();
+  delay(100); // Pequeña pausa general antes de empezar el loop de nuevo.
+}
+
+// --- FUNCIONES AUXILIARES DE DIBUJO ---
+// Dividir el código en funciones hace que sea mucho más organizado y fácil de leer.
+
+// Función para dibujar la primera pantalla (Celsius y Rankine).
+void dibujarPantallaCR() {
+  // Dibuja un ícono simple que cambia con la temperatura.
+  if (tempC >= 25) { // Si hace calor...
+    display.fillCircle(110, 15, 10, SSD1306_WHITE); // ...dibuja un sol.
+  } else { // Si hace frío...
+    display.setTextSize(2); display.setCursor(105, 10); display.print("*"); // ...dibuja un copo de nieve.
+  }
+  
+  // Dibuja la temperatura en Celsius.
+  display.setTextSize(2);      // Letra de tamaño mediano.
+  display.setCursor(5, 10);    // Posiciona el cursor en la columna 5, fila 10.
+  display.print(tempC, 1);     // Imprime la variable tempC con 1 decimal.
+  display.print(" C");
+
+  // Dibuja la temperatura en Rankine.
+  display.setTextSize(2);
+  display.setCursor(5, 40);
+  display.print(tempR, 1);
+  display.print(" R");
+}
+
+// Función para dibujar la segunda pantalla (Fahrenheit y Kelvin).
+void dibujarPantallaFK() {
+  // Dibuja un ícono de termómetro usando formas básicas.
+  display.drawRect(105, 10, 15, 45, SSD1306_WHITE); // El cuerpo del termómetro.
+  display.fillCircle(112, 55, 7, SSD1306_WHITE);    // El bulbo del termómetro.
+  
+  // Dibuja la temperatura en Fahrenheit.
+  display.setTextSize(2);
+  display.setCursor(5, 10);
+  display.print(tempF, 1);
+  display.print(" F");
+
+  // Dibuja la temperatura en Kelvin.
+  display.setTextSize(2);
+  display.setCursor(5, 40);
+  display.print(tempK, 1);
+  display.print(" K");
+}
+
+// Función para dibujar la tercera pantalla (los 4 termómetros gráficos).
+void dibujarPantallaGrafica() {
+  // Dibuja el encabezado de la tabla.
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.println("  C    F    K    R");
+  display.drawLine(0, 10, 127, 10, SSD1306_WHITE); // Línea divisoria.
+
+  // Llama a nuestra función 'dibujarTermometro' para cada escala de temperatura.
+  // Le pasamos la posición X donde queremos dibujarlo, el valor a mostrar, y los
+  // valores mínimo y máximo de esa escala para la barra gráfica.
+  dibujarTermometro(10, tempC, -10, 50);    // Rango para Celsius: de -10 a 50
+  dibujarTermometro(40, tempF, 14, 122);    // Rango para Fahrenheit (equivalente a -10/50 C)
+  dibujarTermometro(70, tempK, 263, 323);   // Rango para Kelvin (equivalente a -10/50 C)
+  dibujarTermometro(100, tempR, 473, 581);  // Rango para Rankine (equivalente a -10/50 C)
+}
+
+// Función súper útil para dibujar una barra de termómetro en una posición X.
+void dibujarTermometro(int x, float valor, float minVal, float maxVal) {
+  int altoBarra = 50; // La altura máxima en píxeles que tendrá nuestro termómetro.
+  
+  // Aquí ocurre la magia: usamos map() para convertir el rango de temperatura
+  // (ej. -10 a 50) al rango de píxeles (0 a 50).
+  int llenado = map(valor, minVal, maxVal, 0, altoBarra);
+  
+  // La función constrain() es un seguro. Se asegura de que el valor de 'llenado'
+  // nunca sea menor que 0 ni mayor que la altura de la barra.
+  llenado = constrain(llenado, 0, altoBarra);
+  
+  // Dibuja el contorno exterior del termómetro.
+  display.drawRect(x, 12, 15, altoBarra + 2, SSD1306_WHITE);
+  
+  // Dibuja el relleno. La lógica de la posición 'y' es un poco tricky:
+  // (13 + (altoBarra - llenado)) hace que el rectángulo se "llene" desde abajo hacia arriba.
+  display.fillRect(x+1, 13 + (altoBarra - llenado), 13, llenado, SSD1306_WHITE);
+}
         </code></pre>
         </div>
         <h2>🔌 Manos a la Obra: El Circuito</h2>
@@ -141,5 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
+
 
 
