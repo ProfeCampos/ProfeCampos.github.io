@@ -6,6 +6,8 @@
     <title>Tomo 5: Sensor LDR - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
     <header>
@@ -30,7 +32,12 @@
 
         <h2>🧠 El Código: Midiendo la Oscuridad</h2>
         <p>Usaremos la función `analogRead()` para obtener un valor entre 0 y 1023 que representa el nivel de luz. Luego, con un `if`, decidiremos si hay suficiente oscuridad para encender un LED.</p>
-        <pre class="code-block"><code>
+        <div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">
 /*
  * Misión 05: El Ojo de la Noche
  * Descripción: Enciende un LED automáticamente cuando está oscuro.
@@ -67,7 +74,7 @@ void loop() {
   delay(200); // Pequeña pausa.
 }
         </code></pre>
-
+</div> 
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Construiremos una lámpara nocturna automática. El corazón del circuito es el divisor de voltaje formado por la LDR y la resistencia de 10kΩ. El punto medio es el que conectamos al pin A0.</p>
         <div class="image-container">
@@ -95,8 +102,38 @@ void loop() {
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+    <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>
+
 
 
