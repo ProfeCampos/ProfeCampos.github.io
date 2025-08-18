@@ -6,6 +6,8 @@
     <title>Tomo 7: Servos - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
     <header>
@@ -36,14 +38,19 @@
 
         <h2>🧠 El Código: Mapeando la Realidad</h2>
         <p>El reto es que el potenciómetro nos da un valor de 0 a 1023, pero el servo entiende ángulos de 0 a 180. Usaremos la poderosa función `map()` para "traducir" o re-escalar un rango de valores a otro.</p>
-        <pre class="code-block"><code>
+        <div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">
 /*
  * Misión 07: Control Fino
  * Descripción: Controla la posición de un servomotor usando un potenciómetro.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
-#include <Servo.h> // Incluimos la librería para controlar servos.
+#include &lt;Servo.h&gt; // Incluimos la librería para controlar servos.
 
 Servo miServo;         // Creamos un objeto de tipo Servo.
 const int pinPot = A0;   // Pin analógico para el potenciómetro.
@@ -70,7 +77,7 @@ void loop() {
   delay(15); // Pequeña pausa recomendada para que el servo tenga tiempo de moverse.
 }
         </code></pre>
-
+ </div>
         <h2>🔌 Manos a la Obra: El Circuito</h2>
         <p>Construiremos un circuito donde al girar la perilla de un potenciómetro, controlemos la posición de un servomotor en tiempo real. ¡Asegúrate de conectar correctamente los 3 cables del servo!</p>
         <div class="image-container">
@@ -98,8 +105,38 @@ void loop() {
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+      <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
 </body>
 
 </html>
+
 
 
