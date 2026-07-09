@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador 1 - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>¡Proyecto Integrador 1! El Sistema de Control Vial Inteligente y Autónomo</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="tomo5.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Volver al Índice &rarr;</a>
+        </div>
+        
+        <p>¡Llegó el momento de la verdad, ingenieros del CECyTEM! A lo largo de este parcial hemos aprendido a controlar salidas de luz, interpretar botones sin ruido eléctrico, generar alertas acústicas inclusivas con el buzzer, optimizar código con bucles <code>for</code> y leer el entorno en tiempo real gracias a la fotorresistencia (LDR) y el Monitor Serial.</p>
+        
+        <p>En el mundo profesional, un ingeniero no trabaja con piezas sueltas; su verdadero valor radica en la capacidad de integrar diferentes tecnologías para resolver un problema de la sociedad. Hoy, tu misión será fusionar todo lo aprendido para programar un <strong>Sistema de Control Vial Inteligente y Autónomo</strong> capaz de tomar decisiones por sí mismo según la hora del día.</p>
+
+        <div class="protagonista-section" style="background-color: #f8f9fa; border-left-color: #007bff;">
+            <h3>📋 Las Reglas del Desafío (Requerimientos del Sistema)</h3>
+            <p>Tu prototipo final debe utilizar la maqueta completa que mantuviste armada (5 LEDs, 1 Buzzer, 1 Botón y 1 LDR) y reaccionar exactamente bajo las siguientes condiciones automáticas:</p>
+            
+            <h4 style="color: #d35400;">☀️ FASE 1: Operación Diurna (Cuando la LDR detecta Luz)</h4>
+            <p>El sistema debe comportarse como el Semáforo Inclusivo de una gran avenida:</p>
+            <ul>
+                <li>El semáforo de autos debe permanecer en <strong>Verde</strong> fijo y el peatonal en <strong>Rojo</strong> fijo.</li>
+                <li>El sistema debe estar vigilando el botón constantemente. Si un peatón presiona el botón, se activa la función personalizada de cruce: los autos frenan (Verde ➡️ Amarillo ➡️ Rojo) y el semáforo peatonal cambia a <strong>Verde</strong> acompañado de los pitidos intermitentes del buzzer (optimizados con tu bucle <code>for</code>).</li>
+                <li>Al terminar el tiempo de cruce y los parpadeos estroboscópicos de prisa, el sistema regresa de forma segura a la normalidad diurna.</li>
+            </ul>
+
+            <h4 style="color: #2c3e50; margin-top: 20px;">🌙 FASE 2: Operación Nocturna (Cuando la LDR detecta Oscuridad)</h4>
+            <p>En cuanto cubras la LDR con tu mano o apagues las luces del laboratorio (simulando la noche), el Arduino debe suspender inmediatamente el ciclo del botón y activar el protocolo de ahorro y precaución:</p>
+            <ul>
+                <li>El semáforo peatonal se apaga o se queda en <strong>Rojo</strong> fijo por seguridad.</li>
+                <li>El LED <strong>Amarillo</strong> de los autos debe parpadear lentamente de forma infinita (0.5 segundos encendido, 0.5 segundos apagado) para avisar a los conductores nocturnos que deben avanzar con precaución.</li>
+                <li>En esta fase, <strong>el botón peatonal queda completamente desactivado</strong> o ignora las solicitudes de cruce.</li>
+                <li>En cuanto la LDR vuelva a detectar luz (amanece), el semáforo debe regresar de forma automática e instantánea a la Fase Diurna.</li>
+            </ul>
+        </div>
+
+        <h2>🛠️ Componentes Necesarios:</h2>
+        <ul>
+            <li>Tu circuito del semáforo ya armado.</li>
+            <li>1 Fotorresistencia (LDR).</li>
+            <li>1 Resistencia de 10k Oms (Marrón, Negro, Naranja) para hacer un divisor de voltaje.</li>
+            <li>2 Cables jumper adicionales.</li>
+        </ul>
+
+        <h2>📝 Instrucciones de Conexión:</h2>
+        <ol>
+            <li>Coloca la LDR en un extremo libre de tu protoboard.</li>
+            <li>Conecta una de sus patitas directamente a la línea de <strong>5V</strong> del Arduino.</li>
+            <li>La otra patita de la LDR se conectará a dos lugares al mismo tiempo (un nodo):
+                <ul>
+                    <li>Conecta una resistencia de 10k Oms que vaya directo a la línea de <strong>GND</strong>.</li>
+                    <li>Conecta un cable jumper desde esa misma unión hacia el <strong>Pin Analógico A0</strong> del Arduino.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <img src="Proyecto1.png" alt="Diagrama de TINKERCAD mostrando el circuito completo del semáforo inteligente con LDR">
+        </div>
+
+        <h2>🧠 El Código: El Semáforo que Detecta la Oscuridad</h2>
+        <p>Observa con atención cómo el <code>void loop()</code> ahora toma una decisión inteligente basada en la luz antes de permitir el funcionamiento del botón.</p>
+        
+        <div class="code-container"> 
+    <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+    </div> 
+<pre><code class="language-cpp code-block">
+/*
+ * Proyecto Integrador 1: Sistema de Control Vial Inteligente 
+ * Alumno(s): [Tu Nombre Aquí] 
+ * Grupo: [Tu Grupo] 
+ * Especialidad: Instrumentación Industrial 
+ * CECyTEM 05 Guacamayas 
+ */ 
+
+// Pines del Semáforo
+int cocheVerde = 10;
+int cocheAmarillo = 11;
+int cocheRojo = 12;
+int peatonVerde = 8;
+int peatonRojo = 9;
+int pinBuzzer = 7;
+int botonPeaton = 2;
+
+// Pin del Sensor de Luz
+int pinLDR = A0; 
+
+// Variable para guardar la cantidad de luz
+int lecturaLuz = 0; 
+int umbralNoche = 400; // Si el valor baja de 400, asumimos que es de noche, ajusta este valor usando el Monitor Serial 
+
+void setup() {
+  pinMode(cocheVerde, OUTPUT);
+  pinMode(cocheAmarillo, OUTPUT);
+  pinMode(cocheRojo, OUTPUT);
+  pinMode(peatonVerde, OUTPUT);
+  pinMode(peatonRojo, OUTPUT);
+  pinMode(pinBuzzer, OUTPUT);
+  pinMode(botonPeaton, INPUT_PULLUP);
+
+  // Nota: Los pines analógicos (A0) se configuran automáticamente como entradas,
+  // por lo que no es estrictamente obligatorio poner pinMode(A0, INPUT);
+  Serial.begin(9600); // Se inicializa el monitor serial.
+}
+
+void loop() {
+  // Leemos constantemente cuánta luz hay en el laboratorio
+  lecturaLuz = analogRead(pinLDR);
+
+  // Imprimimos el valor en el monitor serial
+  // Imprime el texto descriptivo
+  Serial.print("La lectura de luz actual es: "); 
+  
+  // Imprime el número y da un salto de línea (ln = line) para el siguiente dato
+  Serial.println(lecturaLuz); 
+
+  // Esperamos media décima de segundo para que los números no corran tan rápido
+  delay(50);
+
+  // --- TOMA DE DECISIONES INTELIGENTE ---
+  if (lecturaLuz < umbralNoche) {
+    // ¡Es de noche! Activamos el modo preventivo nocturno
+    activarModoNocturno();
+  } 
+  else {
+    // Es de día: El semáforo opera normalmente y vigila el botón
+    digitalWrite(peatonRojo, HIGH);
+    digitalWrite(cocheVerde, HIGH);
+    digitalWrite(cocheAmarillo, LOW);
+    digitalWrite(cocheRojo, LOW);
+    digitalWrite(peatonVerde, LOW);
+
+    if (digitalRead(botonPeaton) == LOW) {
+      activarPasoPeatonal(); // Llama a la función del Tomo 4
+    }
+  }
+}
+
+// Función personalizada para el ahorro de energía y precaución nocturna
+void activarModoNocturno() {
+  // En la noche, los peatones esperan y el semáforo de autos parpadea en amarillo
+  digitalWrite(peatonVerde, LOW);
+  digitalWrite(cocheVerde, LOW);
+  digitalWrite(cocheRojo, LOW);
+  digitalWrite(peatonRojo, HIGH); // Peatón en rojo fijo por seguridad
+
+  // Parpadeo preventivo usando nuestro bucle 'for'
+  for (int i = 1; i <= 3; i++) {
+    digitalWrite(cocheAmarillo, HIGH);
+    delay(500);
+    digitalWrite(cocheAmarillo, LOW);
+    delay(500);
+  }
+}
+
+// (Aquí abajo se mantiene la función void activarPasoPeatonal() del Tomo 4)
+void activarPasoPeatonal() {
+  delay(500); 
+  digitalWrite(cocheVerde, LOW);
+  digitalWrite(cocheAmarillo, HIGH);
+  delay(2000); 
+  digitalWrite(cocheAmarillo, LOW);
+  digitalWrite(cocheRojo, HIGH);
+  delay(1000); 
+
+  digitalWrite(peatonRojo, LOW);
+  digitalWrite(peatonVerde, HIGH);
+
+  for (int cruce = 1; cruce <= 3; cruce++) {
+    tone(pinBuzzer, 800, 300);
+    delay(600);
+  }
+
+  for (int i = 1; i <= 6; i++) {
+    digitalWrite(peatonVerde, LOW);
+    tone(pinBuzzer, 1400, 100); 
+    delay(200);                 
+    digitalWrite(peatonVerde, HIGH);
+    delay(200);
+  }
+
+  digitalWrite(peatonVerde, LOW);
+  digitalWrite(peatonRojo, HIGH); 
+  delay(1000); 
+  digitalWrite(cocheRojo, LOW);
+}
+</code></pre>
+</div>
+
+        <div class="protagonista-section" style="background-color: #e8f5e9; border-left-color: #28a745; margin-top: 30px;">
+            <h2 style="color: #28a745; margin-top: 0;">🏆 ¡Misión Final Cumplida! (Cierre del Primer Parcial)</h2>
+            <p>¡Felicidades, ingenieros! Han diseñado, cableado y programado con éxito un <strong>Sistema de Control Vial Inteligente y Autónomo</strong> completamente funcional. A través de este gran desafío, han demostrado el dominio absoluto de las bases de la automatización moderna:</p>
+            <ul>
+                <li><strong>El Control del Hardware:</strong> Coordinar múltiples salidas digitales (LEDs y Buzzer) mediante sincronizaciones precisas de tiempo.</li>
+                <li><strong>Interactividad Inclusiva:</strong> Escuchar el entorno digital (el botón de solicitud peatonal) aplicando optimizaciones de código como las funciones personalizadas (<code>void</code>) y la limpieza de código con bucles <code>for</code>.</li>
+                <li><strong>Autonomía Analógica:</strong> Interpretar variables continuas del mundo físico (LDR) usando el convertidor analógico-digital (<code>analogRead()</code>) del microcontrolador.</li>
+                <li><strong>Telemetría y Diagnóstico:</strong> Comunicar el cerebro del Arduino con una computadora a través del Monitor Serial para depurar, analizar y comprender los umbrales lógicos de tus algoritmos en tiempo real.</li>
+            </ul>
+            <p>Este prototipo ya no es un simple ejercicio escolar; es el reflejo exacto de cómo funcionan los sistemas de control de tráfico en las ciudades más desarrolladas del mundo. Han dado sus primeros pasos firmes en la Instrumentación Industrial y los sistemas embebidos.</p>
+            <p><strong>¡Tienen todo el derecho de sentirse sumamente orgullosos del proyecto tecnológico que hoy brilla y hace ruido en sus mesas de trabajo!</strong></p>
+            <p style="font-weight: bold; text-align: center; margin-top: 20px; color: #333;">¡Nos vemos en el Segundo Parcial para llevar sus circuitos al siguiente nivel! — Profe Campos</p>
+        </div>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="tomo5.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Volver al Índice &rarr;</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+    <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Busca todos los botones de copiar
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Encuentra el contenedor de código más cercano
+            const codeContainer = this.closest('.code-container');
+            // Encuentra el bloque de código dentro de ese contenedor
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                // Copia el texto del código al portapapeles
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    // Feedback visual para el usuario
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); // Vuelve al texto original después de 2 segundos
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
