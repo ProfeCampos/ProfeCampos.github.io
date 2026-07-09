@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomo 4: Sensor PIR - Manual de Instrumentación</title>
+    <title>Tomo 4: El Bucle For - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
@@ -12,26 +12,31 @@
 <body>
     <header>
         <div class="header-container">
-            <h1>Tomo 4: El Guardián Silencioso - Sensor de Movimiento PIR</h1>
+            <h1>Tomo 4: Mejorando el Semáforo - Optimizando Código con el Bucle for</h1>
         </div>
     </header>
     <main class="tomo-content">
         <div class="nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo3.html" class="nav-link">&larr; Tomo Anterior</a>
             <a href="tomo5.html" class="nav-link">Tomo Siguiente &rarr;</a>
         </div>
-        <p>Ahora que nuestro Arduino puede ver la luz, le daremos la habilidad de detectar movimiento. Usaremos un sensor PIR, el mismo que utilizan las luces automáticas y los sistemas de alarma. Este es un paso crucial para crear proyectos que reaccionen a la presencia de personas.</p>
+        <p>¡Excelente trabajo en la misión anterior! Tu semáforo funciona perfecto. Pero si revisas tu función <code>activarPasoPeatonal()</code>, notarás que para hacer sonar el buzzer varias veces, tuviste que copiar y pegar las mismas líneas de código repetidas veces. ¿Qué pasaría si necesitaras que el buzzer pitara 50 veces? Tu programa se haría inmenso. Para evitar este esfuerzo innecesario, hoy aprenderemos a usar la herramienta de automatización por excelencia: <strong>el bucle <code>for</code></strong>.</p>
 
         <div class="protagonista-section">
-            <h3>🧠 Protagonista de Hoy: El Sensor PIR (Infrarrojo Pasivo)</h3>
-            <p>El sensor PIR no emite nada, por eso es "pasivo". Lo que hace es medir la radiación infrarroja (el calor) que emiten los objetos en su campo de visión. Cuando un cuerpo caliente, como una persona, se mueve a través de su área de detección, el sensor nota este cambio brusco de calor y envía una señal ALTA (HIGH) a nuestro Arduino.</p>
-            <div class="image-container">
-            <img src="pinout PIR HC-SR501.png" alt="pinout sensor de movimiento PIR">
-            </div>
+            <h3>🧠 Protagonista de Hoy: El Bucle for (El Repetidor Inteligente)</h3>
+            <p>Un bucle <strong><code>for</code></strong> es una estructura de control que le dice al Arduino: "Repite esta tarea un número exacto de veces y luego continúa con el resto del programa". Se compone de tres partes dentro de sus paréntesis: <br><br>
+            1. <strong>La inicialización:</strong> Crea una variable para contar (ej. <code>int i = 1</code>).<br>
+            2. <strong>La condición:</strong> Hasta qué número va a llegar (ej. <code>i <= 3</code>).<br>
+            3. <strong>El incremento:</strong> Cómo va a contar (ej. <code>i++</code> significa que suma de 1 en 1).</p>
         </div>
 
-        <h2>🧠 El Código: Detectando Presencia</h2>
-        <p>El código para el sensor PIR es muy sencillo porque es un dispositivo digital. Simplemente leemos si su señal es ALTA o BAJA y actuamos en consecuencia.</p>
+        <div class="protagonista-section" style="background-color: #fff3e0; border-left-color: #ff9800; margin-top: 15px;">
+            <h3>💡 El Gran Dilema: Reduciendo el "Código Espagueti" en el Parpadeo</h3>
+            <p>Los sistemas reales no solo encienden y apagan luces; parpadean para advertir urgencia (como el verde peatonal antes de acabarse el tiempo). Lograr esto repitiendo <code>digitalWrite</code> y <code>delay</code> una docena de veces consume mucha memoria de nuestro Arduino. Usando el <code>for</code>, reduciremos una coreografía larga a tan solo 5 líneas de código elegante.</p>
+        </div>
+
+        <h2>🧠 El Código: El Semáforo Optimizado</h2>
+        <p>Reescribiremos el código del Tomo 3, pero fíjate cómo la función personalizada de abajo ahora usa bucles para automatizar los pitidos de alerta del cruce peatonal.</p>
         <div class="code-container"> 
     <div class="code-header">
         <span>Código Arduino</span>
@@ -39,60 +44,97 @@
     </div> 
 <pre><code class="language-cpp code-block">
 /*
- * Misión 04: El Guardián Silencioso
- * Descripción: Enciende un LED al detectar movimiento con un sensor PIR.
+ * Misión 04: El Semáforo Optimizado
+ * Descripción: Uso del bucle 'for' para reducir líneas de código al generar
+ * repeticiones de sonido y parpadeos en el cruce peatonal.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-const int pinPir = 2;   // Pin donde conectamos la señal del sensor PIR.
-const int pinLed = 13;  // Pin para el LED de alerta.
-
-int estadoPir = 0; // Variable para guardar el estado del sensor.
+// Pines del Semáforo
+int cocheVerde = 10;
+int cocheAmarillo = 11;
+int cocheRojo = 12;
+int peatonVerde = 8;
+int peatonRojo = 9;
+int pinBuzzer = 7;
+int botonPeaton = 2;
 
 void setup() {
-  pinMode(pinLed, OUTPUT);
-  pinMode(pinPir, INPUT); // El sensor PIR es una entrada.
-  Serial.begin(9600);
-  Serial.println("Sensor PIR Calibrando...");
-  delay(20000); // IMPORTANTE: El sensor necesita unos segundos para calibrarse.
-  Serial.println("Sensor Activado.");
+  pinMode(cocheVerde, OUTPUT);
+  pinMode(cocheAmarillo, OUTPUT);
+  pinMode(cocheRojo, OUTPUT);
+  pinMode(peatonVerde, OUTPUT);
+  pinMode(peatonRojo, OUTPUT);
+  pinMode(pinBuzzer, OUTPUT);
+  pinMode(botonPeaton, INPUT_PULLUP);
+
+  digitalWrite(cocheVerde, HIGH);
+  digitalWrite(peatonRojo, HIGH);
 }
 
 void loop() {
-  estadoPir = digitalRead(pinPir); // Leemos el estado del sensor.
-
-  if (estadoPir == HIGH) { // Si detecta movimiento...
-    digitalWrite(pinLed, HIGH); // ...encendemos el LED.
-    Serial.println("¡Movimiento Detectado!");
-  } else { // Si no...
-    digitalWrite(pinLed, LOW); // ...mantenemos el LED apagado.
+  if (digitalRead(botonPeaton) == LOW) {
+    activarPasoPeatonal(); 
   }
-  delay(500); // Pequeña pausa para no saturar el monitor serial.
+}
+
+// --- FUNCIÓN PERSONALIZADA OPTIMIZADA ---
+void activarPasoPeatonal() {
+  digitalWrite(cocheVerde, LOW);
+  digitalWrite(cocheAmarillo, HIGH);
+  delay(2000); 
+  digitalWrite(cocheAmarillo, LOW);
+  digitalWrite(cocheRojo, HIGH);
+  delay(1000); 
+
+  digitalWrite(peatonRojo, LOW);
+  digitalWrite(peatonVerde, HIGH);
+
+  // ¡PRIMER BUCLE FOR! - Ritmo de cruce seguro (Se repite 3 veces)
+  for (int cruce = 1; cruce <= 3; cruce++) {
+    tone(pinBuzzer, 800, 300);
+    delay(600);
+  }
+
+  // ¡SEGUNDO BUCLE FOR! - Alerta estroboscópica de prisa (Se repite 6 veces)
+  for (int i = 1; i <= 6; i++) {
+    digitalWrite(peatonVerde, LOW);
+    tone(pinBuzzer, 1400, 100);  // Tono más agudo y rápido
+    delay(200);                 
+    digitalWrite(peatonVerde, HIGH);
+    delay(200);
+  }
+
+  digitalWrite(peatonVerde, LOW);
+  digitalWrite(peatonRojo, HIGH); 
+  delay(1000); 
+  digitalWrite(cocheRojo, LOW);
+  digitalWrite(cocheVerde, HIGH);
 }
         </code></pre>
 </div>
-        <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Crearemos un sistema de alarma básico. El sensor tiene dos potenciómetros pequeños para ajustar la sensibilidad y el tiempo que la señal se mantiene alta tras detectar movimiento.</p>
+        <h2>🔌 El Circuito: ¡Mantenemos la Intersección Vial!</h2>
+        <p>¡Buenas noticias! Para esta misión <strong>no necesitas desconectar absolutamente nada</strong>. Mantenemos intacta la maqueta que construiste en el Tomo 3. Toda la "magia" y las mejoras de hoy ocurren exclusivamente en el "cerebro" (código) del Arduino, no en su hardware.</p>
         <div class="image-container">
-            <h3>Diagrama del Circuito 4</h3>
-            <img src="Tomo 4.png" alt="Diagrama de conexión del sensor de movimiento PIR">
+            <h3>Diagrama del Circuito 4 (El mismo que el Tomo 3)</h3>
+            <img src="Tomo 4.png" alt="Diagrama de conexión de la intersección vial intacta">
         </div>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
         <ul>
-            <li><strong>Sensor Pasivo:</strong> No emite energía, solo la recibe, lo que lo hace de muy bajo consumo.</li>
-            <li><strong>Calibración:</strong> Al encenderse, el sensor necesita un tiempo para "aprender" el estado normal del ambiente antes de detectar cambios.</li>
+            <li><strong>Variable Contadora (<code>i</code>):</strong> Es una variable temporal que vive solo dentro del bucle <code>for</code>. Su único trabajo es llevar la cuenta de cuántas vueltas ha dado el ciclo.</li>
+            <li><strong>Incremento (<code>++</code>):</strong> Escribir <code>i++</code> es el equivalente en código a decir "suma uno al valor actual de la variable".</li>
+            <li><strong>Optimización:</strong> La práctica de reescribir un código para que haga lo mismo, pero usando menos memoria y siendo más fácil de leer.</li>
         </ul>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>Alarma Sonora:</strong> Añade un buzzer al circuito. ¿Puedes hacer que, además de encender el LED, suene una alarma cuando se detecte movimiento?</li>
-            <li><strong>Contador de Intrusos:</strong> Modifica el código para que cuente cuántas veces se ha detectado movimiento y lo muestre en el Monitor Serial.</li>
-            <li><strong>Alarma con Reset:</strong> Haz que una vez que se detecte movimiento, el LED se quede encendido para siempre hasta que presiones un botón de "reset" que añadas al circuito.</li>
+            <li><strong>El Cruce Largo:</strong> Modifica la condición del primer bucle <code>for</code> para que el cruce peatonal seguro dure 10 pitidos en lugar de 3. ¡Ideal para avenidas anchas!</li>
+            <li><strong>Efecto Parpadeo Extremo:</strong> Modifica los <code>delay()</code> dentro del segundo bucle <code>for</code> bajándolos a <code>50</code> milisegundos. Haz que se repita 15 veces. ¿Cómo se ve la luz verde ahora?</li>
         </ul>
         <div class="nav-links bottom-nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo3.html" class="nav-link">&larr; Tomo Anterior</a>
             <a href="tomo5.html" class="nav-link">Tomo Siguiente &rarr;</a>
         </div>
     </main>
@@ -129,9 +171,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body>
-
 </html>
-
-
-
-
