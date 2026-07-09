@@ -1,59 +1,46 @@
-<article id="tomo-3" class="modulo-tomo">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 3: El Semáforo Inclusivo - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
     <header>
-        <h2>Tomo 3: ¡Tu Ciudad Inteligente! - El Semáforo Inclusivo[cite: 1]</h2>
+        <div class="header-container">
+            <h1>Tomo 3: ¡Tu Ciudad Inteligente! - El Semáforo Inclusivo</h1>
+        </div>
     </header>
-
-    <section class="introduccion">
-        <p>¡Hola de nuevo, inventores urbanos! Hasta ahora hemos encendido luces y aprendido a escuchar botones. Pero en el mundo real, la tecnología tiene un propósito más alto: resolver problemas reales y hacer el mundo más accesible. Hoy nos convertiremos en ingenieros de tráfico urbano.[cite: 1]</p>
-        <p>Vamos a fusionar lo que ya conocemos para construir un <strong>Semáforo Inteligente e Inclusivo</strong>: un sistema que detenga el tráfico vehicular cuando un peatón lo solicite, y que además emita alertas sonoras intermitentes para ayudar a cruzar de forma segura a personas con debilidad visual. ¡Prepárate para dar el salto al siguiente nivel de programación![cite: 1]</p>
-    </section>
-
-    <section class="protagonista">
-        <h3>🧠 El Protagonista de Hoy: El Zumbador Pasivo (Buzzer)[cite: 1]</h3>
-        <p>Para lograr la inclusión vial, nuestro gran aliado será el <strong>Buzzer pasivo</strong>. A diferencia de un zumbador activo (que solo hace un pitido monótono cuando le das corriente), el buzzer pasivo funciona como un mini altavoz: no emite ningún sonido a menos que tú le envíes una onda cuadrada con una velocidad específica.[cite: 1]</p>
-        <p>A esa velocidad la llamamos <strong>Frecuencia</strong> y se mide en Hertz (Hz).[cite: 1] Si le mandas una frecuencia alta (por ejemplo, 1500 Hz), el buzzer vibrará rápido y emitirá un sonido agudo (como un silbato); si le mandas una frecuencia baja (como 300 Hz), vibrará lento y sonará grave (como un motor).[cite: 1] Para controlarlo, usaremos la instrucción estrella: <code>tone(pin, frecuencia, duración);</code>.[cite: 1]</p>
-    </section>
-
-    <section class="dilema">
-        <h3>💡 El Gran Dilema: El "Código Espagueti" y el Control del Tráfico[cite: 1]</h3>
-        <p>Imagina la escena: tienes que apagar el verde de autos, encender el amarillo por 2 segundos, luego el rojo; inmediatamente después, apagar el rojo peatonal, encender el verde peatonal y, <strong>al mismo tiempo</strong>, hacer que el buzzer empiece a pitar de forma intermitente (suena-pausa-suena-pausa) para guiar al peatón.[cite: 1]</p>
-        <p>Si intentamos escribir todas estas instrucciones secuenciales una tras otra directamente dentro de la función <code>void loop()</code>, nuestro código se convertirá en lo que en el mundo del software llamamos <strong>"Código Espagueti"</strong>: un enredo gigante de líneas, tiempos y retrasos (delay) donde es facilísimo equivocarse y casi imposible encontrar un error. El loop() se volvería tan pesado que el Arduino tardaría en reaccionar cuando alguien presione el botón.[cite: 1]</p>
-        <p>¿Cómo resolvemos este caos? La respuesta es la <strong>Programación Modular</strong> mediante <strong>Funciones Personalizadas</strong>. Así como Arduino ya viene de fábrica entendiendo comandos como <code>digitalWrite()</code> o <code>tone()</code>, tú tienes el superpoder de <strong>inventar tus propios comandos</strong>. Vamos a empaquetar toda la secuencia del semáforo y los ritmos del buzzer dentro de una función propia llamada <code>activarPasoPeatonal()</code>. De este modo, nuestro <code>void loop()</code> quedará impecable y ultra rápido: solo se dedicará a vigilar el botón. En cuanto detecte que alguien lo presiona, "llamará" a nuestra función para que ejecute la coreografía vial y, al terminar, el control regresará al flujo principal. ¡Es pasar de escribir código a diseñar sistemas![cite: 1]</p>
-    </section>
-
-    <section class="circuito">
-        <h3>🔌 El Circuito: Tu Intersección Vial[cite: 1]</h3>
-        <p>Para armar esta maqueta urbana, la organización en tu protoboard será vital.[cite: 1]</p>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo4.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
+        <p>¡Hola de nuevo, inventores urbanos! Hasta ahora hemos encendido luces y aprendido a escuchar botones. Pero en el mundo real, la tecnología tiene un propósito más alto: resolver problemas reales y hacer el mundo más accesible. Hoy nos convertiremos en ingenieros de tráfico urbano. Vamos a fusionar lo que ya conocemos para construir un <strong>Semáforo Inteligente e Inclusivo</strong>: un sistema que detenga el tráfico vehicular cuando un peatón lo solicite, y que además emita alertas sonoras intermitentes para ayudar a cruzar de forma segura a personas con debilidad visual.</p>
         
-        <h4>Componentes Necesarios:</h4>
-        <ul>
-            <li>3 LEDs para autos (Rojo, Amarillo, Verde).[cite: 1]</li>
-            <li>2 LEDs para peatones (Rojo, Verde).[cite: 1]</li>
-            <li>5 Resistencias de 220 o 330 ohms (una para cada LED).[cite: 1]</li>
-            <li>1 Botón pulsador.[cite: 1]</li>
-            <li>1 Buzzer (Zumbador pasivo).[cite: 1]</li>
-            <li>Cables jumper.[cite: 1]</li>
-        </ul>
+        <div class="protagonista-section">
+            <h3>🧠 Protagonista de Hoy: El Zumbador Pasivo (Buzzer)</h3>
+            <p>Es hora de hacer ruido. El <strong>buzzer pasivo</strong> es un pequeño componente que, a diferencia de un LED que emite luz continua, necesita recibir ondas eléctricas a diferentes velocidades para vibrar y generar tonos audibles. En Arduino usamos el comando <code>tone(pin, frecuencia, duracion);</code> para decirle exactamente qué nota tocar y por cuánto tiempo.</p>
+        </div>
 
-        <h4>Instrucciones de Conexión:</h4>
-        <ol>
-            <li><strong>Semáforo de Autos:</strong> Conecta el LED Verde al pin 10, Amarillo al pin 11 y Rojo al pin 12 (todos con su resistencia hacia la línea de GND).[cite: 1]</li>
-            <li><strong>Semáforo Peatonal:</strong> Conecta el LED Verde al pin 8 y Rojo al pin 9 (con su resistencia a GND).[cite: 1]</li>
-            <li><strong>El Buzzer Inclusivo:</strong> Conecta su pata positiva (+) al <strong>Pin Digital 7</strong> y la otra pata directo a GND.[cite: 1]</li>
-            <li><strong>El Botón Peatonal:</strong> Conecta una patita al <strong>Pin Digital 2</strong> y la otra patita <strong>directo a GND</strong>. <em>(Aprovecharemos la resistencia interna de Arduino configurando el pin como INPUT_PULLUP para ahorrar espacio en la protoboard)</em>.[cite: 1]</li>
-        </ol>
-    </section>
+        <div class="protagonista-section" style="background-color: #fff3e0; border-left-color: #ff9800; margin-top: 15px;">
+            <h3>💡 El Gran Dilema: El "Código Espagueti" y el Control del Tráfico</h3>
+            <p>Imagina la escena: tienes que apagar el verde de autos, encender el amarillo, luego el rojo; inmediatamente después, apagar el rojo peatonal, encender el verde peatonal y hacer que el buzzer pite de forma intermitente. Si intentamos escribir todo esto directamente dentro del <code>void loop()</code>, se convertirá en lo que llamamos "Código Espagueti": un bloque de texto gigante, desordenado y casi imposible de leer. La solución de un verdadero programador es usar <strong>Funciones Personalizadas</strong>.</p>
+        </div>
 
-    <section class="diagrama">
-        <h3>⚡ Diagrama de armado[cite: 1]</h3>
-        <p><strong>IMAGEN:</strong> Un diagrama de TINKERCAD mostrando los 5 LEDs alineados simulando los dos semáforos, el buzzer conectado al pin 7 y el botón directo a GND sin resistencias externas.[cite: 1]</p>
-    </section>
-
-    <section class="codigo">
-        <h3>🧠 El Código: Creando Nuestro Propio Comando[cite: 1]</h3>
-        <p>Presta mucha atención a cómo se estructura la función personalizada <strong>fuera</strong> del setup y del loop, y cómo es invocada cuando el botón cambia de estado.[cite: 1]</p>
+        <h2>🧠 El Código: Creando Nuestro Propio Comando</h2>
+        <p>En este programa, en lugar de amontonar código, sacaremos toda la secuencia de luces del <code>loop()</code> y la empaquetaremos en una función nueva que nosotros inventaremos llamada <code>activarPasoPeatonal()</code>. ¡Observa la limpieza!</p>
         
-        <pre><code class="language-cpp">
+        <div class="code-container"> 
+        <div class="code-header">
+        <span>Código Arduino</span>
+        <button class="copy-btn">Copiar</button>
+        </div> 
+        <pre><code class="language-cpp code-block">
 /*
  * Misión 03: ¡El Semáforo Inteligente Inclusivo!
  * Descripción: Aprendiendo a programar funciones personalizadas para coordinar
@@ -100,70 +87,103 @@ void loop() {
   }
 }
 
-// ====================================================================
-// 🛠️ NUESTRA FUNCIÓN PERSONALIZADA: ¡Aquí está la magia!
-// ====================================================================
-// Usamos 'void' porque esta función ejecuta acciones pero no devuelve números.
+// =======================================================
+// NUESTRO COMANDO PERSONALIZADO (Fuera del loop)
+// =======================================================
 void activarPasoPeatonal() {
-  delay(500); // Pequeña pausa de seguridad antes de iniciar la transición
-
-  // 1. Fase de Advertencia para Autos (Verde -> Amarillo)
+  // 1. Transición de precaución para autos
   digitalWrite(cocheVerde, LOW);
   digitalWrite(cocheAmarillo, HIGH);
-  delay(2000); // 2 segundos para que los autos frenen
+  delay(2000); 
   
-  // 2. Fase de Detención Total de Autos (Amarillo -> Rojo)
+  // 2. Autos se detienen
   digitalWrite(cocheAmarillo, LOW);
   digitalWrite(cocheRojo, HIGH);
-  delay(1000); // Tiempo de colchón antes de dar paso al peatón
-
-  // 3. Fase de Cruce Peatonal Inclusivo
+  delay(1000); // Margen de seguridad antes de dar paso al peatón
+  
+  // 3. Cruce peatonal con asistencia sonora
   digitalWrite(peatonRojo, LOW);
   digitalWrite(peatonVerde, HIGH);
-
-  // El buzzer emite un ritmo constante y seguro (Frecuencia de 800Hz)
-  // Ciclo auditivo 1
-  tone(pinBuzzer, 800, 300); // Tono medio por 300ms
-  delay(600);
-  // Ciclo auditivo 2
+  
+  // Pitido 1
+  tone(pinBuzzer, 800, 300); // Emite tono de 800Hz por 300ms
+  delay(600);                
+  // Pitido 2
   tone(pinBuzzer, 800, 300);
   delay(600);
-  // Ciclo auditivo 3
+  // Pitido 3
   tone(pinBuzzer, 800, 300);
   delay(600);
-
-  // 4. Fase de Advertencia Peatonal (¡El tiempo se agota!)
-  // Hacemos que el LED verde parpadee y el buzzer suene más agudo y rápido
-  digitalWrite(peatonVerde, LOW);
-  tone(pinBuzzer, 1200, 150); // Tono agudo de prisa
-  delay(300);
-  digitalWrite(peatonVerde, HIGH);
-  delay(300);
   
-  digitalWrite(peatonVerde, LOW);
-  tone(pinBuzzer, 1200, 150);
-  delay(300);
-  digitalWrite(peatonVerde, HIGH);
-  delay(300);
-
-  // 5. Cierre del ciclo y retorno a la normalidad
-  digitalWrite(peatonVerde, LOW);
-  digitalWrite(peatonRojo, HIGH); // Peatones esperan otra vez
-  delay(1000);
+  // 4. Advertencia de que el tiempo se acaba (Parpadeo y sonido rápido)
+  digitalWrite(peatonVerde, LOW); tone(pinBuzzer, 1200, 150); delay(300);
+  digitalWrite(peatonVerde, HIGH); delay(300);
+  digitalWrite(peatonVerde, LOW); tone(pinBuzzer, 1200, 150); delay(300);
+  digitalWrite(peatonVerde, HIGH); delay(300);
   
+  // 5. Fin del cruce peatonal
+  digitalWrite(peatonVerde, LOW);
+  digitalWrite(peatonRojo, HIGH);
+  delay(1000); // Margen de seguridad antes de arrancar autos
+  
+  // 6. Autos vuelven a avanzar
   digitalWrite(cocheRojo, LOW);
-  digitalWrite(cocheVerde, HIGH); // Autos vuelven a circular
-  // Aquí termina la función. El Arduino regresa al 'loop' justo donde se quedó.
+  digitalWrite(cocheVerde, HIGH);
 }
         </code></pre>
-    </section>
+        </div>
 
-    <section class="retos">
-        <h3>🚀 ¡Inténtalo Tú Mismo! (Retos)[cite: 1]</h3>
-        <p>¡Pon a prueba tu mente de arquitecto de sistemas![cite: 1]</p>
-        <ol>
-            <li><strong>La Alerta de Ceguera del Conductor:</strong> Modifica tu función personalizada para que cuando el semáforo de autos pase a <strong>Rojo</strong>, el buzzer emita un único pitido súper agudo y largo (ej. 2000 Hz por 400 milisegundos) <em>antes</em> de que se encienda el verde peatonal.[cite: 1] Esto avisará acústicamente que los autos se han detenido por completo.[cite: 1]</li>
-            <li><strong>Ritmo Sincronizado:</strong> Intenta modificar la sección de "Fase de Advertencia Peatonal" en el código para que el buzzer y el LED peatonal estén perfectamente sincronizados: cuando el LED se encienda el buzzer suena, y cuando el LED se apague el buzzer haga silencio absoluto.[cite: 1] ¡Observa con atención los delay actuales para lograrlo![cite: 1]</li>
-        </ol>
-    </section>
-</article>
+        <h2>🔌 Manos a la Obra: El Circuito</h2>
+        <p>Montaremos una verdadera intersección vial en nuestra protoboard: 3 LEDs para los automóviles, 2 LEDs para los peatones, un botón con resistencia <code>INPUT_PULLUP</code> y nuestro nuevo Buzzer. ¡Cuida mucho tus conexiones y el orden de los cables!</p>
+        <div class="image-container">
+            <h3>Diagrama del Circuito 3: Intersección Vial</h3>
+            <img src="Tomo 3.png" alt="Diagrama de conexión del semáforo inclusivo con buzzer y botón">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Funciones Personalizadas (<code>void</code>):</strong> Bloques de código que tú inventas y nombras, y que el programa principal puede llamar en cualquier momento para mantener el orden.</li>
+            <li><strong>Comando <code>tone()</code>:</strong> La función que permite al Arduino generar ondas cuadradas en un pin específico para producir sonidos audibles de una frecuencia y duración exacta.</li>
+            <li><strong><code>INPUT_PULLUP</code>:</strong> Un truco de software para conectar botones al Arduino de forma directa, activando una resistencia interna y eliminando el ruido eléctrico sin usar componentes externos.</li>
+        </ul>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>La Alerta de Ceguera del Conductor:</strong> Modifica tu función personalizada para que cuando el semáforo de autos pase a Rojo, el buzzer emita un único pitido súper agudo y largo (ej. 2000 Hz por 400 milisegundos) antes de que se encienda el verde peatonal.</li>
+            <li><strong>Modo Tráfico Nocturno (Reto Pro):</strong> Dentro del <code>void loop()</code>, comenta la llamada al semáforo y escribe un código donde solo el LED Amarillo de los autos parpadee infinitamente (alerta de crucero en la madrugada).</li>
+        </ul>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="tomo2.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="tomo4.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+    <script>hljs.highlightAll();</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const allCopyButtons = document.querySelectorAll('.copy-btn');
+
+    allCopyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const codeContainer = this.closest('.code-container');
+            const codeBlock = codeContainer.querySelector('code');
+            
+            if (codeBlock) {
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    this.innerText = '¡Copiado!';
+                    setTimeout(() => {
+                        this.innerText = 'Copiar';
+                    }, 2000); 
+                }).catch(err => {
+                    console.error('Error al copiar el código: ', err);
+                });
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
