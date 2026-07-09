@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Caja de Herramientas - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <style>
+        /* Estilos específicos para las tablas de la caja de herramientas */
+        .glosario-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0 30px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .glosario-table th {
+            background-color: #2c3e50;
+            color: white;
+            text-align: left;
+            padding: 12px 15px;
+        }
+        .glosario-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .glosario-table tr:last-child td {
+            border-bottom: none;
+        }
+        .glosario-table code {
+            background-color: #f1f2f6;
+            color: #e74c3c;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        .alerta-sintaxis {
+            background-color: #fff3f3;
+            border-left: 5px solid #e74c3c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>🧰 La Caja de Herramientas del Programador</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Punto de Partida</a>
+        </div>
+        
+        <p>¡Bienvenido a tu glosario de bolsillo, ingeniero! Aquí encontrarás la sintaxis exacta y el resumen de todos los comandos, símbolos y operadores que necesitas para que tu código de Arduino funcione a la perfección. Úsalo como referencia rápida mientras armas tus proyectos en el taller.</p>
+
+        <div class="alerta-sintaxis">
+            <h3 style="color: #c0392b; margin-top: 0;">⚠️ 🚨 Las Reglas de Oro de la Sintaxis</h3>
+            <p>Si tu programa no compila y se pinta de rojo, revisa a estos sospechosos comunes:</p>
+            <ul>
+                <li><strong>El punto y coma (<code>;</code>):</strong> Cada instrucción individual debe terminar obligatoriamente con un punto y coma.</li>
+                <li><strong>Las Llaves (<code>{ }</code>):</strong> Todo lo que abre debe cerrar. Las funciones (<code>setup</code>, <code>loop</code>) y los condicionales (<code>if</code>, <code>for</code>) encierran sus bloques de código entre llaves.</li>
+                <li><strong>Mayúsculas y Minúsculas:</strong> Arduino es "Case Sensitive". No es lo mismo <code>pinMode</code> que <code>Pinmode</code>. ¡Escribe exacto!</li>
+            </ul>
+        </div>
+
+        <div class="protagonista-section">
+            <h3>📌 1. Comandos de Hardware y Control</h3>
+            <table class="glosario-table">
+                <tr>
+                    <th>Comando</th>
+                    <th>¿Para qué sirve?</th>
+                    <th>Ejemplo de Uso</th>
+                </tr>
+                <tr>
+                    <td><code>pinMode()</code></td>
+                    <td>Configura un pin como Entrada (INPUT) o Salida (OUTPUT). Va en el setup.</td>
+                    <td><code>pinMode(13, OUTPUT);</code></td>
+                </tr>
+                <tr>
+                    <td><code>digitalWrite()</code></td>
+                    <td>Envía 5V (HIGH) o 0V (LOW) a un pin digital. Sirve para encender/apagar.</td>
+                    <td><code>digitalWrite(8, HIGH);</code></td>
+                </tr>
+                <tr>
+                    <td><code>digitalRead()</code></td>
+                    <td>Lee el estado de un pin digital (sabe si está en HIGH o LOW).</td>
+                    <td><code>int boton = digitalRead(2);</code></td>
+                </tr>
+                <tr>
+                    <td><code>delay()</code></td>
+                    <td>Pausa el programa por un tiempo específico en milisegundos (1000 = 1 seg).</td>
+                    <td><code>delay(500);</code></td>
+                </tr>
+                <tr>
+                    <td><code>tone()</code></td>
+                    <td>Genera una onda de sonido en un buzzer especificando el Pin, la Frecuencia (Hz) y la Duración (ms).</td>
+                    <td><code>tone(7, 1000, 200);</code></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="protagonista-section">
+            <h3>📦 2. Tipos de Variables (Las Cajas de Memoria)</h3>
+            <table class="glosario-table">
+                <tr>
+                    <th>Tipo</th>
+                    <th>¿Qué guarda?</th>
+                    <th>Ejemplo</th>
+                </tr>
+                <tr>
+                    <td><code>int</code></td>
+                    <td>Números enteros (sin decimales). Rango de -32,768 a 32,767.</td>
+                    <td><code>int edad = 16;</code></td>
+                </tr>
+                <tr>
+                    <td><code>float</code></td>
+                    <td>Números con decimales. Ideal para mediciones precisas de sensores.</td>
+                    <td><code>float temperatura = 24.5;</code></td>
+                </tr>
+                <tr>
+                    <td><code>bool</code></td>
+                    <td>Variables booleanas que solo pueden ser Verdadero (true) o Falso (false).</td>
+                    <td><code>bool encendido = true;</code></td>
+                </tr>
+                <tr>
+                    <td><code>String</code></td>
+                    <td>Cadenas de texto o palabras. Siempre se escriben entre comillas dobles.</td>
+                    <td><code>String saludo = "Hola Profe";</code></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="protagonista-section">
+            <h3>⚖️ 3. Operadores Lógicos y de Comparación</h3>
+            <p>Estos símbolos son fundamentales para construir tus condiciones dentro de un <code>if</code> o un bucle <code>for</code>.</p>
+            <table class="glosario-table">
+                <tr>
+                    <th>Símbolo</th>
+                    <th>Significado</th>
+                    <th>Uso en Condición</th>
+                </tr>
+                <tr>
+                    <td><code>==</code></td>
+                    <td>Igual a (¡Ojo! Dos signos iguales para comparar)</td>
+                    <td><code>if (luz == 100)</code></td>
+                </tr>
+                <tr>
+                    <td><code>!=</code></td>
+                    <td>Diferente de (No es igual a)</td>
+                    <td><code>if (estado != LOW)</code></td>
+                </tr>
+                <tr>
+                    <td><code>></code> y <code><</code></td>
+                    <td>Mayor que / Menor que</td>
+                    <td><code>if (temperatura > 30)</code></td>
+                </tr>
+                <tr>
+                    <td><code>>=</code> y <code><=</code></td>
+                    <td>Mayor o igual que / Menor o igual que</td>
+                    <td><code>if (valor <= 400)</code></td>
+                </tr>
+                <tr>
+                    <td><code>&&</code></td>
+                    <td>Lógico AND (Y). Ambas condiciones deben cumplirse.</td>
+                    <td><code>if (luz < 400 && mov == HIGH)</code></td>
+                </tr>
+                <tr>
+                    <td><code>||</code></td>
+                    <td>Lógico OR (O). Basta con que una condición se cumpla.</td>
+                    <td><code>if (boton1 == LOW || boton2 == LOW)</code></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="protagonista-section" style="background-color: #e8f4f8; border-left-color: #3498db;">
+            <h3>📐 4. El Gran Dilema Analógico: 1023 vs 255</h3>
+            <p>Confundir estos dos números es el error más común al conectar sensores analógicos y motores. ¡Esta es la regla definitiva!</p>
+            <ul>
+                <li><strong>📥 <code>analogRead()</code> → El Filtro de Entrada (0 a 1023):</strong> Cuando el Arduino LEE el mundo exterior (ej. Sensor LDR en pines A0-A5), convierte ese voltaje en un número. Oscuridad total = <code>0</code>, Luz máxima = <code>1023</code>.</li>
+                <li><strong>📤 <code>analogWrite()</code> → El Filtro de Salida PWM (0 a 255):</strong> Cuando el Arduino ESCRIBE hacia afuera para controlar intensidad (ej. brillo de un LED o velocidad de un motor en pines con ~), solo acepta números hasta el 255. Apagado = <code>0</code>, Máxima potencia = <code>255</code>.</li>
+            </ul>
+            
+            <h4>🗺️ El Traductor Automático: La función map()</h4>
+            <p>Si quieres controlar un motor usando un sensor, necesitas traducir de la escala 1023 a la escala 255. Para eso usamos el comando map:</p>
+            <div style="background: #2c3e50; color: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 0.9em; margin-bottom: 10px;">
+                // map(variable_a_traducir, min_original, max_original, min_nuevo, max_nuevo);<br>
+                int velocidad = map(lecturaLuz, 0, 1023, 0, 255);
+            </div>
+        </div>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Punto de Partida</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+</body>
+</html>
