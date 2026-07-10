@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device--width, initial-scale=1.0">
-    <title>Tomo 6: Proyecto 1 - Manual de Instrumentación</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 6: Potenciómetros y Servomotores - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
@@ -12,7 +12,7 @@
 <body>
     <header>
         <div class="header-container">
-            <h1>Tomo 6: ¡PROYECTO INTEGRADOR 1! - Iluminación Inteligente</h1>
+            <h1>Tomo 6: El Control Fino - Potenciómetros y Servomotores</h1>
         </div>
     </header>
     <main class="tomo-content">
@@ -20,79 +20,128 @@
             <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
             <a href="tomo7.html" class="nav-link">Tomo Siguiente &rarr;</a>
         </div>
-        <p>¡Felicidades por llegar al primer proyecto integrador! Es hora de combinar todo lo que hemos aprendido. Ya no trabajaremos con sensores por separado; los uniremos para crear un sistema más inteligente y útil. Construiremos un sistema de iluminación automática que solo se enciende cuando es necesario: cuando alguien está presente Y está oscuro.</p>
+        
+        <p>¡Hola, equipo! En el primer parcial, aprendimos a trabajar con señales digitales: <code>HIGH</code> o <code>LOW</code>, encendido o apagado. Pero el mundo real no es tan simple. ¿Qué pasa con los valores intermedios? ¿Cómo controlamos el volumen de una bocina o la posición exacta de un brazo robótico?</p>
+        <p>Hoy nos sumergimos en el <strong>mundo analógico</strong>. Aprenderemos a leer valores "grises" con un potenciómetro y a crear movimiento preciso y controlado con un servomotor.</p>
 
         <div class="protagonista-section">
-            <h3>🧠 La Lógica del Proyecto: El Poder del `&&` (Y)</h3>
-            <p>La clave de este proyecto es la toma de decisiones basada en múltiples condiciones. En programación, usamos <strong>operadores lógicos</strong> para esto. El más importante hoy es el operador "Y" lógico, que en C++ se escribe como <code>&&</code>. La condición <code>if (condicion1 && condicion2)</code> solo será verdadera si AMBAS condiciones son verdaderas al mismo tiempo. Es la base para crear sistemas que responden a situaciones complejas del mundo real.</p>
+            <h3>🧠 Protagonista 1: El Potenciómetro (La Perilla de Control)</h3>
+            <p>Un potenciómetro es una resistencia variable. Piensa en él como la perilla de volumen de un estéreo o el regulador de luz de una lámpara. Al girar su eje, cambias la cantidad de resistencia que ofrece, y Arduino puede leer ese cambio como un valor de voltaje.</p>
+            <ul>
+                <li><strong>¿Cómo funciona?:</strong> Tiene 3 pines. Conectamos los extremos a 5V y a GND. El pin del medio, llamado "wiper", se mueve a lo largo de la pista resistiva. Dependiendo de su posición, entregará un voltaje entre 0V y 5V.</li>
+                <li><strong>Lectura en Arduino:</strong> Usamos la función <code>analogRead()</code>, que convierte ese voltaje en un número entre <strong>0 y 1023</strong>. 0 es cuando la perilla está girada completamente hacia el lado de GND, y 1023 es cuando está del lado de 5V.</li>
+            </ul>
         </div>
 
-        <h2>🧠 El Código: El Cerebro del Sistema</h2>
-        <p>Este código lee los dos sensores (PIR y LDR) y usa una sola declaración `if` con el operador `&&` para controlar el LED.</p>
+        <div class="protagonista-section" style="background-color: #f1f8ff; border-left-color: #3498db; margin-top: 20px;">
+            <h3>⚙️ Protagonista 2: El Servomotor (El Músculo Preciso)</h3>
+            <p>Un servomotor no es como un motor normal que solo gira sin parar. Un servo tiene un "cerebro" interno (un pequeño circuito de control) que le permite girar a un ángulo exacto, generalmente <strong>entre 0 y 180 grados</strong>, y mantenerse firme en esa posición. ¡Es ideal para brazos robóticos o sistemas de dirección!</p>
+            <ul>
+                <li><strong>¿Cómo funciona?:</strong> También tiene 3 cables. Dos para alimentación (5V y GND) y uno para la señal de control.</li>
+                <li><strong>Control en Arduino:</strong> A diferencia del potenciómetro, enviamos pulsos al servo. Para facilitarnos la vida, usamos la "librería" de Arduino llamada <code>Servo.h</code>, que nos permite darle órdenes sencillas como <code>miServo.write(90);</code> para que vaya al centro exacto.</li>
+            </ul>
+        </div>
+
+        <h2>🔌 El Circuito: Perilla de Mando</h2>
+        <p>Construiremos un sistema donde la posición del potenciómetro controle directamente el ángulo del servomotor. ¡Es la base de un control remoto!</p>
+        
+        <h3>Componentes Necesarios:</h3>
+        <ul>
+            <li>1 Arduino UNO y Protoboard</li>
+            <li>1 Potenciómetro de 10kΩ</li>
+            <li>1 Micro Servomotor (SG90)</li>
+            <li>Cables Jumper</li>
+        </ul>
+
+        <h3>📝 Instrucciones de Conexión:</h3>
+        <ol>
+            <li><strong>Potenciómetro:</strong>
+                <ul>
+                    <li>Pin izquierdo: a 5V del Arduino.</li>
+                    <li>Pin derecho: a GND del Arduino.</li>
+                    <li>Pin central: al pin analógico <strong>A0</strong> del Arduino.</li>
+                </ul>
+            </li>
+            <li><strong>Servomotor:</strong>
+                <ul>
+                    <li>Cable Marrón o Negro: a GND del Arduino.</li>
+                    <li>Cable Rojo: a 5V del Arduino.</li>
+                    <li>Cable Naranja o Amarillo (Señal): al pin digital <strong>9</strong> (fíjate que tiene el símbolo <code>~</code> que soporta PWM).</li>
+                </ul>
+            </li>
+        </ol>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <img src="Tomo 6.png" alt="Diagrama de Tinkercad mostrando un potenciómetro conectado a A0 y un Servomotor conectado al pin 9">
+        </div>
+
+        <h2>🧠 El Código: Traduciendo Perilla a Movimiento</h2>
+        <p>El reto aquí es "mapear" o traducir el rango de lectura del potenciómetro (0 a 1023) al rango de movimiento del servo (0 a 180). Por suerte, ¡Arduino tiene una función perfecta para eso!</p>
+        
         <div class="code-container"> 
-    <div class="code-header">
-        <span>Código Arduino</span>
-        <button class="copy-btn">Copiar</button>
-    </div> 
+            <div class="code-header">
+                <span>Código Arduino</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
 <pre><code class="language-cpp code-block">
 /*
- * PROYECTO INTEGRADOR 1: Iluminación Inteligente de Pasillos
- * Descripción: Enciende una luz si se detecta movimiento Y está oscuro.
+ * Misión 06: Control Fino
+ * Descripción: Controla el ángulo de un servomotor usando un potenciómetro.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-const int pinPir = 2;       // Pin del sensor de movimiento
-const int pinLdr = A0;      // Pin del sensor de luz
-const int pinLed = 9;       // Pin del LED que simula la luz del pasillo
+// Primero, necesitamos incluir la librería oficial de Arduino para Servos.
+// Una librería es un conjunto de código pre-hecho que nos facilita la vida.
+#include &lt;Servo.h&gt;
 
-int valorLuz;               // Variable para la lectura del LDR
-boolean hayMovimiento;      // Variable para la lectura del PIR (true/false)
-int umbralOscuridad = 400;  // Umbral de oscuridad (ajustable)
+// --- ZONA DE CONFIGURACIÓN ---
+Servo miServo; // Creamos un objeto "Servo". Piensa que es como darle un nombre a nuestro motor.
+
+const int pinPot = A0;  // Pin donde leemos el potenciómetro.
+const int pinServo = 9; // Pin donde controlamos el servo.
+
+int valorPot; // Variable para guardar la lectura del potenciómetro (0-1023).
+int angulo;   // Variable para guardar el ángulo calculado para el servo (0-180).
 
 void setup() {
-  pinMode(pinLed, OUTPUT);
-  pinMode(pinPir, INPUT);
-  // El pin A0 ya es una entrada por defecto
+  Serial.begin(9600); // Iniciamos el monitor para ver los valores.
+  
+  // "Adjuntamos" nuestro servo al pin 9. Ahora Arduino sabe dónde está conectado.
+  miServo.attach(pinServo); 
 }
 
 void loop() {
-  // Leemos ambos sensores en cada ciclo
-  valorLuz = analogRead(pinLdr);
-  hayMovimiento = digitalRead(pinPir);
-  
-  // Aquí está la magia: la condición IF con el operador AND (&&)
-  // SI (hayMovimiento es VERDADERO Y el valorLuz es MENOR que el umbral)...
-  if (hayMovimiento == true && valorLuz < umbralOscuridad) {
-    digitalWrite(pinLed, HIGH); // ...entonces enciende la luz.
-    // Opcional: un delay aquí mantendría la luz encendida un tiempo fijo
-    // después de la última detección, pero el PIR ya tiene un ajuste para esto.
-  } else { // SI NO se cumplen AMBAS condiciones...
-    digitalWrite(pinLed, LOW); // ...asegúrate de que la luz esté apagada.
-  }
-  delay(300); // Pequeña pausa
-}
-        </code></pre>
- </div>
-        <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Integraremos los circuitos del sensor PIR y la LDR para controlar un solo LED, que simula la iluminación de un pasillo. La clave es organizar bien el cableado en la protoboard.</p>
-        <div class="image-container">
-            <h3>Diagrama del Circuito 6</h3>
-            <img src="Tomo 6_ .png" alt="Diagrama de conexión del proyecto final del primer parcial">
-        </div>
+  // 1. LEER: Obtenemos la posición de la perilla (0 a 1023).
+  valorPot = analogRead(pinPot);
 
-        <h2>💡 Conceptos Clave de la Misión</h2>
-        <ul>
-            <li><strong>Lógica Booleana:</strong> Usar operadores como AND (`&&`), OR (`||`) y NOT (`!`) para tomar decisiones basadas en múltiples condiciones.</li>
-            <li><strong>Integración de Sistemas:</strong> Combinar diferentes subsistemas (sensores, actuadores) para crear un proyecto funcional y complejo.</li>
-        </ul>
+  // 2. TRADUCIR (El gran truco): 
+  // La función map() convierte una escala en otra.
+  // map(variable, min_viejo, max_viejo, min_nuevo, max_nuevo);
+  angulo = map(valorPot, 0, 1023, 0, 180);
+
+  // 3. ACTUAR: Le decimos al servo que se mueva al nuevo ángulo.
+  miServo.write(angulo);
+
+  // 4. DIAGNÓSTICO: Imprimimos ambos valores para ver la traducción en vivo.
+  Serial.print("Perilla: ");
+  Serial.print(valorPot);
+  Serial.print(" -> Angulo: ");
+  Serial.println(angulo);
+
+  delay(15); // Una pausa muy cortita para darle tiempo al motor de llegar a su posición.
+}
+</code></pre>
+        </div>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>Modo Manual:</strong> Añade un botón al circuito. Si el botón es presionado, la luz debe encenderse sin importar lo que digan los sensores.</li>
-            <li><strong>Indicador de Estado:</strong> Añade un segundo LED (de otro color). Este LED debe estar siempre encendido si el sistema está en modo "automático" y parpadear si está en modo "manual".</li>
-            <li><strong>Ajuste de Sensibilidad:</strong> Añade un potenciómetro que permita ajustar el `umbralOscuridad` en tiempo real, sin tener que cambiar el código y volver a subirlo.</li>
+            <li><strong>Movimiento Inverso:</strong> Modifica la función <code>map()</code> para que, cuando gires la perilla hacia la derecha, el servo gire hacia la izquierda. (Pista: juega con los números <code>min_nuevo</code> y <code>max_nuevo</code>).</li>
+            <li><strong>Límites de Seguridad:</strong> ¿Qué pasa si no quieres que el servo llegue a los extremos? Modifica el código para que el ángulo máximo que alcance sea de 150 grados, sin importar si giras la perilla a fondo.</li>
+            <li><strong>Indicador Visual:</strong> Añade un LED al circuito. Haz que su brillo cambie en proporción a la posición de la perilla, usando <code>analogWrite()</code> y la función <code>map()</code>. ¡Controlarás luz y movimiento al mismo tiempo!</li>
         </ul>
+
         <div class="nav-links bottom-nav-links">
             <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
             <a href="tomo7.html" class="nav-link">Tomo Siguiente &rarr;</a>
@@ -101,38 +150,29 @@ void loop() {
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
-    <script>hljs.highlightAll();</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Busca todos los botones de copiar
-    const allCopyButtons = document.querySelectorAll('.copy-btn');
 
-    allCopyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Encuentra el contenedor de código más cercano
-            const codeContainer = this.closest('.code-container');
-            // Encuentra el bloque de código dentro de ese contenedor
-            const codeBlock = codeContainer.querySelector('code');
-            
-            if (codeBlock) {
-                // Copia el texto del código al portapapeles
-                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                    // Feedback visual para el usuario
-                    this.innerText = '¡Copiado!';
-                    setTimeout(() => {
-                        this.innerText = 'Copiar';
-                    }, 2000); // Vuelve al texto original después de 2 segundos
-                }).catch(err => {
-                    console.error('Error al copiar el código: ', err);
-                });
-            }
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
-
 </html>
-
-
-
