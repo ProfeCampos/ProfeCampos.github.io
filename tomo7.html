@@ -36,84 +36,86 @@
             <a href="tomo8.html" class="nav-link">Tomo Siguiente &rarr;</a>
         </div>
         
-        <p>¡Bienvenidos de vuelta, ingenieros! En la misión anterior aprendimos a controlar la posición de un motor de forma manual. Pero en la industria, la automatización real ocurre cuando el circuito toma decisiones por sí mismo basándose en lo que pasa a su alrededor.</p>
-        <p>Hoy vamos a crear un <strong>Sistema de Enfriamiento Automático</strong>. Aprenderemos a medir la temperatura ambiental real y a activar un ventilador cuando haga demasiado calor. Para lograrlo, conoceremos a dos componentes indispensables en la instrumentación.</p>
+        <p>¡Hola, creadores de sistemas! Hoy vamos a construir un termostato inteligente. Le daremos a nuestro Arduino la capacidad de medir la temperatura ambiente con precisión usando un sensor analógico, el LM35. Y lo más importante, aprenderemos a controlar un dispositivo de mayor potencia que un simple LED, como un ventilador, usando un transistor como interruptor electrónico.</p>
 
         <div class="protagonista-section">
-            <h3>🧠 Protagonista 1: El Sensor LM35 (El Termómetro Integrado)</h3>
-            <p>El LM35 es un sensor de temperatura analógico de gran precisión. Lo genial de este pequeño componente es que viene calibrado de fábrica directamente en grados Celsius.</p>
+            <h3>🧠 Protagonista 1: El Sensor de Temperatura LM35</h3>
+            <p>El LM35 es un sensor de temperatura de precisión. Su magia es que su voltaje de salida es linealmente proporcional a la temperatura en grados Celsius.</p>
             <ul>
-                <li><strong>¿Cómo funciona?:</strong> Por cada grado Celsius que aumente la temperatura, el sensor entrega 10mV (milivoltios) en su pin de señal. Por ejemplo, si estamos a 25°C, el sensor entregará 250mV.</li>
-                <li><strong>Lectura en Arduino:</strong> Recibimos este voltaje mediante <code>analogRead()</code> en un pin analógico. Después, mediante una pequeña fórmula matemática, convertimos esa lectura digital a grados Celsius (°C) reales para poder usarla en nuestro código.</li>
+                <li><strong>¿Cómo funciona?:</strong> Es muy directo. Por cada grado Celsius de temperatura, el voltaje en su pin de salida aumenta en 10 milivoltios (0.01V). Si mide 0.25V, significa que la temperatura es de 25°C.</li>
+                <li><strong>Ventajas:</strong> Es más preciso que un termistor, no necesita calibración externa y es muy fácil de usar.</li>
             </ul>
             <div class="image-container">
-                <!-- Sube la imagen del LM35 a GitHub con este nombre -->
-                <img src="lm35.png" alt="Sensor de temperatura LM35 con la distribución de sus tres pines: VCC, VOUT y GND">
+                <!-- Sube la imagen del sensor LM35 con este nombre -->
+                <img src="lm35.png" alt="Sensor de temperatura LM35 y sus tres pines">
             </div>
         </div>
 
         <div class="protagonista-section" style="background-color: #f1f8ff; border-left-color: #3498db; margin-top: 20px;">
-            <h3>⚙️ Protagonista 2: El Transistor 2N2222 (El Interruptor Electrónico)</h3>
-            <p>Un pin de Arduino solo puede entregar un máximo de 40mA de corriente. Si conectas un motor o un ventilador directo a un pin, ¡podrías quemar tu Arduino! Aquí es donde entra el transistor.</p>
+            <h3>⚙️ Protagonista 2: El Transistor (El Amplificador de Fuerza)</h3>
+            <p>Hasta ahora, hemos encendido LEDs que consumen muy poca corriente. Pero, ¿qué pasa si queremos controlar un motor, un ventilador o una tira de LEDs potente? El pin de Arduino no puede suministrar suficiente "fuerza" (corriente) para esos dispositivos y podríamos quemarlo.</p>
+            <p>Aquí entra el transistor. Actúa como un interruptor o una llave de paso controlada electrónicamente.</p>
             <ul>
-                <li><strong>¿Cómo funciona?:</strong> Piensa en él como un interruptor digital o un relevador de alta velocidad. Tiene 3 patitas: Emisor, Base y Colector. Al inyectar una corriente muy pequeña en la <strong>Base</strong> (desde un pin de Arduino), cerramos el circuito entre el <strong>Colector</strong> y el <strong>Emisor</strong>, permitiendo que pase una corriente mucho mayor externa para alimentar motores o cargas pesadas.</li>
-                <li><strong>Estado de Saturación:</strong> En este proyecto usaremos el transistor en modo "saturación", lo que significa que actuará simplemente como un switch cerrado (encendido) cuando el pin del Arduino esté en <code>HIGH</code>.</li>
+                <li><strong>¿Cómo funciona?:</strong> Tiene 3 patas: Base, Colector y Emisor.</li>
+                <li>Enviamos una pequeña señal de control desde Arduino a la <strong>Base</strong>.</li>
+                <li>Esta pequeña señal "abre la compuerta" y permite que una corriente mucho más grande fluya desde el <strong>Colector</strong> hacia el <strong>Emisor</strong>, encendiendo nuestro ventilador.</li>
+                <li><strong>En resumen:</strong> Usamos una señal pequeña y segura de Arduino para controlar una corriente grande y potente de una fuente de alimentación externa.</li>
             </ul>
             <div class="image-container">
-                <!-- Sube la imagen del transistor a GitHub con este nombre -->
-                <img src="transistor.png" alt="Transistor BJT 2N2222 mostrando sus pines de Emisor, Base y Colector">
+                <!-- Sube la imagen del transistor TIP120 con este nombre -->
+                <img src="tip120.png" alt="Transistor de potencia TIP 120 mostrando Base, Colector y Emisor">
             </div>
         </div>
 
-        <h2>🔌 El Circuito: Sistema de Ventilación Automática</h2>
-        <p>Conectaremos el LM35 para monitorear la temperatura ambiental. Si la temperatura supera un límite establecido, el Arduino mandará una señal al transistor para encender el ventilador de DC.</p>
+        <h2>🔌 El Circuito: Termostato Automático</h2>
+        <p>Construiremos un sistema que lea la temperatura y, si supera un cierto umbral, encienda un ventilador.</p>
         
         <h3>Componentes Necesarios:</h3>
         <ul>
-            <li>1 Arduino UNO y Protoboard</li>
-            <li>1 Sensor de temperatura LM35</li>
-            <li>1 Transistor NPN (2N2222 o similar)</li>
-            <li>1 Resistencia de 1kΩ (para proteger la base del transistor)</li>
-            <li>1 Motor o Ventilador de DC (5V)</li>
-            <li>1 Diodo 1N4007 (Diodo de protección contra contracorrientes del motor)</li>
-            <li>Cables Jumper</li>
+            <li>1 Placa Arduino UNO y Protoboard</li>
+            <li>1 Sensor de Temperatura LM35</li>
+            <li>1 Transistor TIP 120</li>
+            <li>1 Resistencia de 1kΩ</li>
+            <li>1 Ventilador PC 12V</li>
+            <li>1 Diodo (1N4007 o similar). ¡MUY IMPORTANTE!</li>
+            <li>Fuente de alimentación externa de 12V</li>
         </ul>
 
         <h3>📝 Instrucciones de Conexión:</h3>
         <ol>
-            <li><strong>Sensor LM35:</strong>
+            <li><strong>Conecta el Sensor LM35:</strong>
                 <ul>
-                    <li>Pin 1 (VCC): a los 5V del Arduino.</li>
-                    <li>Pin 2 (VOUT/Señal): al pin analógico <strong>A0</strong>.</li>
-                    <li>Pin 3 (GND): al GND del Arduino.</li>
+                    <li>Pin izquierdo (Vs) ➜ 5V.</li>
+                    <li>Pin central (Vout) ➜ Pin Analógico <strong>A0</strong>.</li>
+                    <li>Pin derecho (GND) ➜ GND.</li>
                 </ul>
             </li>
-            <li><strong>Circuito de Potencia (Transistor y Motor):</strong>
+            <li><strong>Conecta el Circuito del Motor con el Transistor:</strong>
                 <ul>
-                    <li><strong>Base (Pin central del 2N2222):</strong> Se conecta a una resistencia de 1kΩ, y el otro extremo de la resistencia va al pin digital <strong>2</strong> del Arduino.</li>
-                    <li><strong>Emisor:</strong> Va directo a la línea de GND del Arduino.</li>
-                    <li><strong>Colector:</strong> Se conecta al cable **negativo** del motor.</li>
-                    <li>El cable **positivo** del motor va directo a los 5V.</li>
-                    <li><em>Nota de protección:</em> Coloca el diodo 1N4007 en paralelo con el motor, con la franja gris apuntando al cable positivo. ¡Esto protege al circuito de picos de voltaje!</li>
+                    <li>Base del transistor ➜ a través de una resistencia de 1kΩ ➜ Pin Digital <strong>9</strong> de Arduino.</li>
+                    <li>Emisor del transistor ➜ al GND del Arduino.</li>
+                    <li>Colector del transistor ➜ al cable negativo (-) del ventilador.</li>
+                    <li>Cable positivo (+) del ventilador ➜ al Positivo (+) de tu fuente de alimentación de 12V.</li>
+                    <li><strong>¡Importante!</strong> Conecta el Negativo (-) de la fuente de alimentación de 12V al GND del Arduino (necesitan tierra común).</li>
+                    <li><strong>¡EL DIODO PROTECTOR!</strong> Conecta el diodo "en paralelo" con el motor, pero al revés. La pata con la raya plateada (cátodo) se conecta al positivo del ventilador, y la otra pata (ánodo) al negativo. Esto protege a tu transistor de picos de voltaje cuando el motor se apaga.</li>
                 </ul>
             </li>
         </ol>
 
         <div class="image-container">
             <h3>⚡ Diagrama de armado</h3>
-            <!-- Asegúrate de subir la imagen con el nombre exacto a tu repositorio -->
-            <img src="Tomo 7.png" alt="Diagrama de conexiones en Tinkercad del sensor LM35 y etapa de potencia con transistor 2N2222">
+            <!-- Sube tu diagrama de Tinkercad con este nombre -->
+            <img src="Tomo 7.png" alt="Diagrama de armado de termostato automático con LM35, TIP120 y fuente de 12V">
         </div>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
         <ul>
-            <li><strong>Conversión Analógica a Digital (ADC):</strong> Arduino convierte el voltaje de entrada (0-5V) en un número entero (0-1023) mediante <code>analogRead()</code>.</li>
-            <li><strong>Factor de Escala del LM35:</strong> Como el sensor entrega 10mV por cada grado, la fórmula matemática para obtener los grados Celsius es: <code>(voltaje_en_milivoltios / 10.0)</code>.</li>
-            <li><strong>Aislamiento de Corriente:</strong> El transistor permite controlar un componente de alto consumo utilizando una señal de control de muy baja corriente desde el microcontrolador.</li>
+            <li><strong>Tierra Común (GND):</strong> Cuando usas dos fuentes de voltaje distintas (como los 5V de Arduino y los 12V externos), es obligatorio unir sus polos negativos (GND) para que compartan la misma referencia eléctrica.</li>
+            <li><strong>Tipo de dato <code>float</code>:</strong> A diferencia de los enteros (<code>int</code>), este tipo de variable nos permite almacenar números con puntos decimales, crucial para medir variaciones finas de temperatura.</li>
         </ul>
 
-        <h2>🧠 El Código: Control de Temperatura Inteligente</h2>
-        <p>En este código leeremos de manera constante el valor analógico del sensor, haremos las operaciones matemáticas para guardarlo en una variable tipo <code>float</code> (con punto decimal) y usaremos un condicional <code>if</code> para decidir si encendemos el ventilador.</p>
+        <h2>🧠 El Código: La Lógica del Termostato</h2>
+        <p>El código leerá el voltaje del LM35, lo convertirá a grados Celsius y decidirá si debe encender el ventilador.</p>
         
         <div class="code-container"> 
             <div class="code-header">
@@ -129,28 +131,28 @@
 */
 
 // --- ZONA DE CONFIGURACIÓN ---
-const int pinSensor = A0;     // Pin analógico donde conectamos el LM35
-const int pinVentilador = 2;  // Pin digital que controla la base del transistor
+int pinSensor = A0;   // Pin analógico donde conectamos el LM35
+int pinVentilador = 9;// Pin digital que controla la base del transistor
 
-int lecturaRaw;               // Variable para almacenar el valor bruto (0-1023)
-float voltaje;                // Variable para almacenar el voltaje calculado
-float temperatura;            // Variable para almacenar la temperatura final en °C
+int lecturaLM35;   // Variable para almacenar el valor bruto (0-1023)
+float voltaje;     // Variable para almacenar el voltaje calculado
+float temperatura; // Variable para almacenar la temperatura final en °C
 
 // Umbral de temperatura para activar el ventilador
-const float UMBRAL_CALOR = 30.0; 
+float UMBRAL_CALOR = 30.0; 
 
 void setup() {
-  Serial.begin(9600);                // Iniciamos la comunicación serial
-  pinMode(pinVentilador, OUTPUT);    // Configuramos el pin del transistor como salida
+  Serial.begin(9600);             // Iniciamos la comunicación serial
+  pinMode(pinVentilador, OUTPUT); // Configuramos el pin del transistor como salida
 }
 
 void loop() {
   // 1. LEER EL SENSOR
-  lecturaRaw = analogRead(pinSensor);
+  lecturaLM35 = analogRead(pinSensor);
 
   // 2. CONVERTIR LECTURA A VOLTAJE (en milivoltios)
   // Multiplicamos por 5000 (porque son 5V o 5000mV) y dividimos entre los 1023 pasos del ADC
-  voltaje = (lecturaRaw / 1023.0) * 5000.0;
+  voltaje = (lecturaLM35 / 1023.0) * 5000.0;
 
   // 3. CALCULAR TEMPERATURA
   // Sabiendo que el LM35 da 10mV por cada 1°C, dividimos el voltaje entre 10
@@ -158,7 +160,7 @@ void loop() {
 
   // 4. MOSTRAR DATOS EN MONITOR SERIAL
   Serial.print("Lectura ADC: ");
-  Serial.print(lecturaRaw);
+  Serial.print(lecturaLM35);
   Serial.print(" -> Temperatura: ");
   Serial.print(temperatura);
   Serial.println(" C");
@@ -179,10 +181,16 @@ void loop() {
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>Alerta Visual y Sonora:</strong> Agrega un LED rojo y un Buzzer al circuito. Haz que se activen de forma intermitente únicamente cuando el ventilador esté encendido, alertando de forma visual y audible que el sistema está caliente.</li>
-            <li><strong>Histéresis (Reto Avanzado):</strong> Si la temperatura oscila exactamente en 30.0°C, el ventilador se encenderá y apagará muy rápido, lo cual puede dañarlo. Modifica las condiciones para que el ventilador se encienda a los 30.0°C pero solo se apague cuando la temperatura baje de 28.0°C.</li>
-            <li><strong>Ventilador Inteligente (Velocidad Variable):</strong> En lugar de usar <code>digitalWrite()</code>, conecta el transistor a un pin PWM (como el pin 3) y usa <code>analogWrite()</code> y la función <code>map()</code> para que el ventilador sople despacio a los 25°C y vaya aumentando su velocidad conforme haga más calor.</li>
+            <li><strong>Histéresis (Reto Avanzado):</strong> Si la temperatura oscila exactamente en 30.0°C, el ventilador se encenderá y apagará muy rápido, lo cual puede dañarlo. Modifica las condiciones para que el ventilador se encienda a los 30.0°C pero sólo se apague cuando la temperatura baje de 28.0°C.</li>
+            <li><strong>Control de Velocidad (Avanzado):</strong> En lugar de <code>digitalWrite</code>, usa <code>analogWrite(pinVentilador, velocidad)</code> en el pin 9. ¿Puedes hacer que la velocidad del ventilador aumente a medida que sube la temperatura? (Necesitarás la función <code>map()</code> de nuevo).</li>
         </ul>
+
+        <p style="margin-top: 2rem; font-style: italic; font-weight: bold; color: #0A2A4E;">
+            ¡Felicidades! Han dado un paso enorme hacia la instrumentación real. Ahora pueden no solo leer el ambiente con precisión, sino también controlar dispositivos de mayor potencia de forma segura. ¡Están listos para automatizar casi cualquier cosa!
+        </p>
+        <p style="font-weight: bold; color: #F58220; font-size: 1.2rem;">
+            ¡A seguir construyendo! - Profe Campos
+        </p>
 
         <div class="nav-links bottom-nav-links">
             <a href="tomo6.html" class="nav-link">&larr; Tomo Anterior</a>
