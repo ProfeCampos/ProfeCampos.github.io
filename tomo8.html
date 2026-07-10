@@ -3,146 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomo 8: LM35 y Transistor - Manual de Instrumentación</title>
+    <title>Tomo 8: El Panorama Completo - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        /* Resaltado especial para comandos sueltos en el texto (sin afectar el bloque de código) */
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="header-container">
-            <h1>Tomo 8: Sintiendo el Calor - Sensor LM35 y Transistores</h1>
+            <h1>Tomo 8: El Panorama Completo - DHT11, Relés y LCD</h1>
         </div>
     </header>
     <main class="tomo-content">
-<div class="nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+        <div class="nav-links">
+            <a href="tomo7.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
             <a href="tomo9.html" class="nav-link">Tomo Siguiente &rarr;</a>
-        </div>        <p>Ya sabemos medir luz y movimiento. Hoy aprenderemos a medir temperatura con el sensor de precisión LM35. Pero no nos detendremos ahí. ¿Qué pasa si la señal de Arduino no es suficiente para activar un componente más grande, como un motor? Introduciremos al <strong>Transistor</strong>, el componente fundamental de la electrónica moderna, que actuará como un "amplificador" o interruptor electrónico para controlar cargas de mayor potencia.</p>
+        </div>
+        
+        <p>¡Saludos, futuros ingenieros! Ya son expertos en medir el mundo y controlar movimiento. Hoy vamos a dar un salto gigante: aprenderemos a leer dos variables ambientales con un solo sensor, a controlar aparatos del mundo real (como los que se conectan a la pared) y a mostrar toda esa información de manera profesional en una pantalla de cristal líquido (LCD).</p>
 
         <div class="protagonista-section">
-            <h3>🧠 Protagonista 1: El Sensor de Temperatura LM35</h3>
-            <p>El LM35 es un sensor analógico muy preciso. Su magia reside en que su voltaje de salida es linealmente proporcional a la temperatura en grados Celsius. Específicamente, por cada grado Celsius, el voltaje en su pin de salida aumenta en 10 milivoltios (0.01V). Esto hace que calcular la temperatura sea una simple operación matemática.</p>
-                    <div class="image-container">
-                    <img src="LM35-Sensor-de-Temperatura-PINOUT.png" alt="pinout 2n2222">
-                    </div>   
+            <h3>🧠 Protagonista 1: Sensor DHT11 (El Combo Digital 2x1)</h3>
+            <p>El DHT11 es un sensor increíblemente popular y práctico. Es como tener un termómetro y un medidor de humedad en un solo paquete digital.</p>
+            <ul>
+                <li><strong>¿Cómo funciona?:</strong> Internamente, tiene un sensor de humedad y un termistor. Un pequeño chip convierte esas lecturas en una señal digital que nuestro Arduino puede entender. ¡Con un solo pin de datos obtenemos dos mediciones!</li>
+                <li><strong>Pines:</strong> Usualmente viene en un pequeño módulo con 3 pines:
+                    <ul>
+                        <li><code>VCC</code> o <code>+</code>: A 5V.</li>
+                        <li><code>GND</code> o <code>-</code>: A GND.</li>
+                        <li><code>DATA</code> o <code>OUT</code>: Al pin digital de Arduino que elijamos.</li>
+                    </ul>
+                </li>
+                <li><strong>Nota:</strong> Si usas el sensor que viene solo, es decir sin módulo (4 pines), debes colocar una resistencia <code>Pull-Up</code> que puede ser un valor entre 4.7K y 10K.</li>
+            </ul>
+            <div class="image-container">
+                <!-- Sube la imagen del DHT11 a GitHub con este nombre -->
+                <img src="dht11.png" alt="Sensor de temperatura y humedad DHT11 en versión individual y módulo">
+            </div>
         </div>
-        <div class="protagonista-section">
-            <h3>⚙️ Protagonista 2: El Transistor NPN (2N2222)</h3>
-            <p>Un transistor es un interruptor controlado por electricidad. Tiene tres patas: Base, Colector y Emisor. Piensa en él como una llave de agua: al aplicar una pequeña corriente al pin de la <strong>Base</strong> (la perilla de la llave), permitimos que una corriente mucho más grande fluya desde el <strong>Colector</strong> hacia el <strong>Emisor</strong> (el tubo principal). Esto nos permite usar un pin de 5V de Arduino, que solo da unos 40mA, para controlar un motor que podría necesitar 200mA o más.</p>
-                   <div class="image-container">
-                    <img src="2N2222-NPN.png" alt="pinout 2n2222">
-                    </div>     
+
+        <div class="protagonista-section" style="background-color: #f1f8ff; border-left-color: #3498db; margin-top: 20px;">
+            <h3>⚙️ Protagonista 2: El Módulo de Relé (El Interruptor de Alto Voltaje)</h3>
+            <p>¿Recuerdan que el transistor nos ayudó a controlar un motor de 12V? Bueno, ¿qué pasa si queremos controlar una lámpara, un ventilador o una cafetera que se conecta directamente al enchufe de la pared (120V AC)? <strong>¡NUNCA, BAJO NINGUNA CIRCUNSTANCIA, conectes alto voltaje directamente a tu protoboard o Arduino!</strong> Podrías destruirlo y, lo que es peor, es extremadamente peligroso.</p>
+            <p>Para esta tarea, necesitamos un intermediario seguro: el Relé (o Relevador).</p>
+            <ul>
+                <li><strong>¿Qué es?:</strong> Es un interruptor electromagnético. Usamos una señal pequeña y segura de 5V de Arduino para activar un electroimán dentro del relé. Este imán mueve un interruptor físico interno que está completamente aislado de nuestro Arduino, permitiendo controlar de forma segura el circuito de alto voltaje.</li>
+                <li><strong>Pines del Módulo:</strong>
+                    <ul>
+                        <li><strong>Lado de Control:</strong> <code>VCC</code>, <code>GND</code> y <code>IN</code> (la señal que viene de Arduino).</li>
+                        <li><strong>Lado de Potencia (los tornillos):</strong>
+                            <ul>
+                                <li><code>COM</code>: Común. Aquí conectas uno de los cables del aparato que quieres controlar.</li>
+                                <li><code>NO</code>: Normally Open (Normalmente Abierto). El circuito está apagado por defecto.</li>
+                                <li><code>NC</code>: Normally Closed (Normalmente Cerrado). El circuito está encendido por defecto.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><em>Generalmente usaremos <code>COM</code> y <code>NO</code>.</em></li>
+            </ul>
+            <div class="image-container">
+                <!-- Sube la imagen del módulo de relé a GitHub con este nombre -->
+                <img src="rele.png" alt="Módulo de relé de un canal mostrando el lado de control y los terminales de potencia">
+            </div>
         </div>
 
-        <h2>🧠 El Código: Un Termostato Automático</h2>
-        <p>El código leerá el voltaje del LM35, lo convertirá a grados Celsius, y si la temperatura supera un umbral, activará el pin de la Base del transistor para encender un ventilador.</p>
-        <div class="code-container"> 
-    <div class="code-header">
-        <span>Código Arduino</span>
-        <button class="copy-btn">Copiar</button>
-    </div> 
-<pre><code class="language-cpp code-block">
-/*
- * Misión 08: Sintiendo el Calor
- * Descripción: Activa un ventilador con un transistor si la temperatura del LM35 supera un umbral.
- * Por: Profe Campos
- * CECyTEM 05 Guacamayas
-*/
+        <div class="protagonista-section" style="background-color: #fdfefe; border-left-color: #2ecc71; margin-top: 20px;">
+            <h3>🖥️ Protagonista 3: La Pantalla LCD 16x2 con I2C</h3>
+            <p>El Monitor Serial es genial para pruebas, pero si queremos que nuestro proyecto sea independiente de la computadora, necesitamos una forma de ver la información.</p>
+            <p>La Pantalla LCD (Liquid Crystal Display) es la solución clásica. El modelo 16x2 significa que puede mostrar 2 filas de 16 caracteres cada una.</p>
+            <p>Conectar una LCD directamente requiere muchos pines. Por eso, usamos un pequeño módulo I2C que viene soldado detrás. <strong>¡Este módulo reduce los 16 cables necesarios a solo 4!</strong></p>
+            <ul>
+                <li><code>GND</code>: A GND.</li>
+                <li><code>VCC</code>: A 5V.</li>
+                <li><code>SDA</code>: Pin de Datos ➜ Al pin <strong>A4</strong> de Arduino UNO.</li>
+                <li><code>SCL</code>: Pin de Reloj ➜ Al pin <strong>A5</strong> de Arduino UNO.</li>
+            </ul>
+            <div class="image-container">
+                <!-- Sube la imagen de la pantalla LCD I2C a GitHub con este nombre -->
+                <img src="lcd_i2c.png" alt="Pantalla LCD 16x2 con el módulo adaptador I2C soldado en la parte posterior">
+            </div>
+        </div>
 
-const int pinSensor = A0;       // Pin para leer el LM35.
-const int pinVentilador = 9;    // Pin para controlar la base del transistor.
+        <h2>🔌 El Circuito: Estación de Monitoreo Ambiental</h2>
+        
+        <h3>Componentes Necesarios:</h3>
+        <ul>
+            <li>Arduino, Protoboard, Cables</li>
+            <li>Sensor DHT11</li>
+            <li>Módulo de Relé de 1 canal</li>
+            <li>Pantalla LCD 16x2 con I2C</li>
+            <li>Un foco con socket y clavija (para el lado de potencia del relé). <strong>¡MÁXIMA PRECAUCIÓN AQUÍ!</strong></li>
+        </ul>
 
-float voltaje;            // Para guardar el voltaje leído.
-float temperaturaC;       // Para guardar la temperatura calculada.
-const float umbralTemp = 28.0; // Umbral de temperatura en Celsius.
+        <h3>📝 Instrucciones de Conexión:</h3>
+        <ol>
+            <li><strong>Conecta la Pantalla LCD:</strong>
+                <ul>
+                    <li><code>GND</code> ➜ GND, <code>VCC</code> ➜ 5V, <code>SDA</code> ➜ <strong>A4</strong>, <code>SCL</code> ➜ <strong>A5</strong>.</li>
+                </ul>
+            </li>
+            <li><strong>Conecta el Sensor DHT11:</strong>
+                <ul>
+                    <li><code>+</code> ➜ 5V, <code>-</code> ➜ GND, <code>OUT</code> ➜ Pin Digital <strong>2</strong>.</li>
+                </ul>
+            </li>
+            <li><strong>Conecta el Módulo de Relé (Lado de Control):</strong>
+                <ul>
+                    <li><code>+</code> ➜ 5V, <code>-</code> ➜ GND, <code>IN</code> ➜ Pin Digital <strong>7</strong>.</li>
+                </ul>
+            </li>
+            <li><strong>Conecta el Foco al Relé (Lado de Potencia):</strong>
+                <ul>
+                    <li><strong>ADVERTENCIA:</strong> Pide ayuda y supervisión al Profe Campos para este paso.</li>
+                    <li>Toma el cable de la lámpara. Córtalo en uno de los dos hilos (no en ambos).</li>
+                    <li>Conecta un extremo del hilo cortado al tornillo <code>COM</code> del relé.</li>
+                    <li>Conecta el otro extremo del hilo cortado al tornillo <code>NO</code> del relé.</li>
+                </ul>
+            </li>
+        </ol>
 
-void setup() {
-  pinMode(pinVentilador, OUTPUT);
-  Serial.begin(9600);
-}
-
-void loop() {
-  // 1. Leemos el valor analógico (0-1023) y lo convertimos a voltaje (0-5V).
-  voltaje = (analogRead(pinSensor) / 1023.0) * 5.0;
-  
-  // 2. Convertimos el voltaje a grados Celsius (10mV por grado -> V * 100).
-  temperaturaC = voltaje * 100;
-
-  Serial.print("Temperatura: ");
-  Serial.print(temperaturaC);
-  Serial.println(" C");
-  
-  // 3. Tomamos la decisión.
-  if (temperaturaC > umbralTemp) {
-    digitalWrite(pinVentilador, HIGH); // Activamos el transistor.
-  } else {
-    digitalWrite(pinVentilador, LOW); // Lo desactivamos.
-  }
-  delay(1000); // Leemos la temperatura cada segundo.
-}
-        </code></pre>
-</div>
-        <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Construiremos un termostato automático. Es crucial incluir un <strong>diodo</strong> en "paralelo inverso" con el motor. Este diodo protege al transistor de picos de voltaje que el motor genera al apagarse (fuerza contraelectromotriz).</p>
         <div class="image-container">
-            <h3>Diagrama del Circuito 8</h3>
-            <img src="Tomo 8.png" alt="Diagrama de conexión de un sensor LM35 y un transistor controlando un motor">
+            <h3>⚡ Diagrama de armado</h3>
+            <!-- Sube tu diagrama de Tinkercad o Fritzing con este nombre -->
+            <img src="Tomo 8.png" alt="Diagrama completo de conexiones de la estación de monitoreo ambiental">
         </div>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
         <ul>
-            <li><strong>Transistor como Interruptor:</strong> Usar una pequeña corriente en la 'Base' para controlar un flujo grande de corriente entre el 'Colector' y el 'Emisor'.</li>
-            <li><strong>Diodo de Protección (Flyback):</strong> Absorbe la energía que un motor genera al apagarse, protegiendo los componentes del circuito.</li>
+            <li><strong>Protocolo I2C:</strong> Un bus de comunicación industrial que permite interconectar múltiples dispositivos (como pantallas y sensores) usando únicamente dos cables de señal (<code>SDA</code> y <code>SCL</code>).</li>
+            <li><strong>Función <code>isnan()</code>:</strong> Significa "Is Not a Number" (No es un Número). Es una función matemática indispensable para validar que las lecturas obtenidas del DHT11 sean correctas y no se hayan corrompido durante la transmisión de datos.</li>
         </ul>
+
+        <h2>🧠 El Código: El Centro de Comando</h2>
+        <p>Este código necesita varias librerías. Asegúrate de instalarlas desde el Gestor de Librerías de Arduino IDE: <strong>DHT sensor library</strong> (de Adafruit) y <strong>LiquidCrystal_I2C</strong>.</p>
+        
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
+/*
+ * Misión 09: El Panorama Completo
+ * Descripción: Muestra Temp/Humedad del DHT11 en una LCD y activa un relé.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+// --- INCLUIR LIBRERÍAS ---
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt; // Para la pantalla LCD
+#include "DHT.h"                 // Para el sensor DHT
+
+// --- CONFIGURACIÓN DE COMPONENTES ---
+#define DHTPIN 2       // Pin donde está el DHT11
+#define DHTTYPE DHT11  // Definimos que es un DHT11
+const int pinRele = 7; // Pin para controlar el relé
+
+// Inicializamos los objetos
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Dirección I2C, 16 columnas, 2 filas
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pinRele, OUTPUT);
+  digitalWrite(pinRele, LOW); // Nos aseguramos que el relé empiece apagado
+
+  dht.begin(); // Iniciamos el sensor DHT
+  
+  lcd.init();      // Iniciamos la pantalla LCD
+  lcd.backlight(); // Encendemos la luz de fondo
+  lcd.setCursor(0, 0); // Ponemos el cursor en la columna 0, fila 0
+  lcd.print("Estacion CTEC");
+  lcd.setCursor(0, 1); // Columna 0, fila 1
+  lcd.print("Iniciando...");
+  delay(2000);
+  lcd.clear(); // Limpiamos la pantalla
+}
+
+void loop() {
+  delay(2000); // Esperamos 2 segundos entre lecturas
+
+  // Leer la humedad y la temperatura toma unos 250ms
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  // Verificamos si la lectura falló (muy común con los DHT)
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Error al leer del sensor DHT!");
+    lcd.setCursor(0, 0);
+    lcd.print("Error de Sensor");
+    return; // Salimos del loop y lo intentamos de nuevo
+  }
+
+  // --- MOSTRAMOS EN LCD ---
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(t);
+  lcd.print(" C");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Hum:  ");
+  lcd.print(h);
+  lcd.print(" %");
+
+  // --- LÓGICA DEL RELÉ ---
+  if (t > 30.0) { // Si la temperatura supera los 30 grados
+    digitalWrite(pinRele, HIGH); // Activamos el relé
+  } else {
+    digitalWrite(pinRele, LOW);  // Lo desactivamos
+  }
+}
+</code></pre>
+        </div>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>Modo Frío:</strong> Modifica el código para que en lugar de un ventilador, active un foco (simulado con un LED) si la temperatura baja de cierto punto (como un calentador).</li>
-            <li><strong>Control de Velocidad:</strong> Usa `analogWrite()` en el pin 9. ¿Puedes hacer que la velocidad del ventilador aumente a medida que sube la temperatura?</li>
-            <li><strong>Termostato con Histéresis:</strong> Para evitar que el ventilador se encienda y apague constantemente, crea una "zona muerta": que se encienda a los 28°C pero no se apague hasta que baje de 26°C.</li>
+            <li><strong>Control de Humedad:</strong> Modifica la lógica para que el relé se active si la humedad supera el 70%, simulando un deshumidificador.</li>
+            <li><strong>Doble Condición:</strong> Cambia el código para que el relé solo se active si la temperatura es alta Y la humedad también es alta. (Pista: necesitarás el operador <code>&&</code>).</li>
+            <li><strong>Mensajes en LCD:</strong> Haz que en la pantalla LCD aparezca un mensaje como "Ventilador ON" o "Ventilador OFF" según el estado del relé.</li>
         </ul>
+
+        <p style="margin-top: 2rem; font-style: italic; font-weight: bold; color: #0A2A4E;">
+            ¡Felicidades! Han dado un paso enorme hacia la instrumentación real. Ahora pueden no solo leer el ambiente con precisión, sino también controlar dispositivos de mayor potencia de forma segura. ¡Están listos para automatizar casi cualquier cosa!
+        </p>
+        <p style="font-weight: bold; color: #F58220; font-size: 1.2rem;">
+            ¡A seguir construyendo! - Profe Campos
+        </p>
+
         <div class="nav-links bottom-nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="tomo7.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
             <a href="tomo9.html" class="nav-link">Tomo Siguiente &rarr;</a>
         </div>
     </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
-      <script>hljs.highlightAll();</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Busca todos los botones de copiar
-    const allCopyButtons = document.querySelectorAll('.copy-btn');
 
-    allCopyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Encuentra el contenedor de código más cercano
-            const codeContainer = this.closest('.code-container');
-            // Encuentra el bloque de código dentro de ese contenedor
-            const codeBlock = codeContainer.querySelector('code');
-            
-            if (codeBlock) {
-                // Copia el texto del código al portapapeles
-                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                    // Feedback visual para el usuario
-                    this.innerText = '¡Copiado!';
-                    setTimeout(() => {
-                        this.innerText = 'Copiar';
-                    }, 2000); // Vuelve al texto original después de 2 segundos
-                }).catch(err => {
-                    console.error('Error al copiar el código: ', err);
-                });
-            }
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
-
 </html>
-
-
 
