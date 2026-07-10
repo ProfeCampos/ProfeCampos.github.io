@@ -102,3 +102,14 @@
     list-style-type: square;
     padding-left: 20px;
 }
+/* =========================================================
+   NUEVO: Hacer que las imágenes se adapten a los celulares
+   ========================================================= */
+.image-container img, 
+.tomo-content img {
+    max-width: 100%;  
+    height: auto;     
+    display: block;   
+    margin: 0 auto;   
+    border-radius: 8px; 
+}
