@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        /* Resaltado especial para comandos sueltos en el texto (sin afectar el bloque de código) */
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; /* Rojo intenso para resaltar */
+            font-size: 1.15em; /* Tamaño ajustado para que no se vea chiquito */
+            font-weight: bold;
+            background-color: #f1f2f6; /* Fondito gris tenue para enmarcarlo */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
     <header>
