@@ -6,6 +6,10 @@
     <title>La Caja de Herramientas - Manual de Instrumentación</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
     <style>
         /* Estilos específicos para las tablas de la caja de herramientas */
         .glosario-table {
@@ -30,13 +34,14 @@
         .glosario-table tr:last-child td {
             border-bottom: none;
         }
+        /* Aquí aumentamos el tamaño de letra de los comandos en las tablas */
         .glosario-table code {
             background-color: #f1f2f6;
             color: #e74c3c;
-            padding: 3px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 0.95em;
+            font-size: 1.2em; /* Tamaño aumentado para mayor legibilidad */
         }
         .alerta-sintaxis {
             background-color: #fff3f3;
@@ -44,6 +49,16 @@
             padding: 15px;
             margin: 20px 0;
             border-radius: 4px;
+        }
+        /* Clase especial para comandos grandes fuera de tablas */
+        .comando-grande {
+            background-color: #f1f2f6;
+            color: #e74c3c;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 1.3em; /* Letra aún más grande para resaltar */
         }
     </style>
 </head>
@@ -64,8 +79,8 @@
             <h3 style="color: #c0392b; margin-top: 0;">⚠️ 🚨 Las Reglas de Oro de la Sintaxis</h3>
             <p>Si tu programa no compila y se pinta de rojo, revisa a estos sospechosos comunes:</p>
             <ul>
-                <li><strong>El punto y coma (<code>;</code>):</strong> Cada instrucción individual debe terminar obligatoriamente con un punto y coma.</li>
-                <li><strong>Las Llaves (<code>{ }</code>):</strong> Todo lo que abre debe cerrar. Las funciones (<code>setup</code>, <code>loop</code>) y los condicionales (<code>if</code>, <code>for</code>) encierran sus bloques de código entre llaves.</li>
+                <li><strong>El punto y coma (<span class="comando-grande">;</span>):</strong> Cada instrucción individual debe terminar obligatoriamente con un punto y coma.</li>
+                <li><strong>Las Llaves (<span class="comando-grande">{ }</span>):</strong> Todo lo que abre debe cerrar. Las funciones (<code>setup</code>, <code>loop</code>) y los condicionales (<code>if</code>, <code>for</code>) encierran sus bloques de código entre llaves.</li>
                 <li><strong>Mayúsculas y Minúsculas:</strong> Arduino es "Case Sensitive". No es lo mismo <code>pinMode</code> que <code>Pinmode</code>. ¡Escribe exacto!</li>
             </ul>
         </div>
@@ -132,7 +147,7 @@
                 <tr>
                     <td><code>String</code></td>
                     <td>Cadenas de texto o palabras. Siempre se escriben entre comillas dobles.</td>
-                    <td><code>String saludo = "Hola Profe";</code></td>
+                    <td><code>String saludo = "Hola";</code></td>
                 </tr>
             </table>
         </div>
@@ -159,7 +174,7 @@
                 <tr>
                     <td><code>></code> y <code><</code></td>
                     <td>Mayor que / Menor que</td>
-                    <td><code>if (temperatura > 30)</code></td>
+                    <td><code>if (temp > 30)</code></td>
                 </tr>
                 <tr>
                     <td><code>>=</code> y <code><=</code></td>
@@ -174,7 +189,7 @@
                 <tr>
                     <td><code>||</code></td>
                     <td>Lógico OR (O). Basta con que una condición se cumpla.</td>
-                    <td><code>if (boton1 == LOW || boton2 == LOW)</code></td>
+                    <td><code>if (bot1 == LOW || bot2 == LOW)</code></td>
                 </tr>
             </table>
         </div>
@@ -183,15 +198,22 @@
             <h3>📐 4. El Gran Dilema Analógico: 1023 vs 255</h3>
             <p>Confundir estos dos números es el error más común al conectar sensores analógicos y motores. ¡Esta es la regla definitiva!</p>
             <ul>
-                <li><strong>📥 <code>analogRead()</code> → El Filtro de Entrada (0 a 1023):</strong> Cuando el Arduino LEE el mundo exterior (ej. Sensor LDR en pines A0-A5), convierte ese voltaje en un número. Oscuridad total = <code>0</code>, Luz máxima = <code>1023</code>.</li>
-                <li><strong>📤 <code>analogWrite()</code> → El Filtro de Salida PWM (0 a 255):</strong> Cuando el Arduino ESCRIBE hacia afuera para controlar intensidad (ej. brillo de un LED o velocidad de un motor en pines con ~), solo acepta números hasta el 255. Apagado = <code>0</code>, Máxima potencia = <code>255</code>.</li>
+                <li><strong>📥 <span class="comando-grande">analogRead()</span> → El Filtro de Entrada (0 a 1023):</strong> Cuando el Arduino LEE el mundo exterior (ej. Sensor LDR en pines A0-A5), convierte ese voltaje en un número. Oscuridad total = <code>0</code>, Luz máxima = <code>1023</code>.</li>
+                <li><strong>📤 <span class="comando-grande">analogWrite()</span> → El Filtro de Salida PWM (0 a 255):</strong> Cuando el Arduino ESCRIBE hacia afuera para controlar intensidad (ej. brillo de un LED o velocidad de un motor en pines con ~), solo acepta números hasta el 255. Apagado = <code>0</code>, Máxima potencia = <code>255</code>.</li>
             </ul>
             
             <h4>🗺️ El Traductor Automático: La función map()</h4>
             <p>Si quieres controlar un motor usando un sensor, necesitas traducir de la escala 1023 a la escala 255. Para eso usamos el comando map:</p>
-            <div style="background: #2c3e50; color: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 0.9em; margin-bottom: 10px;">
-                // map(variable_a_traducir, min_original, max_original, min_nuevo, max_nuevo);<br>
-                int velocidad = map(lecturaLuz, 0, 1023, 0, 255);
+            
+            <div class="code-container"> 
+                <div class="code-header">
+                    <span>Código Arduino</span>
+                    <button class="copy-btn">Copiar</button>
+                </div> 
+<pre><code class="language-cpp code-block">
+// Sintaxis: map(variable, min_actual, max_actual, min_nuevo, max_nuevo);
+int velocidad = map(lecturaLuz, 0, 1023, 0, 255);
+</code></pre>
             </div>
         </div>
 
@@ -202,5 +224,29 @@
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
+
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
