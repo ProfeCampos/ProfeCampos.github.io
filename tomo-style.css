@@ -90,26 +90,32 @@
     margin-bottom: 1.5rem;
     border-left: 5px solid #0A2A4E;
 }
+
+/* Ajuste al contenedor de la imagen para pantallas chicas */
 .image-container {
     text-align: center;
     margin-top: 2rem;
-    padding: 2rem;
+    padding: 1rem; /* Reducimos el padding para ganar espacio en celular */
     background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 5px;
+    box-sizing: border-box;
 }
+
 .tomo-content ul {
     list-style-type: square;
     padding-left: 20px;
 }
+
 /* =========================================================
-   NUEVO: Hacer que las imágenes se adapten a los celulares
+   CORRECCIÓN DEFINITIVA: Fuerza a la imagen a no desbordarse
    ========================================================= */
 .image-container img, 
 .tomo-content img {
-    max-width: 100%;  
-    height: auto;     
-    display: block;   
-    margin: 0 auto;   
+    display: block;
+    width: 100%;       /* Ocupa todo el ancho disponible del recuadro */
+    max-width: 600px;  /* Pero en computadora no se hará más grande de 600px */
+    height: auto;      /* Mantiene la proporción perfecta */
+    margin: 0 auto;    /* La centra */
     border-radius: 8px; 
 }
