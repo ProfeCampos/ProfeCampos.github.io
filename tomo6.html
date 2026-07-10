@@ -31,6 +31,9 @@
                 <li><strong>¿Cómo funciona?:</strong> Tiene 3 pines. Conectamos los extremos a 5V y a GND. El pin del medio, llamado "wiper", se mueve a lo largo de la pista resistiva. Dependiendo de su posición, entregará un voltaje entre 0V y 5V.</li>
                 <li><strong>Lectura en Arduino:</strong> Usamos la función <code>analogRead()</code>, que convierte ese voltaje en un número entre <strong>0 y 1023</strong>. 0 es cuando la perilla está girada completamente hacia el lado de GND, y 1023 es cuando está del lado de 5V.</li>
             </ul>
+            <div class="image-container">
+                <img src="potenciometro.png" alt="Imagen de un potenciómetro comercial mostrando sus tres pines">
+            </div>
         </div>
 
         <div class="protagonista-section" style="background-color: #f1f8ff; border-left-color: #3498db; margin-top: 20px;">
@@ -40,6 +43,9 @@
                 <li><strong>¿Cómo funciona?:</strong> También tiene 3 cables. Dos para alimentación (5V y GND) y uno para la señal de control.</li>
                 <li><strong>Control en Arduino:</strong> A diferencia del potenciómetro, enviamos pulsos al servo. Para facilitarnos la vida, usamos la "librería" de Arduino llamada <code>Servo.h</code>, que nos permite darle órdenes sencillas como <code>miServo.write(90);</code> para que vaya al centro exacto.</li>
             </ul>
+            <div class="image-container">
+                <img src="servomotor.png" alt="Imagen de un micro servomotor SG90 con sus cables de conexión">
+            </div>
         </div>
 
         <h2>🔌 El Circuito: Perilla de Mando</h2>
@@ -73,8 +79,14 @@
 
         <div class="image-container">
             <h3>⚡ Diagrama de armado</h3>
-            <img src="Tomo 7.png" alt="Diagrama de Tinkercad mostrando un potenciómetro conectado a A0 y un Servomotor conectado al pin 9">
+            <img src="Tomo 6.png" alt="Diagrama de Tinkercad mostrando un potenciómetro conectado a A0 y un Servomotor conectado al pin 9">
         </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Librerías (<code>#include</code>):</strong> Bloques de código pre-hecho que nos dan funcionalidades extra, como controlar servos de manera sencilla.</li>
+            <li><strong>Función <code>map()</code>:</strong> Una herramienta muy útil que re-escala un número de un rango a otro.</li>
+        </ul>
 
         <h2>🧠 El Código: Traduciendo Perilla a Movimiento</h2>
         <p>El reto aquí es "mapear" o traducir el rango de lectura del potenciómetro (0 a 1023) al rango de movimiento del servo (0 a 180). Por suerte, ¡Arduino tiene una función perfecta para eso!</p>
