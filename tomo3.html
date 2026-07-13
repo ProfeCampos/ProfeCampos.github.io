@@ -8,6 +8,78 @@
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        /* Estilo para los comandos en rojo */
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        /* Estilos para las tablas de componentes */
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1em;
+            font-family: sans-serif;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        .component-table thead tr {
+            background-color: #0056b3;
+            color: #ffffff;
+            text-align: left;
+        }
+        .component-table th, .component-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        .component-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .component-table tbody tr:last-of-type {
+            border-bottom: 2px solid #0056b3;
+        }
+        
+        /* Estilo para mostrar dos imágenes juntas */
+        .side-by-side-images {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .side-by-side-images img {
+            max-width: 48%; /* Para que cada imagen ocupe casi la mitad */
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Ajuste para celulares: pone una imagen debajo de la otra si no caben */
+        @media (max-width: 600px) {
+            .side-by-side-images {
+                flex-direction: column;
+            }
+            .side-by-side-images img {
+                max-width: 100%;
+            }
+        }
+        
+        .dilema-box {
+            background-color: #fff3e0; 
+            border-left: 5px solid #ff9800; 
+            padding: 15px 20px; 
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -19,29 +91,100 @@
         <div class="nav-links">
             <a href="tomo2.html" class="nav-link">&larr; Tomo Anterior</a>
             <a href="index.html" class="nav-link">Índice</a>
-            <a href="tomo4.html" class="nav-link">Tomo Siguiente &rarr;</a>
-            </div>
-        <p>¡Hola de nuevo, inventores urbanos! Hasta ahora hemos encendido luces y aprendido a escuchar botones. Pero en el mundo real, la tecnología tiene un propósito más alto: resolver problemas reales y hacer el mundo más accesible. Hoy nos convertiremos en ingenieros de tráfico urbano. Vamos a fusionar lo que ya conocemos para construir un <strong>Semáforo Inteligente e Inclusivo</strong>: un sistema que detenga el tráfico vehicular cuando un peatón lo solicite, y que además emita alertas sonoras intermitentes para ayudar a cruzar de forma segura a personas con debilidad visual.</p>
+            <a href="tomo4.html" class="nav-link">Siguiente Tomo &rarr;</a>
+        </div>
         
-        <div class="protagonista-section">
-            <h3>🧠 Protagonista de Hoy: El Zumbador Pasivo (Buzzer)</h3>
-            <p>Es hora de hacer ruido. El <strong>buzzer pasivo</strong> es un pequeño componente que, a diferencia de un LED que emite luz continua, necesita recibir ondas eléctricas a diferentes velocidades para vibrar y generar tonos audibles. En Arduino usamos el comando <code>tone(pin, frecuencia, duracion);</code> para decirle exactamente qué nota tocar y por cuánto tiempo.</p>
+        <p>¡Hola de nuevo, inventores urbanos! Hasta ahora hemos encendido luces y aprendido a escuchar botones. Pero en el mundo real, la tecnología tiene un propósito más alto: resolver problemas reales y hacer el mundo más accesible.</p>
+        <p>Hoy nos convertiremos en ingenieros de tráfico urbano. Vamos a fusionar lo que ya conocemos para construir un <strong>Semáforo Inteligente e Inclusivo</strong>: un sistema que detenga el tráfico vehicular cuando un peatón lo solicite, y que además emita alertas sonoras intermitentes para ayudar a cruzar de forma segura a personas con debilidad visual.</p>
+
+        <hr>
+
+        <h2>🌟 El Protagonista de Hoy: El Zumbador Pasivo (Buzzer)</h2>
+        <p>Es hora de hacer ruido. El <strong>buzzer pasivo</strong> es un pequeño componente que, a diferencia de un LED que emite luz continua, necesita recibir ondas eléctricas a diferentes velocidades para vibrar y generar tonos audibles. En Arduino usamos el comando <code>tone(pin, frecuencia, duracion);</code> para decirle exactamente qué nota tocar y por cuánto tiempo.</p>
+        
+        <!-- Contenedor para dos imágenes juntas -->
+        <div class="side-by-side-images">
+            <!-- Sustituye por el nombre real de tus imágenes -->
+            <img src="buzzer_frente.jpg" alt="Vista frontal del buzzer pasivo">
+            <img src="buzzer_pines.jpg" alt="Vista inferior del buzzer mostrando sus pines de conexión">
         </div>
 
-        <div class="protagonista-section" style="background-color: #fff3e0; border-left-color: #ff9800; margin-top: 15px;">
-            <h3>💡 El Gran Dilema: El "Código Espagueti" y el Control del Tráfico</h3>
+        <hr>
+
+        <h2>🔌 El Circuito: Manos a la Obra</h2>
+        <p>Montaremos una verdadera intersección vial en nuestra protoboard: 3 LEDs para los automóviles, 2 LEDs para los peatones, un botón pulsador con resistencia interna y nuestro nuevo Buzzer. ¡Cuida mucho tus conexiones y el orden de los cables!</p>
+        
+        <h3>Componentes Necesarios:</h3>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Cant.</th>
+                    <th>Componente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Placa Arduino UNO y Protoboard</strong></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>LEDs de Autos</strong> (1 Rojo, 1 Amarillo, 1 Verde)</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>LEDs Peatonales</strong> (1 Rojo, 1 Verde)</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><strong>Resistencias de 220&Omega;</strong> (una para cada LED)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Pulsador táctil (Botón)</strong></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Buzzer Pasivo</strong></td>
+                </tr>
+                <tr>
+                    <td>Varios</td>
+                    <td><strong>Cables Jumper</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado: Intersección Vial</h3>
+            <img src="Tomo 3.png" alt="Diagrama de conexión del semáforo inclusivo con buzzer y botón">
+        </div>
+
+        <hr>
+
+        <h2>💡 Conceptos Clave</h2>
+        
+        <div class="dilema-box">
+            <h3>El Gran Dilema: El "Código Espagueti" y el Control del Tráfico</h3>
             <p>Imagina la escena: tienes que apagar el verde de autos, encender el amarillo, luego el rojo; inmediatamente después, apagar el rojo peatonal, encender el verde peatonal y hacer que el buzzer pite de forma intermitente. Si intentamos escribir todo esto directamente dentro del <code>void loop()</code>, se convertirá en lo que llamamos "Código Espagueti": un bloque de texto gigante, desordenado y casi imposible de leer. La solución de un verdadero programador es usar <strong>Funciones Personalizadas</strong>.</p>
         </div>
+
+        <ul>
+            <li><strong>Funciones Personalizadas (<code>void</code>):</strong> Bloques de código que tú inventas y nombras, y que el programa principal puede llamar en cualquier momento para mantener el orden.</li>
+            <li><strong>Comando <code>tone()</code>:</strong> La función que permite al Arduino generar ondas cuadradas en un pin específico para producir sonidos audibles de una frecuencia y duración exacta.</li>
+            <li><strong><code>INPUT_PULLUP</code>:</strong> Un truco de software para conectar botones al Arduino de forma directa, activando una resistencia interna y eliminando el ruido eléctrico sin usar componentes externos.</li>
+        </ul>
+
+        <hr>
 
         <h2>🧠 El Código: Creando Nuestro Propio Comando</h2>
         <p>En este programa, en lugar de amontonar código, sacaremos toda la secuencia de luces del <code>loop()</code> y la empaquetaremos en una función nueva que nosotros inventaremos llamada <code>activarPasoPeatonal()</code>. ¡Observa la limpieza!</p>
         
         <div class="code-container"> 
-        <div class="code-header">
-        <span>Código Arduino</span>
-        <button class="copy-btn">Copiar</button>
-        </div> 
-        <pre><code class="language-cpp code-block">
+            <div class="code-header">
+                <span>Código Arduino - Misión 03</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
 /*
  * Misión 03: ¡El Semáforo Inteligente Inclusivo!
  * Descripción: Aprendiendo a programar funciones personalizadas para coordinar
@@ -131,60 +274,49 @@ void activarPasoPeatonal() {
   digitalWrite(cocheRojo, LOW);
   digitalWrite(cocheVerde, HIGH);
 }
-        </code></pre>
+</code></pre>
         </div>
 
-        <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Montaremos una verdadera intersección vial en nuestra protoboard: 3 LEDs para los automóviles, 2 LEDs para los peatones, un botón pulsador <code>INPUT_PULLUP</code> y nuestro nuevo Buzzer Pasivo. ¡Cuida mucho tus conexiones y el orden de los cables!</p>
-        <div class="image-container">
-            <h3>Diagrama del Circuito 3: Intersección Vial</h3>
-            <img src="Tomo 3.png" alt="Diagrama de conexión del semáforo inclusivo con buzzer y botón">
-        </div>
-
-        <h2>💡 Conceptos Clave de la Misión</h2>
-        <ul>
-            <li><strong>Funciones Personalizadas (<code>void</code>):</strong> Bloques de código que tú inventas y nombras, y que el programa principal puede llamar en cualquier momento para mantener el orden.</li>
-            <li><strong>Comando <code>tone()</code>:</strong> La función que permite al Arduino generar ondas cuadradas en un pin específico para producir sonidos audibles de una frecuencia y duración exacta.</li>
-            <li><strong><code>INPUT_PULLUP</code>:</strong> Un truco de software para conectar botones al Arduino de forma directa, activando una resistencia interna y eliminando el ruido eléctrico sin usar componentes externos.</li>
-        </ul>
+        <hr>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>La Alerta de Ceguera del Conductor:</strong> Modifica tu función personalizada para que cuando el semáforo de autos pase a Rojo, el buzzer emita un único pitido súper agudo y largo (ej. 2000 Hz por 400 milisegundos) antes de que se encienda el verde peatonal.</li>
-            <li><strong>Modo Tráfico Nocturno (Reto Pro):</strong> Dentro del <code>void loop()</code>, comenta la llamada al semáforo y escribe un código donde solo el LED Amarillo de los autos parpadee infinitamente (alerta de crucero en la madrugada).</li>
+            <li>🚨 <strong>La Alerta de Ceguera del Conductor:</strong> Modifica tu función personalizada para que cuando el semáforo de autos pase a Rojo, el buzzer emita un único pitido súper agudo y largo (ej. 2000 Hz por 400 milisegundos) antes de que se encienda el verde peatonal.</li>
+            <li>🌙 <strong>Modo Tráfico Nocturno (Reto Pro):</strong> Dentro del <code>void loop()</code>, comenta la llamada al semáforo y escribe un código donde solo el LED Amarillo de los autos parpadee infinitamente (alerta de crucero en la madrugada).</li>
         </ul>
 
         <div class="nav-links bottom-nav-links">
             <a href="tomo2.html" class="nav-link">&larr; Tomo Anterior</a>
-            <a href="tomo4.html" class="nav-link">Tomo Siguiente &rarr;</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo4.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
     </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
-    <script>hljs.highlightAll();</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const allCopyButtons = document.querySelectorAll('.copy-btn');
 
-    allCopyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const codeContainer = this.closest('.code-container');
-            const codeBlock = codeContainer.querySelector('code');
-            
-            if (codeBlock) {
-                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                    this.innerText = '¡Copiado!';
-                    setTimeout(() => {
-                        this.innerText = 'Copiar';
-                    }, 2000); 
-                }).catch(err => {
-                    console.error('Error al copiar el código: ', err);
-                });
-            }
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
 </html>
