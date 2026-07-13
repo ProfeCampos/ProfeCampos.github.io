@@ -3,12 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomo 1: Controlar la Luz - Manual de Instrumentación</title>
+    <title>Tomo 1: ¡Tu Primera Misión - Controlar la Luz!</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        /* Estilos específicos para las tablas de componentes */
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1em;
+            font-family: sans-serif;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        .component-table thead tr {
+            background-color: #0056b3;
+            color: #ffffff;
+            text-align: left;
+        }
+        .component-table th, .component-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        .component-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .component-table tbody tr:last-of-type {
+            border-bottom: 2px solid #0056b3;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -17,44 +53,51 @@
         </div>
     </header>
     <main class="tomo-content">
-       <div class="nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
-            <a href="tomo2.html" class="nav-link">Tomo Siguiente &rarr;</a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo2.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
+        
+        <p>¡Qué onda, futuros ingenieros e ingenieras! 👋</p>
+        <p>Bienvenidos a su primera misión en el increíble mundo de Arduino. Hoy van a aprender el súper poder más fundamental de la electrónica: darle órdenes a un componente y que éste obedezca. Dejarán de ser simples espectadores para convertirse en creadores.</p>
+        <p>Nuestra primera tarea será controlar un pequeño pero poderoso componente: el LED. Vamos a encenderlo, apagarlo y hacerlo parpadear a nuestro antojo. ¿Listos? ¡Manos a la obra!</p>
 
-        <p>¡Bienvenidos a su primera misión! Hoy daremos el primer paso en el mundo de la electrónica programable. Nuestra tarea es simple pero fundamental: aprender a controlar la electricidad para darle vida a un componente. Haremos que un LED parpadee. Este es el "Hola, Mundo" de la electrónica.</p>
+        <hr>
 
         <h2>🧠 El Cerebro de la Operación: El Código</h2>
         <p>Todo lo que hacemos con Arduino necesita un plan, y ese plan es el código. Este es el "idioma" que usaremos para darle instrucciones a nuestra placa.</p>
-<div class="code-container"> 
-    <div class="code-header">
-        <span>Código Arduino</span>
-        <button class="copy-btn">Copiar</button>
-    </div> 
+        <p>Aquí está el código completo para nuestra misión. No te preocupes si no lo entiendes todo al principio, ¡lo analizaremos línea por línea!</p>
+
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino - Misión 01: Blink</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
 <pre><code class="language-cpp code-block">
- /*
+/*
  * Misión 01: Blink - Hacer parpadear un LED
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-// El bloque setup() se ejecuta UNA SOLA VEZ cuando enciendes
-// o reseteas tu Arduino. Es para configurar lo que vamos a usar.
+// El bloque setup() se ejecuta UNA SOLA VEZ cuando enciendes o reseteas tu Arduino.
+// Es perfecto para configurar todo lo que vamos a usar.
 void setup() {
-  // Le decimos al Arduino: "Oye, el Pin número 13 será una SALIDA".
-  // Es como abrir una compuerta para que la electricidad pueda salir.
+  // Aquí le decimos al Arduino: "Oye, el Pin número 13 será una SALIDA de energía".
+  // Es como abrir una puerta para que la electricidad pueda salir.
   pinMode(13, OUTPUT);
 }
 
-// El bloque loop() es un ciclo infinito. ¡Se repite para siempre!
-// Aquí ocurre toda la acción principal de nuestro programa.
+// El bloque loop() es un ciclo infinito. ¡Se repite una y otra vez para siempre!
+// Aquí es donde ocurre toda la acción principal de nuestro programa.
 void loop() {
   // 1. Encendemos el LED:
   // Enviamos una señal ALTA (HIGH) de 5V al Pin 13. ¡Luz!
   digitalWrite(13, HIGH);
 
   // 2. Esperamos un segundo:
-  // Pausa de 1000 milisegundos (1 segundo).
+  // Hacemos una pausa de 1000 milisegundos (que es igual a 1 segundo).
+  // El LED se queda encendido durante este tiempo.
   delay(1000);
 
   // 3. Apagamos el LED:
@@ -62,76 +105,119 @@ void loop() {
   digitalWrite(13, LOW);
 
   // 4. Esperamos otro segundo:
+  // Hacemos otra pausa de 1 segundo con el LED apagado.
   delay(1000);
 
-  // Y... el loop() vuelve a empezar. ¡Para siempre!
+  // Y... el loop() vuelve a empezar desde el principio. ¡Para siempre!
 }
-        </code></pre>
-</div>
+</code></pre>
+        </div>
+
+        <hr>
+
         <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Ahora vamos a construir el cuerpo de nuestra operación. Necesitamos darle al código algo físico que controlar. ¡Recuerda que el LED tiene una pata larga (+) y una corta (-)!</p>
-         <div class="image-container">
-           <img src="LED_2.jpg" alt="pinout  LED">
-        </div>
+        <p>Ahora vamos a construir el cuerpo de nuestra operación. Necesitamos darle al código algo físico que controlar.</p>
+        
+        <h3>Componentes Necesarios:</h3>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Cant.</th>
+                    <th>Componente</th>
+                    <th>¿Para qué sirve?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Placa Arduino UNO</strong></td>
+                    <td>Nuestro cerebro principal.</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Protoboard</strong></td>
+                    <td>Nuestro campo de construcción.</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>LED</strong> (de cualquier color)</td>
+                    <td>Nuestro foquito de luz.</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Resistencia de 220&Omega;</strong></td>
+                    <td>El "guardaespaldas" del LED.</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Cables jumper</strong></td>
+                    <td>Las "venas" que llevan la electricidad.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>📝 Instrucciones de Conexión (Paso a Paso):</h3>
+        <ol>
+            <li><strong>Coloca el LED:</strong> Inserta el LED en la protoboard. ¡OJO! El LED tiene una pata más larga que la otra. La pata larga es la positiva (<code>+</code>) y la corta es la negativa (<code>-</code>).</li>
+            <li><strong>Conecta el "guardaespaldas":</strong> Conecta un extremo de la resistencia de <code>220&Omega;</code> en la misma fila de la pata larga (<code>+</code>) del LED. El otro extremo de la resistencia ponlo en una fila vacía.</li>
+            <li><strong>Lleva la energía:</strong> Usa un cable jumper para conectar desde el <strong>Pin Digital 13</strong> del Arduino hasta la fila donde dejaste el extremo libre de la resistencia.</li>
+            <li><strong>Cierra el circuito:</strong> Usa otro cable jumper para conectar desde la pata corta (<code>-</code>) del LED hasta uno de los pines <strong>GND</strong> (Ground o Tierra) del Arduino.</li>
+        </ol>
+
         <div class="image-container">
-            <h3>Diagrama del Circuito 1</h3>
-            <img src="Tomo 1.png" alt="Diagrama de conexión para la práctica de Blink con un LED y una resistencia">
+            <h3>⚡ Diagrama de armado</h3>
+            <!-- Asegúrate de tener una imagen llamada tomo1_diagrama.jpg en tu carpeta -->
+            <img src="tomo1_diagrama.jpg" alt="Un diagrama de TINKERCAD. El cable del Pin 13 va a la resistencia, la resistencia va a la pata larga del LED, y la pata corta del LED va al GND del Arduino.">
         </div>
+
+        <hr>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
         <ul>
-            <li><strong>Resistencia:</strong> Actúa como un "guardaespaldas" que limita la corriente para que el LED no se queme. ¡Siempre úsala!</li>
-            <li><strong>GND (Tierra):</strong> Es el camino de regreso para la electricidad. Sin él, no hay flujo y nada funciona.</li>
-            <li><strong>HIGH y LOW:</strong> Son las órdenes digitales básicas. HIGH es "encendido" (5V) y LOW es "apagado" (0V).</li>
+            <li><strong>Resistencia:</strong> Imagina que el Arduino le da un "empujón" de 5V a la electricidad, pero el LED solo aguanta un empujón pequeño. La resistencia es como un guardaespaldas que frena ese empujón para que no "queme" al LED. ¡Siempre usa una resistencia con los LEDs!</li>
+            <li><strong>GND (Tierra):</strong> La electricidad es como un circuito de carreras: necesita un punto de partida y una meta para poder fluir. GND es la "meta" o el camino de regreso. Sin él, la electricidad no se mueve y nada funciona.</li>
+            <li><strong>HIGH y LOW:</strong> Son las señales digitales más básicas. <code>HIGH</code> es la orden para "encendido" (envía 5V) y <code>LOW</code> es la orden para "apagado" (envía 0V).</li>
         </ul>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <p>Ya que eres el jefe, ¿por qué no pruebas a cambiar las órdenes?</p>
         <ul>
-            <li><strong>Flash Rápido:</strong> Modifica los valores en `delay()` para que el LED parpadee mucho más rápido.</li>
-            <li><strong>Latido de Corazón:</strong> Haz que el LED haga dos parpadeos rápidos seguidos de una pausa larga.</li>
-            <li><strong>S.O.S.:</strong> El código morse para S.O.S. es "3 cortos, 3 largos, 3 cortos". ¿Puedes programarlo?</li>
+            <li>❤️ <strong>Latido de Corazón:</strong> Haz que el LED haga dos parpadeos rápidos seguidos de una pausa larga.</li>
+            <li>🆘 <strong>S.O.S.:</strong> El código internacional de S.O.S. es "3 parpadeos cortos, 3 largos, 3 cortos". ¿Puedes modificar el código para que tu LED envíe esta señal de auxilio? (<em>Pista: necesitarás más <code>digitalWrite()</code> y <code>delay()</code></em>).</li>
+            <li>🎁 <strong>Reto Sorpresa:</strong> Modifica los tiempos de los <code>delay()</code> al mínimo posible (por ejemplo, 10 o 20 milisegundos) e intenta observar qué pasa con la luz del LED. ¿Sigue parpadeando o parece estar siempre encendido pero más tenue?</li>
         </ul>
+
         <div class="nav-links bottom-nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
-            <a href="tomo2.html" class="nav-link">Tomo Siguiente &rarr;</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo2.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
     </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
-    <script>hljs.highlightAll();</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Busca todos los botones de copiar
-    const allCopyButtons = document.querySelectorAll('.copy-btn');
 
-    allCopyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Encuentra el contenedor de código más cercano
-            const codeContainer = this.closest('.code-container');
-            // Encuentra el bloque de código dentro de ese contenedor
-            const codeBlock = codeContainer.querySelector('code');
-            
-            if (codeBlock) {
-                // Copia el texto del código al portapapeles
-                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                    // Feedback visual para el usuario
-                    this.innerText = '¡Copiado!';
-                    setTimeout(() => {
-                        this.innerText = 'Copiar';
-                    }, 2000); // Vuelve al texto original después de 2 segundos
-                }).catch(err => {
-                    console.error('Error al copiar el código: ', err);
-                });
-            }
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
-
 </html>
-
-
-
-
