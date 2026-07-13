@@ -66,36 +66,65 @@
             <li>1 Transistor de potencia <code>TIP120</code> con su resistencia de <code>1kΩ</code>.</li>
             <li>1 Ventilador de PC de <code>12V</code> junto a su diodo protector <code>1N4007</code>.</li>
             <li>1 Módulo de <code>Relé</code> de 1 canal.</li>
-            <li>1 Foco de <code>120V AC</code> con socket y clavija segura.</li>
+            <li>1 Foco de <code>120V AC</code> con socket, clavija e interruptor de pared.</li>
+            <li>1 Módulo Reductor de Voltaje Buck (<code>LM2596</code>) regulado exactamente a <strong>5V</strong>.</li>
             <li>1 Pantalla <code>LCD 16x2</code> con adaptador <code>I2C</code> integrado.</li>
-            <li>1 Fuente de alimentación externa de <code>12V DC</code> (para el ventilador de potencia).</li>
+            <li>1 Fuente de alimentación externa de <code>12V DC</code> (Plug de pared).</li>
         </ul>
 
-        <h3>📝 Instrucciones de Conexión (Resumen Seguro):</h3>
+        <h3>📝 Instrucciones Exactas de Conexión (Según el Diagrama):</h3>
         <ol>
-            <li><strong>Pantalla LCD I2C:</strong> Conecta <code>GND</code> a GND, <code>VCC</code> a los 5V de Arduino, el pin <code>SDA</code> al pin analógico <code>A4</code> y el pin <code>SCL</code> al pin analógico <code>A5</code>.</li>
-            <li><strong>Sensor LM35:</strong> Pin izquierdo (Vs) a <code>5V</code>, pin central (Vout) al pin analógico <code>A0</code> y pin derecho a <code>GND</code>.</li>
-            <li><strong>Transistor TIP120 (Ventilador):</strong> La Base se conecta al Pin Digital <code>9</code> a través de la resistencia de <code>1kΩ</code>. El Emisor va directo al <code>GND</code> de Arduino. El Colector se une al cable negativo (-) del ventilador de 12V.</li>
-            <li><strong>Módulo de Relé (Foco):</strong> Conecta el pin <code>IN</code> de señal al Pin Digital <code>7</code> de Arduino. Alimenta el módulo con <code>VCC</code> a 5V y <code>GND</code> a GND.</li>
-            <li><strong>Alimentación Externa e Importante Tierra Común:</strong> 
+            <li><strong>Sistema de Alimentación y Tierra Común (Los Rieles de Energía):</strong>
                 <ul>
-                    <li>El cable positivo (+) de tu fuente externa de <code>12V</code> va directo al positivo (+) del ventilador.</li>
-                    <li><strong>¡OBLIGATORIO!</strong> Conecta el Negativo (-) de la fuente externa de <code>12V</code> al <code>GND</code> de tu Arduino. Sin esta tierra común, la señal del pin 9 no podrá activar el transistor.</li>
-                    <li>El foco de alta potencia de <code>120V AC</code> se interrumpe conectando un hilo al tornillo <code>COM</code> y el otro al tornillo <code>NO</code> del bloque de terminales del relé.</li>
+                    <li><strong>Fuente de Poder (Plug DC 12V):</strong> El positivo (<code>+</code>) va a la entrada <code>IN+</code> del reductor y se extiende (cable rojo largo) al positivo del ventilador de 12V. El negativo (<code>-</code>) va a la entrada <code>IN-</code> del reductor.</li>
+                    <li><strong>Módulo Reductor (LM2596):</strong> Asegúrate de que esté regulado a 5V. Conecta su salida positiva (<code>OUT+</code>) al <strong>riel positivo superior</strong> de la protoboard, y su salida negativa (<code>OUT-</code>) al <strong>riel negativo superior</strong>.</li>
+                    <li><strong>Alimentación Arduino:</strong> Conecta el pin <code>5V</code> de Arduino al <strong>riel positivo inferior</strong> y el pin <code>GND</code> al <strong>riel negativo inferior</strong>.</li>
+                    <li><strong>¡Tierra Común!</strong> Une el riel negativo superior con el riel negativo inferior usando un cable negro. <em>Nota: Los rieles positivos superior e inferior NUNCA deben unirse entre sí, ya que manejan fuentes independientes.</em></li>
+                </ul>
+            </li>
+            <li><strong>Pantalla LCD 16x2 con I2C:</strong>
+                <ul>
+                    <li><code>GND</code> ➜ Al riel <strong>negativo superior</strong> (GND común).</li>
+                    <li><code>VCC</code> ➜ Al riel <strong>positivo superior</strong> (5V externos del reductor).</li>
+                    <li><code>SDA</code> ➜ Al pin analógico <code>A4</code> de Arduino (cable naranja).</li>
+                    <li><code>SCL</code> ➜ Al pin analógico <code>A5</code> de Arduino (cable gris).</li>
+                </ul>
+            </li>
+            <li><strong>Sensor de Temperatura LM35:</strong>
+                <ul>
+                    <li>Pin izquierdo (Vs) ➜ Al riel <strong>positivo inferior</strong> (5V estables y limpios de Arduino).</li>
+                    <li>Pin central (Vout) ➜ Al pin analógico <code>A0</code> de Arduino (cable azul).</li>
+                    <li>Pin derecho (GND) ➜ Al riel <strong>negativo inferior</strong> (GND de Arduino).</li>
+                </ul>
+            </li>
+            <li><strong>Módulo de Relé de 1 Canal (Control del Foco):</strong>
+                <ul>
+                    <li><code>VCC</code> ➜ Al riel <strong>positivo superior</strong> (5V del reductor).</li>
+                    <li><code>GND</code> ➜ Al riel <strong>negativo superior</strong> (GND común).</li>
+                    <li><code>IN</code> (Señal) ➜ Al Pin Digital <code>7</code> de Arduino (cable amarillo).</li>
+                    <li><strong>Lado de Potencia (120V AC):</strong> La <strong>FASE</strong> de la toma de corriente va al tornillo central (<code>COM</code>). El cable de retorno que va al foco se conecta al tornillo superior (<code>NO</code>). El <strong>NEUTRO</strong> va directo de la pared hacia el foco.</li>
+                </ul>
+            </li>
+            <li><strong>Etapa de Potencia con Transistor TIP120 (Control del Ventilador):</strong>
+                <ul>
+                    <li><strong>Base (Pin 1, izquierdo):</strong> Va a la resistencia de <code>1kΩ</code>, y el otro extremo de esta va al Pin Digital <code>9</code> de Arduino (cable rosa).</li>
+                    <li><strong>Colector (Pin 2, central):</strong> Se une al cable <strong>negativo (negro)</strong> del ventilador de 12V y al <strong>ánodo</strong> (lado completamente negro) del diodo <code>1N4007</code>.</li>
+                    <li><strong>Emisor (Pin 3, derecho):</strong> Conecta un cable negro directo al riel <strong>negativo superior</strong> (GND común).</li>
+                    <li><strong>Línea de Fuerza (12V):</strong> El cable <strong>positivo (rojo)</strong> del ventilador y el <strong>cátodo</strong> (lado con franja plateada) del diodo <code>1N4007</code> van conectados al positivo directo de 12V que viene del Plug DC.</li>
                 </ul>
             </li>
         </ol>
 
         <div class="image-container">
             <h3>⚡ Diagrama de armado</h3>
-            <!-- Asegúrate de subir tu diagrama unificado con este nombre exacto a tu repositorio -->
-            <img src="proyecto integrador 2_bb.png" alt="Diagrama de conexiones completo del Proyecto Integrador 2 que une el LM35, LCD I2C, Relé con foco y etapa TIP120 con ventilador de 12V">
+            <!-- El archivo de imagen que nos enviaste debe subirse con este nombre exacto -->
+            <img src="proyecto integrador 2_bb.jpg" alt="Diagrama de conexiones completo del Proyecto Integrador 2 con regulador Buck LM2596, LM35, LCD I2C, Relé y TIP120">
         </div>
 
         <h2>💡 Conceptos Clave de la Misión</h2>
         <ul>
             <li><strong>Estructura Condicional Anidada:</strong> Al usar <code>else if</code> creamos caminos excluyentes; el programa evalúa las condiciones de arriba hacia abajo y en cuanto una es verdadera, ejecuta ese bloque e ignora los demás, optimizando el procesador.</li>
-            <li><strong>Aislamiento Eléctrico Total:</strong> Este circuito maneja de forma simultánea tres voltajes distintos de forma segura: <code>5V DC</code> para control lógico, <code>12V DC</code> para fuerza mecánica y <code>120V AC</code> para potencia eléctrica domiciliaria, todo gracias al aislamiento del relé y el transistor.</li>
+            <li><strong>Módulo Regulador de Voltaje (Buck Converter):</strong> Permite bajar de forma eficiente voltajes altos (como los 12V) a voltajes menores de forma estable (como los 5V), ideales para alimentar periféricos robustos sin sobrecargar el regulador de la placa Arduino.</li>
         </ul>
 
         <h2>🧠 El Código: El Sistema Operativo del Clima</h2>
