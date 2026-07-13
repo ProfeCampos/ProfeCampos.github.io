@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador 2 - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        /* Resaltado especial para comandos sueltos en el texto (sin afectar el bloque de código) */
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>¡PROYECTO INTEGRADOR 2! - Estación de Control Térmico</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="tomo8.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="#" class="nav-link" style="color: #ccc; cursor: not-allowed;">Siguiente Bloque &rarr;</a>
+        </div>
+        
+        <p>¡Lo lograron, equipo! Bienvenidos a la misión final del segundo parcial. Aquí es donde todo lo aprendido cobra sentido. Dejarán de ser estudiantes que siguen tutoriales para convertirse en integradores de sistemas. Vamos a diseñar y construir un dispositivo completamente funcional y automático que podría usarse en un invernadero, un terrario o una incubadora.</p>
+        
+        <div class="protagonista-section" style="background-color: #fff3cd; border-left-color: #ffc107;">
+            <h3>🎯 El Reto: Construir una estación de control de clima que:</h3>
+            <ul>
+                <li>Mida la temperatura de forma continua y precisa con el sensor <code>LM35</code>.</li>
+                <li>Muestre la temperatura actual y el estado del sistema en una pantalla <code>LCD</code>.</li>
+                <li>Si la temperatura supera un primer umbral (30°C), debe activar un ventilador de <code>12V</code> (controlado por el transistor de potencia <code>TIP120</code>) para enfriar el ambiente.</li>
+                <li>Si la temperatura supera un segundo umbral de PELIGRO (38°C), debe activar una alarma de alto poder (un foco de <code>120V AC</code> controlado por el módulo de <code>Relé</code>) y mostrar un mensaje de alerta en la <code>LCD</code>.</li>
+            </ul>
+        </div>
+
+        <h2>🧠 La Lógica del Proyecto: Control por Niveles</h2>
+        <p>Este sistema no tiene una sola decisión, sino una jerarquía. Usaremos la estructura <code>if / else if / else</code> para crear diferentes niveles de acción en base a los umbrales del código:</p>
+        <ul>
+            <li><strong>Nivel 1 (Normal):</strong> <code>if (temperatura < 30.0)</code> ➜ Todo apagado.</li>
+            <li><strong>Nivel 2 (Alerta):</strong> <code>else if (temperatura >= 30.0 && temperatura < 38.0)</code> ➜ Ventilador encendido, foco apagado.</li>
+            <li><strong>Nivel 3 (Peligro):</strong> <code>else</code> ➜ Ventilador Y Foco encendidos al mismo tiempo, mostrando mensaje de peligro.</li>
+        </ul>
+
+        <h2>🔌 El Circuito: La Integración Maestra</h2>
+        <p>Vamos a combinar de forma maestra el circuito de potencia por transistor visto en el <strong>Tomo 7</strong> (<code>LM35</code> + Transistor <code>TIP120</code>) con el circuito de control industrial digital analizado en el <strong>Tomo 8</strong> (Pantalla <code>LCD I2C</code> + Módulo de <code>Relé</code>).</p>
+
+        <h3>Componentes Necesarios:</h3>
+        <ul>
+            <li>Todos los de las prácticas anteriores: Placa Arduino UNO, Protoboard y cables Jumper.</li>
+            <li>1 Sensor de Temperatura <code>LM35</code>.</li>
+            <li>1 Transistor de potencia <code>TIP120</code> con su resistencia de <code>1kΩ</code>.</li>
+            <li>1 Ventilador de PC de <code>12V</code> junto a su diodo protector <code>1N4007</code>.</li>
+            <li>1 Módulo de <code>Relé</code> de 1 canal.</li>
+            <li>1 Foco de <code>120V AC</code> con socket y clavija segura.</li>
+            <li>1 Pantalla <code>LCD 16x2</code> con adaptador <code>I2C</code> integrado.</li>
+            <li>1 Fuente de alimentación externa de <code>12V DC</code> (para el ventilador de potencia).</li>
+        </ul>
+
+        <h3>📝 Instrucciones de Conexión (Resumen Seguro):</h3>
+        <ol>
+            <li><strong>Pantalla LCD I2C:</strong> Conecta <code>GND</code> a GND, <code>VCC</code> a los 5V de Arduino, el pin <code>SDA</code> al pin analógico <code>A4</code> y el pin <code>SCL</code> al pin analógico <code>A5</code>.</li>
+            <li><strong>Sensor LM35:</strong> Pin izquierdo (Vs) a <code>5V</code>, pin central (Vout) al pin analógico <code>A0</code> y pin derecho a <code>GND</code>.</li>
+            <li><strong>Transistor TIP120 (Ventilador):</strong> La Base se conecta al Pin Digital <code>9</code> a través de la resistencia de <code>1kΩ</code>. El Emisor va directo al <code>GND</code> de Arduino. El Colector se une al cable negativo (-) del ventilador de 12V.</li>
+            <li><strong>Módulo de Relé (Foco):</strong> Conecta el pin <code>IN</code> de señal al Pin Digital <code>7</code> de Arduino. Alimenta el módulo con <code>VCC</code> a 5V y <code>GND</code> a GND.</li>
+            <li><strong>Alimentación Externa e Importante Tierra Común:</strong> 
+                <ul>
+                    <li>El cable positivo (+) de tu fuente externa de <code>12V</code> va directo al positivo (+) del ventilador.</li>
+                    <li><strong>¡OBLIGATORIO!</strong> Conecta el Negativo (-) de la fuente externa de <code>12V</code> al <code>GND</code> de tu Arduino. Sin esta tierra común, la señal del pin 9 no podrá activar el transistor.</li>
+                    <li>El foco de alta potencia de <code>120V AC</code> se interrumpe conectando un hilo al tornillo <code>COM</code> y el otro al tornillo <code>NO</code> del bloque de terminales del relé.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <!-- Asegúrate de subir tu diagrama unificado con este nombre exacto a tu repositorio -->
+            <img src="Proyecto_Integrador_2.png" alt="Diagrama de conexiones completo del Proyecto Integrador 2 que une el LM35, LCD I2C, Relé con foco y etapa TIP120 con ventilador de 12V">
+        </div>
+
+        <h2>💡 Conceptos Clave de la Misión</h2>
+        <ul>
+            <li><strong>Estructura Condicional Anidada:</strong> Al usar <code>else if</code> creamos caminos excluyentes; el programa evalúa las condiciones de arriba hacia abajo y en cuanto una es verdadera, ejecuta ese bloque e ignora los demás, optimizando el procesador.</li>
+            <li><strong>Aislamiento Eléctrico Total:</strong> Este circuito maneja de forma simultánea tres voltajes distintos de forma segura: <code>5V DC</code> para control lógico, <code>12V DC</code> para fuerza mecánica y <code>120V AC</code> para potencia eléctrica domiciliaria, todo gracias al aislamiento del relé y el transistor.</li>
+        </ul>
+
+        <h2>🧠 El Código: El Sistema Operativo del Clima</h2>
+        
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
+/*
+ * PROYECTO INTEGRADOR 2: Estación de Control Térmico
+ * Descripción: Controla un ventilador de 12V y una alarma de foco según la temperatura.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+// --- PINES ---
+const int pinSensor = A0;
+const int pinVentilador = 9; // Controla la base del transistor TIP120
+const int pinFoco = 7;       // Controla la señal del módulo de relé
+
+// --- UMBRALES ---
+const float UMBRAL_VENTILADOR = 30.0;
+const float UMBRAL_PELIGRO = 38.0;
+
+// --- OBJETOS ---
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  pinMode(pinVentilador, OUTPUT);
+  pinMode(pinFoco, OUTPUT);
+  
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Control de Clima");
+  lcd.setCursor(0, 1);
+  lcd.print("    V 1.0");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  // --- LECTURA Y CÁLCULO DE TEMPERATURA (LM35) ---
+  int valorSensor = analogRead(pinSensor);
+  float voltaje = (valorSensor / 1023.0) * 5.0;
+  float temperatura = voltaje * 100.0;
+
+  // --- LÓGICA DE CONTROL POR NIVELES ---
+  if (temperatura < UMBRAL_VENTILADOR) {
+    // Nivel 1: Normal
+    lcd.setCursor(0, 0);
+    lcd.print("Temp: ");
+    lcd.print(temperatura, 1); // Muestra 1 decimal para estabilidad visual
+    lcd.print(" C   ");
+    lcd.setCursor(0, 1);
+    lcd.print("Estado: Normal  ");
+    
+    digitalWrite(pinVentilador, LOW);  // Ventilador OFF
+    digitalWrite(pinFoco, LOW);        // Foco OFF
+
+  } else if (temperatura >= UMBRAL_VENTILADOR && temperatura < UMBRAL_PELIGRO) {
+    // Nivel 2: Enfriando
+    lcd.setCursor(0, 0);
+    lcd.print("Temp: ");
+    lcd.print(temperatura, 1);
+    lcd.print(" C   ");
+    lcd.setCursor(0, 1);
+    lcd.print("Estado: Ventila ");
+
+    digitalWrite(pinVentilador, HIGH); // Ventilador ON (TIP120 activo)
+    digitalWrite(pinFoco, LOW);        // Foco OFF
+
+  } else {
+    // Nivel 3: Peligro
+    lcd.setCursor(0, 0);
+    lcd.print("!!! ALERTA !!!  ");
+    lcd.setCursor(0, 1);
+    lcd.print("Temp: ");
+    lcd.print(temperatura, 1);
+    lcd.print(" C Danger");
+
+    digitalWrite(pinVentilador, HIGH); // Ventilador ON
+    digitalWrite(pinFoco, HIGH);       // Foco ON (Alarma de potencia activa)
+  }
+
+  delay(1000); // Muestreo cada segundo
+}
+</code></pre>
+        </div>
+
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Control de Humedad:</strong> Modifica la lógica para que el relé se active si la humedad supera el 70%, simulando un deshumidificador.</li>
+            <li><strong>Doble Condición:</strong> Cambia el código para que el relé solo se active si la temperatura es alta Y la humedad también es alta. (Pista: necesitarás el operador <code>&&</code>).</li>
+            <li><strong>Mensajes en LCD:</strong> Haz que en la pantalla LCD aparezca un mensaje como "Ventilador ON" o "Ventilador OFF" según el estado del relé.</li>
+        </ul>
+
+        <p style="margin-top: 2rem; font-style: italic; font-weight: bold; color: #0A2A4E;">
+            ¡Felicidades, Integradores! Han completado el segundo parcial y han demostrado un dominio impresionante. Pasaron de encender un simple LED a construir un sistema de control autónomo, robusto y con múltiples niveles de acción. Han manejado señales analógicas, digitales, comunicación I2C y control de alta potencia.
+        </p>
+        <p style="margin-top: 0.5rem; font-style: italic; font-weight: bold; color: #0A2A4E;">
+            Lo que tienen en sus manos es un prototipo real, la base de la automatización industrial. ¡Están perfectamente preparados para los desafíos del último parcial!
+        </p>
+        <p style="font-weight: bold; color: #F58220; font-size: 1.2rem;">
+            ¡El límite es su imaginación! - Profe Campos
+        </p>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="tomo8.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="#" class="nav-link" style="color: #ccc; cursor: not-allowed;">Siguiente Bloque &rarr;</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
