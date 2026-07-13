@@ -53,6 +53,11 @@
         <h2>🌡️ Protagonista 1: El Termómetro Digital DS18B20</h2>
         <p>Ya conocen el clásico LM35, pero el DS18B20 juega en otra liga por completo. A primera vista, parece un simple transistor de tres patas, pero en su interior se esconde una pieza de ingeniería impresionante. Pensemos en él no como un simple termómetro analógico, sino como una microcomputadora dedicada exclusivamente a medir la temperatura.</p>
         
+        <div class="image-container">
+            <!-- Asegúrate de tener una imagen llamada tomo10_ds18b20.jpg en tu carpeta -->
+            <img src="tomo10_ds18b20.jpg" alt="Fotografía del Sensor de temperatura digital DS18B20">
+        </div>
+
         <h3>¿Cómo funciona por dentro?</h3>
         <ul>
             <li><strong>Sensor de Silicio:</strong> El corazón del DS18B20 es un sensor de temperatura de "banda prohibida de silicio". Es un material semiconductor cuyo comportamiento eléctrico cambia de manera muy precisa y predecible con la temperatura. No es aproximado como una fotorresistencia; este cambio físico es tan fiable que se puede convertir directamente en una medición exacta.</li>
@@ -68,6 +73,12 @@
 
         <h2>🖥️ Protagonista 2: La Pantalla OLED SSD1306</h2>
         <p>La pantalla LCD de las prácticas anteriores es sumamente funcional, pero la OLED es simplemente... hermosa. La tecnología OLED (Diodo Orgánico Emisor de Luz) es un salto enorme en comparación con las pantallas de cristal líquido.</p>
+        
+        <div class="image-container">
+            <!-- Asegúrate de tener una imagen llamada tomo10_oled.jpg en tu carpeta -->
+            <img src="tomo10_oled.jpg" alt="Fotografía de la Pantalla OLED SSD1306 con conexión I2C">
+        </div>
+
         <ul>
             <li><strong>Pantalla LCD Tradicional:</strong> Imagina una ventana con una luz blanca siempre encendida detrás (la luz de fondo o <em>backlight</em>). Para crear una imagen, la pantalla tiene miles de pequeñas persianas que se abren o se cierran para dejar pasar o bloquear la luz. Un píxel negro en una LCD no es realmente negro; es solo una persiana cerrada que intenta bloquear la luz trasera que sigue encendida.</li>
             <li><strong>Pantalla OLED:</strong> Olvídate de la luz de fondo y de las persianas. Imagina un mosaico gigante hecho con millones de diminutas bombillas de colores independientes. Cada una de estas bombillas (cada píxel) genera su propia luz y puede encenderse o apagarse por completo.</li>
@@ -82,6 +93,12 @@
 
         <h2>🕹️ Protagonista 3: El Módulo Joystick KY-023</h2>
         <p>El joystick es un componente de entrada maravillosamente ingenioso porque combina tres sensores mecánicos en un solo dispositivo compacto:</p>
+        
+        <div class="image-container">
+            <!-- Asegúrate de tener una imagen llamada tomo10_joystick.jpg en tu carpeta -->
+            <img src="tomo10_joystick.jpg" alt="Fotografía del Módulo Joystick KY-023">
+        </div>
+
         <ul>
             <li><strong>Dos Potenciómetros Perpendiculares:</strong> Cuenta con dos potenciómetros idénticos en principio al del Tomo 7. Uno está montado para medir el movimiento en el eje X (izquierda-derecha) y el otro en el eje Y (arriba-abajo). Al mover la palanca, se leen los pines <code>VRx</code> y <code>VRy</code> con la función <code>analogRead()</code>, obteniendo coordenadas entre 0 y 1023. En nuestro proyecto, ignoraremos el eje X y solo usaremos el eje Y para detectar los movimientos de "arriba" y "abajo" en el menú.</li>
             <li><strong>Un Pulsador Táctil Integrado:</strong> Debajo de la palanca, hay un pequeño pulsador idéntico al del Tomo 2. Al presionar la palanca hacia adentro verticalmente, cierras el circuito del botón. El pin <code>SW</code> (Switch) nos permite detectar esta acción.</li>
