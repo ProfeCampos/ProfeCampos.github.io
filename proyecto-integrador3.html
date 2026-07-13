@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Integrador 3: Estación de Monitoreo Ambiental y Radar Gráfico</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success-box {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .success-box h2 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>¡Proyecto integrador 3!</h1>
+            <p>Estación de Monitoreo Ambiental y Radar Gráfico</p>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="tomo10.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+        </div>
+        
+        <p>¡Ha llegado la hora, equipo! La misión final del curso. Este no es solo un proyecto, es la síntesis de todas sus habilidades. Van a construir un dispositivo de instrumentación completo, multifuncional e interactivo que integra medición ambiental, detección de proximidad, registro de datos y una interfaz gráfica avanzada. Hoy se convierten en diseñadores de sistemas embebidos.</p>
+        
+        <h2>🎯 El Reto</h2>
+        <p>Construir una estación de monitoreo "todo en uno" que:</p>
+        <ul>
+            <li>Mida la temperatura (<code>DS18B20</code>) y la distancia (<code>HC-SR04</code>).</li>
+            <li>Permita navegar con un <strong>Joystick</strong> entre cuatro pantallas en una pantalla OLED:
+                <ul>
+                    <li><strong>Pantalla Principal:</strong> Temperatura y aguja de servo.</li>
+                    <li><strong>Pantalla de Registro de Datos:</strong> Máximos y Mínimos.</li>
+                    <li><strong>Pantalla de Radar Gráfico:</strong> Con barrido y blips.</li>
+                    <li><strong>Pantalla de Radar Numérico:</strong> Con barra de proximidad.</li>
+                </ul>
+            </li>
+            <li>Active una <strong>alerta sonora</strong> con un Buzzer si la temperatura es muy alta o la distancia es muy corta.</li>
+            <li>Permita <strong>resetear los datos</strong> máximos y mínimos con el botón del joystick.</li>
+        </ul>
+
+        <hr>
+
+        <h2>🔌 El Circuito: La Fusión Final de Sistemas</h2>
+        
+        <h3>Componentes Necesarios:</h3>
+        <ul>
+            <li>Placa Arduino UNO, Protoboard y cables.</li>
+            <li>1 Sensor de temperatura <code>DS18B20</code> con su resistencia de <code>4.7k&Omega;</code>.</li>
+            <li>1 Sensor ultrasónico <code>HC-SR04</code>.</li>
+            <li>1 Pantalla <code>OLED I2C</code>.</li>
+            <li>1 Módulo <code>Joystick</code>.</li>
+            <li>1 Micro Servomotor <code>SG90</code>.</li>
+            <li>1 Buzzer Pasivo.</li>
+        </ul>
+
+        <h3>📝 Instrucciones de Conexión:</h3>
+        <ol>
+            <li><strong>Pantalla OLED (I2C):</strong> <code>SDA</code> a A4, <code>SCL</code> a A5.</li>
+            <li><strong>Sensor DS18B20 (One-Wire):</strong> <code>DATA</code> al Pin 2 (con resistencia pull-up de 4.7k&Omega; a 5V).</li>
+            <li><strong>Sensor Ultrasónico:</strong> <code>Trig</code> al Pin 9, <code>Echo</code> al Pin 10.</li>
+            <li><strong>Joystick:</strong> <code>VRy</code> al Pin A0, <code>SW</code> (botón) al Pin 3.</li>
+            <li><strong>Servomotor:</strong> Cable de señal al Pin 6.</li>
+            <li><strong>Buzzer:</strong> Pata positiva (+) al Pin 4, pata negativa (-) a GND.</li>
+            <li><strong>Alimentación:</strong> Conecta todos los <code>VCC</code> a 5V y todos los <code>GND</code> a GND.</li>
+        </ol>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <!-- Asegúrate de tener una imagen llamada proyecto3_diagrama.jpg en tu carpeta -->
+            <img src="proyecto3_diagrama.jpg" alt="Diagrama de armado Fritzing del Proyecto Integrador 3">
+        </div>
+
+        <hr>
+
+        <h2>🧠 El Código: El Sistema Operativo Final</h2>
+        <p>Este es el código más completo del curso. Gestiona 4 pantallas, múltiples sensores, actuadores y entradas de usuario simultáneamente.</p>
+        
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino - Proyecto Integrador</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
+/*
+ * PROYECTO INTEGRADOR 3 (Definitivo): Estación Ambiental y Radar Gráfico
+ * Descripción: Mide temp/distancia, muestra en 4 pantallas OLED navegables,
+ * registra datos, controla servo y tiene alertas sonoras.
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+// --- INCLUSIÓN DE LIBRERÍAS (NUESTRAS "CAJAS DE HERRAMIENTAS") ---
+#include &lt;Wire.h&gt;                // Necesaria para la comunicación I2C.
+#include &lt;Adafruit_GFX.h&gt;        // Librería gráfica base de Adafruit.
+#include &lt;Adafruit_SSD1306.h&gt;    // Librería para controlar nuestra pantalla OLED.
+#include &lt;OneWire.h&gt;             // Protocolo de comunicación One-Wire.
+#include &lt;DallasTemperature.h&gt;   // Lectura del sensor DS18B20.
+#include &lt;Servo.h&gt;               // Control del servomotor.
+
+// --- OBJETOS Y PINES (DEFINIENDO NUESTRO HARDWARE) ---
+Adafruit_SSD1306 display(128, 64, &Wire, -1); 
+OneWire oneWire(2);
+DallasTemperature sensors(&oneWire);
+Servo miServo;
+
+const int pinTrig = 9;
+const int pinEcho = 10;
+const int pinJoyY = A0;
+const int pinJoySW = 3;   
+const int pinServo = 6;
+const int pinBuzzer = 4;
+
+// --- VARIABLES GLOBALES (LA MEMORIA DE NUESTRO PROGRAMA) ---
+int pantallaActual = 0; // 0=Principal, 1=DataLog, 2=Radar Gráfico, 3=Radar Numérico
+
+float distanciaCm = 0;
+float tempC = 0;
+long duracion; 
+
+// Variables para el registro de datos (Data Logging).
+float tempMax = -100; 
+float tempMin = 200;  
+float distMax = 0;
+float distMin = 500; 
+
+//=============================================================================
+// FUNCIÓN SETUP
+//=============================================================================
+void setup() {
+  Serial.begin(9600);
+  
+  sensors.begin(); 
+  miServo.attach(pinServo); 
+  
+  pinMode(pinTrig, OUTPUT);
+  pinMode(pinEcho, INPUT);
+  pinMode(pinBuzzer, OUTPUT);
+  pinMode(pinJoySW, INPUT_PULLUP); 
+  
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("Fallo al iniciar SSD1306"));
+    for(;;); 
+  }
+  
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(10, 10);
+  display.println("SISTEMA");
+  display.setCursor(10, 35);
+  display.println("INICIADO");
+  display.display(); 
+  delay(2000);
+}
+
+//=============================================================================
+// FUNCIÓN LOOP
+//=============================================================================
+void loop() {
+  // --- NAVEGACIÓN Y ACCIONES DEL JOYSTICK ---
+  int valorJoy = analogRead(pinJoyY);
+  if (valorJoy < 100) { 
+    pantallaActual++; 
+    if (pantallaActual > 3) pantallaActual = 0; 
+    delay(200); 
+  }
+  if (valorJoy > 900) { 
+    pantallaActual--; 
+    if (pantallaActual < 0) pantallaActual = 3; 
+    delay(200);
+  }
+  if (pantallaActual == 1 && digitalRead(pinJoySW) == LOW) {
+    resetDataLog(); 
+  }
+
+  // --- LECTURA DE SENSORES ---
+  leerSensores(); 
+
+  // --- ACTUALIZACIÓN DE DATOS MÁXIMOS Y MÍNIMOS ---
+  actualizarDataLog(); 
+
+  // --- COMPROBACIÓN DE ALERTAS ---
+  comprobarAlertas(); 
+
+  // --- ACTUALIZAR PANTALLA ---
+  display.clearDisplay(); 
+  
+  if (pantallaActual == 0) dibujarPantallaPrincipal();
+  else if (pantallaActual == 1) dibujarPantallaDataLog();
+  else if (pantallaActual == 2) dibujarPantallaRadarGrafico();
+  else if (pantallaActual == 3) dibujarPantallaRadarNumerico();
+  
+  display.display(); 
+  delay(100); 
+}
+
+//=============================================================================
+// --- FUNCIONES AUXILIARES ---
+//=============================================================================
+
+void leerSensores() {
+  sensors.requestTemperatures(); 
+  tempC = sensors.getTempCByIndex(0);
+  
+  digitalWrite(pinTrig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pinTrig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pinTrig, LOW);
+  duracion = pulseIn(pinEcho, HIGH);
+  distanciaCm = duracion * 0.0343 / 2.0;
+  distanciaCm = constrain(distanciaCm, 0, 200); 
+}
+
+void actualizarDataLog() {
+  if (tempC > tempMax) tempMax = tempC;
+  if (tempC < tempMin) tempMin = tempC;
+  if (distanciaCm > distMax) distMax = distanciaCm;
+  if (distanciaCm < distMin && distanciaCm > 0) distMin = distanciaCm; 
+}
+
+void resetDataLog() {
+  tempMax = tempC; 
+  tempMin = tempC; 
+  distMax = distanciaCm;
+  distMin = distanciaCm;
+  
+  tone(pinBuzzer, 1500, 100); 
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(15,25);
+  display.print("DATOS");
+  display.setCursor(5,45);
+  display.print("REINICIADOS");
+  display.display();
+  delay(1000); 
+}
+
+void comprobarAlertas() {
+  if (tempC > 40.0 || (distanciaCm < 10 && distanciaCm > 0)) {
+    display.fillTriangle(0,0, 10,0, 0,10, SSD1306_WHITE);
+    tone(pinBuzzer, 2000, 150);
+  }
+}
+
+// --- FUNCIONES DE DIBUJO DE PANTALLAS ---
+
+void dibujarPantallaPrincipal() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- MONitoreo AMBIENTAL ---");
+  display.setTextSize(2);
+  display.setCursor(5, 20);
+  display.print(tempC, 1);
+  display.print(" ");
+  display.setTextSize(1);
+  display.drawCircle(75, 22, 3, SSD1306_WHITE); 
+  display.setTextSize(2);
+  display.print("C");
+  int anguloTemp = map(tempC, 0, 50, 0, 180);
+  miServo.write(anguloTemp);
+  display.setTextSize(1);
+  display.setCursor(0, 55);
+  display.print("Mover Joystick->");
+}
+
+void dibujarPantallaDataLog() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- REGISTRO DE DATOS ---");
+  display.setCursor(0, 15);
+  display.print("T.Max: "); display.print(tempMax, 1); display.print("C");
+  display.setCursor(0, 28);
+  display.print("T.Min: "); display.print(tempMin, 1); display.print("C");
+  display.setCursor(0, 41);
+  display.print("D.Max: "); display.print(distMax, 0); display.print("cm");
+  display.setCursor(0, 54);
+  display.print("D.Min: "); display.print(distMin, 0); display.print("cm");
+}
+
+void dibujarPantallaRadarGrafico() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- RADAR GRAFICO ---");
+  
+  static int anguloScan = 0; 
+  static int direccion = 1; 
+  anguloScan += direccion;
+  if (anguloScan >= 180 || anguloScan <= 0) {
+    direccion *= -1; 
+  }
+  miServo.write(anguloScan);
+
+  display.drawArc(64, 63, 60, 60, 0, 180, SSD1306_WHITE);
+
+  float anguloRad = anguloScan * PI / 180.0; 
+  int x2 = 64 - cos(anguloRad) * 60;
+  int y2 = 63 - sin(anguloRad) * 60;
+  display.drawLine(64, 63, x2, y2, SSD1306_WHITE);
+
+  if (distanciaCm < 60) {
+    float anguloBlip = miServo.read() * PI / 180.0;
+    int xBlip = 64 - cos(anguloBlip) * distanciaCm;
+    int yBlip = 63 - sin(anguloBlip) * distanciaCm;
+    display.fillCircle(xBlip, yBlip, 3, SSD1306_WHITE); 
+  }
+}
+
+void dibujarPantallaRadarNumerico() {
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("--- RADAR DE PROXIMIDAD ---");
+  display.setTextSize(3);
+  display.setCursor(5, 25);
+  display.print(distanciaCm, 0);
+  display.setTextSize(2);
+  display.print("cm");
+  int barra = map(distanciaCm, 100, 5, 0, 128);
+  barra = constrain(barra, 0, 128);
+  display.fillRect(0, 58, barra, 6, SSD1306_WHITE);
+  int anguloDist = map(distanciaCm, 5, 100, 180, 0);
+  miServo.write(anguloDist);
+}
+</code></pre>
+        </div>
+
+        <div class="success-box">
+            <h2>🏆 ¡MISIÓN CUMPLIDA, INGENIEROS!</h2>
+            <p>¡Lo han logrado! Han recorrido el camino completo desde encender un LED hasta construir un dispositivo de medición multifuncional con una interfaz gráfica. Han demostrado un dominio de sensores digitales, analógicos, protocolos de comunicación I2C y One-Wire, y han creado un sistema robusto y complejo.</p>
+            <p>Este proyecto no es solo la culminación de un curso, es el primer paso en su carrera como creadores de tecnología. El conocimiento que tienen ahora es la base para la robótica, la domótica, el Internet de las Cosas y la instrumentación industrial.</p>
+            <p><strong>El futuro es suyo para programarlo. ¡Felicidades! - Profe Campos</strong></p>
+        </div>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="tomo10.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
