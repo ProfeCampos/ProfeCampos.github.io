@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -22,10 +35,20 @@
         </div>
         
         <p>¡Qué onda, futuros ingenieros e ingenieras! 👋</p>
-        <p>Bienvenidos a su primera misión en el increíble mundo de Arduino. Hoy van a aprender el súper poder más fundamental de la electrónica: darle órdenes a un componente y que éste obedezca. Dejarán de ser simples espectadores para convertirse en creadores. Nuestra primera tarea será controlar un pequeño pero poderoso componente: el LED. Vamos a encenderlo, apagarlo y hacerlo parpadear a nuestro antojo. ¿Listos? ¡Manos a la obra!</p>
+        <p>Bienvenidos a su primera misión en el increíble mundo de Arduino. Hoy van a aprender el súper poder más fundamental de la electrónica: darle órdenes a un componente y que éste obedezca. Dejarán de ser simples espectadores para convertirse en creadores.</p>
+        <p>Nuestra primera tarea será controlar un pequeño pero poderoso componente: el LED. Vamos a encenderlo, apagarlo y hacerlo parpadear a nuestro antojo. ¿Listos? ¡Manos a la obra!</p>
+
+        <hr>
 
         <h2>🌟 El Protagonista: El LED</h2>
         <p>El <strong>LED</strong> (Diodo Emisor de Luz) es el "hola mundo" de la electrónica. Es un componente semiconductor que emite luz cuando la corriente fluye a través de él. A diferencia de un foco tradicional, el LED es extremadamente eficiente y tiene polaridad: una pata larga (ánodo, +) y una pata corta (cátodo, -). ¡Si lo conectas al revés, no encenderá!</p>
+        
+        <div class="image-container">
+            <!-- Asegúrate de tener una imagen llamada led_protagonista.jpg en tu carpeta -->
+            <img src="LED_2.jpg" alt="Diodo Emisor de Luz (LED) mostrando el ánodo (pata larga) y cátodo (pata corta)">
+        </div>
+
+        <hr>
 
         <h2>🔌 El Circuito: Manos a la Obra</h2>
         <p>Vamos a construir el cuerpo de nuestra operación. Necesitamos darle al código algo físico que controlar.</p>
@@ -49,8 +72,11 @@
 
         <div class="image-container">
             <h3>⚡ Diagrama de armado</h3>
-            <img src="tomo1_diagrama.jpg" alt="Diagrama de conexión LED">
+            <!-- Asegúrate de tener una imagen llamada tomo1_diagrama.jpg en tu carpeta -->
+            <img src="Tomo 1.png" alt="Diagrama de conexión LED en Protoboard con Arduino">
         </div>
+
+        <hr>
 
         <h2>💡 Conceptos Clave</h2>
         <ul>
@@ -59,31 +85,47 @@
             <li><strong>HIGH y LOW:</strong> Comandos básicos. <code>HIGH</code> envía 5V (encendido), <code>LOW</code> envía 0V (apagado).</li>
         </ul>
 
+        <hr>
+
         <h2>🧠 El Código: El Cerebro de la Operación</h2>
         <p>Este es el "idioma" que usaremos para darle instrucciones a nuestra placa.</p>
+        
         <div class="code-container"> 
             <div class="code-header">
-                <span>Código Arduino</span>
+                <span>Código Arduino - Misión 01: Blink</span>
                 <button class="copy-btn">Copiar</button>
             </div> 
 <pre><code class="language-cpp code-block">
+/*
+ * Misión 01: Blink - Hacer parpadear un LED
+ * Por: Profe Campos
+ * CECyTEM 05 Guacamayas
+*/
+
+// El bloque setup() se ejecuta UNA SOLA VEZ al iniciar.
 void setup() {
-  pinMode(13, OUTPUT); // Pin 13 configurado como salida
+  // Configuramos el Pin 13 como SALIDA (OUTPUT)
+  pinMode(13, OUTPUT); 
 }
 
+// El bloque loop() se repite infinitamente.
 void loop() {
-  digitalWrite(13, HIGH); // Encender LED
-  delay(1000);           // Esperar 1 segundo
-  digitalWrite(13, LOW);  // Apagar LED
-  delay(1000);           // Esperar 1 segundo
+  digitalWrite(13, HIGH); // Encender LED (envía 5V)
+  delay(1000);            // Esperar 1 segundo (1000 milisegundos)
+  digitalWrite(13, LOW);  // Apagar LED (envía 0V)
+  delay(1000);            // Esperar 1 segundo
 }
 </code></pre>
         </div>
 
+        <hr>
+
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <p>Ya que eres el jefe, ¿por qué no pruebas a cambiar las órdenes?</p>
         <ul>
-            <li><strong>Latido de Corazón:</strong> Haz que el LED haga dos parpadeos rápidos seguidos de una pausa larga.</li>
-            <li><strong>S.O.S.:</strong> Programa el código internacional (3 cortos, 3 largos, 3 cortos) usando <code>digitalWrite()</code> y <code>delay()</code>.</li>
+            <li>❤️ <strong>Latido de Corazón:</strong> Haz que el LED haga dos parpadeos rápidos seguidos de una pausa larga.</li>
+            <li>🆘 <strong>S.O.S.:</strong> El código internacional de S.O.S. es "3 parpadeos cortos, 3 largos, 3 cortos". ¿Puedes modificar el código para que tu LED envíe esta señal de auxilio? (<em>Pista: necesitarás más <code>digitalWrite()</code> y <code>delay()</code></em>).</li>
+            <li>🎁 <strong>Reto Sorpresa:</strong> Modifica los tiempos de los <code>delay()</code> al mínimo posible (por ejemplo, 10 o 20 milisegundos). ¿Qué pasa con la luz del LED?</li>
         </ul>
 
         <div class="nav-links bottom-nav-links">
@@ -91,6 +133,32 @@ void loop() {
             <a href="tomo2.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
     </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+
     <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
