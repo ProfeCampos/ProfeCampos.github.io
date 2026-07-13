@@ -1,180 +1,227 @@
-Tomo 10: Termómetro Multiescala con Interfaz Gráfica
-¡Saludos, tecnólogos! Hoy vamos a subir de nivel en dos áreas clave: la precisión de nuestras mediciones y, sobre todo, la creación de una interfaz de usuario (UI) interactiva y de alta calidad. Usaremos el preciso termómetro digital DS18B20, una brillante pantalla OLED SSD1306, y un módulo Joystick para navegar entre múltiples pantallas de datos como si fuera un dispositivo profesional.
-🧠 Protagonista 1: El Termómetro Digital DS18B20 🌡️
-Ya conocen el LM35, pero el DS18B20 juega en otra liga.
-A primera vista, el DS18B20 parece un simple transistor, pero en su interior de tres patas se esconde una pieza de ingeniería impresionante. Pensemos en él no como un termómetro, sino como una microcomputadora dedicada exclusivamente a medir la temperatura.
-¿Cómo funciona por dentro?
-Sensor de Silicio: El corazón del DS18B20 es un sensor de temperatura de "banda prohibida de silicio". En términos sencillos, es un material semiconductor cuyo comportamiento eléctrico cambia de manera muy precisa y predecible con la temperatura. No es como una LDR que es aproximada; este cambio es tan fiable que se puede convertir directamente en una medición exacta.
-Conversor Analógico a Digital (ADC): La medición del sensor de silicio es, en su origen, una señal analógica. Dentro del chip, un conversor de alta resolución (de 9 a 12 bits) la transforma en un número digital. Una resolución de 12 bits le permite detectar cambios de temperatura tan pequeños como 0.0625°C, una precisión mucho mayor que la que podríamos obtener fácilmente con el LM35.
-El Protocolo "One-Wire": La Línea de Grupo Esta es la verdadera magia del DS18B20. Imagina un salón de clases donde el profesor (el Arduino) quiere saber la temperatura de cada alumno (los sensores).
-Método tradicional (como el LM35): El profesor necesitaría un cable de micrófono individual para cada alumno. Si tiene 10 alumnos, necesita 10 cables y 10 entradas en su consola. Es un desastre de cables.
-Método One-Wire: El profesor usa un solo cable de micrófono que pasa por todos los escritorios. Para hablar con un alumno en específico, primero grita por el micrófono: "¡Atención, solo responda el alumno con el número de lista 7A3B-5C8D!". Todos los demás alumnos lo escuchan, pero solo el que tiene ese número de lista único responderá.
-Eso es exactamente lo que hace el protocolo One-Wire. Cada sensor DS18B20 tiene una dirección única de 64 bits grabada con láser en la fábrica. El Arduino usa esta dirección para pedirle la temperatura a un sensor específico, y todo sucede a través de un único pin de datos. Por eso podemos conectar una docena de estos sensores en un solo pin de nuestro Arduino.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomo 10: Termómetro Multiescala con Interfaz Gráfica</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .formula-box {
+            font-size: 1.25rem; 
+            margin: 1.5rem auto; 
+            text-align: left; 
+            max-width: 500px;
+            background-color: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid #e9ecef; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-weight: bold;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Tomo 10: Termómetro Multiescala con Interfaz Gráfica</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="tomo9.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo11.html" class="nav-link">Siguiente Tomo &rarr;</a>
+        </div>
+        
+        <p>¡Saludos, tecnólogos! Hoy vamos a subir de nivel en dos áreas clave: la precisión de nuestras mediciones y, sobre todo, la creación de una interfaz de usuario (UI) interactiva y de alta calidad. Usaremos el preciso termómetro digital <strong>DS18B20</strong>, una brillante pantalla <strong>OLED SSD1306</strong>, y un módulo <strong>Joystick</strong> para navegar entre múltiples pantallas de datos como si fuera un dispositivo profesional.</p>
+        
+        <h2>🌡️ Protagonista 1: El Termómetro Digital DS18B20</h2>
+        <p>Ya conocen el clásico LM35, pero el DS18B20 juega en otra liga por completo. A primera vista, parece un simple transistor de tres patas, pero en su interior se esconde una pieza de ingeniería impresionante. Pensemos en él no como un simple termómetro analógico, sino como una microcomputadora dedicada exclusivamente a medir la temperatura.</p>
+        
+        <h3>¿Cómo funciona por dentro?</h3>
+        <ul>
+            <li><strong>Sensor de Silicio:</strong> El corazón del DS18B20 es un sensor de temperatura de "banda prohibida de silicio". Es un material semiconductor cuyo comportamiento eléctrico cambia de manera muy precisa y predecible con la temperatura. No es aproximado como una fotorresistencia; este cambio físico es tan fiable que se puede convertir directamente en una medición exacta.</li>
+            <li><strong>Conversor Analógico a Digital (ADC):</strong> La medición del sensor de silicio es, en su origen, una señal analógica. Dentro del propio chip, un conversor de alta resolución (de 9 a 12 bits) la transforma en un número digital. Una resolución de 12 bits le permite detectar cambios de temperatura tan pequeños como de <strong>0.0625&deg;C</strong>. ¡Mucho mayor que la obtenida con un LM35!</li>
+            <li><strong>El Protocolo "One-Wire" (Línea de Grupo):</strong> Esta es la verdadera magia. Imagina un salón de clases donde el profesor (el Arduino) quiere saber la temperatura de cada alumno (los sensores).
+                <ul>
+                    <li><em>Método tradicional (como el LM35):</em> El profesor necesitaría un cable de conexión individual para cada alumno. Si tiene 10 alumnos, necesita 10 puertos en su consola. Es un desastre de cableado.</li>
+                    <li><em>Método One-Wire:</em> El profesor usa un solo cable que pasa de forma secuencial por todos los escritorios. Para hablar con un alumno en específico, primero grita por el bus: <code>"¡Atención, solo responda el alumno con el número de lista 7A3B-5C8D!"</code>. Todos los demás escuchan, pero solo el que tiene esa dirección única responde.</li>
+                </ul>
+                Cada sensor DS18B20 tiene una dirección de identificación única de 64 bits grabada con láser de fábrica. El Arduino usa esta dirección para pedirle la temperatura a un sensor específico, y todo sucede a través de **un único pin de datos**. Por eso podemos conectar docenas de estos sensores en un solo pin.
+            </li>
+        </ul>
 
-Forma de conexión
+        <h2>🖥️ Protagonista 2: La Pantalla OLED SSD1306</h2>
+        <p>La pantalla LCD de las prácticas anteriores es sumamente funcional, pero la OLED es simplemente... hermosa. La tecnología OLED (Diodo Orgánico Emisor de Luz) es un salto enorme en comparación con las pantallas de cristal líquido.</p>
+        <ul>
+            <li><strong>Pantalla LCD Tradicional:</strong> Imagina una ventana con una luz blanca siempre encendida detrás (la luz de fondo o <em>backlight</em>). Para crear una imagen, la pantalla tiene miles de pequeñas persianas que se abren o se cierran para dejar pasar o bloquear la luz. Un píxel negro en una LCD no es realmente negro; es solo una persiana cerrada que intenta bloquear la luz trasera que sigue encendida.</li>
+            <li><strong>Pantalla OLED:</strong> Olvídate de la luz de fondo y de las persianas. Imagina un mosaico gigante hecho con millones de diminutas bombillas de colores independientes. Cada una de estas bombillas (cada píxel) genera su propia luz y puede encenderse o apagarse por completo.</li>
+            <li><strong>Sus Súper Poderes:</strong> 
+                <ul>
+                    <li><em>Contraste Infinito:</em> Para mostrar el color negro, una pantalla OLED simplemente apaga sus píxeles. No hay luz residual que se filtre, entregando el negro más puro posible.</li>
+                    <li><em>Eficiencia Energética:</em> La pantalla solo gasta energía en los píxeles encendidos. Si tu interfaz es mayormente negra con texto blanco, consumirá muy poca corriente.</li>
+                    <li><em>Velocidad de Respuesta:</em> Al no requerir cristales mecánicos que giren, los píxeles cambian de estado de inmediato, eliminando el molesto efecto "fantasma" de los textos en movimiento.</li>
+                </ul>
+            </li>
+        </ul>
 
+        <h2>🕹️ Protagonista 3: El Módulo Joystick KY-023</h2>
+        <p>El joystick es un componente de entrada maravillosamente ingenioso porque combina tres sensores mecánicos en un solo dispositivo compacto:</p>
+        <ul>
+            <li><strong>Dos Potenciómetros Perpendiculares:</strong> Cuenta con dos potenciómetros idénticos en principio al del Tomo 7. Uno está montado para medir el movimiento en el eje X (izquierda-derecha) y el otro en el eje Y (arriba-abajo). Al mover la palanca, se leen los pines <code>VRx</code> y <code>VRy</code> con la función <code>analogRead()</code>, obteniendo coordenadas entre 0 y 1023. En nuestro proyecto, ignoraremos el eje X y solo usaremos el eje Y para detectar los movimientos de "arriba" y "abajo" en el menú.</li>
+            <li><strong>Un Pulsador Táctil Integrado:</strong> Debajo de la palanca, hay un pequeño pulsador idéntico al del Tomo 2. Al presionar la palanca hacia adentro verticalmente, cierras el circuito del botón. El pin <code>SW</code> (Switch) nos permite detectar esta acción.</li>
+        </ul>
 
-⚙️ Protagonista 2: La Pantalla OLED 🖥️
-La pantalla LCD es funcional, pero la OLED es simplemente... hermosa.
-La pantalla OLED (Diodo Orgánico Emisor de Luz) es un salto tecnológico enorme en comparación con la LCD tradicional. Para entender por qué es tan especial, pensemos en cómo funciona una pantalla LCD.
-Pantalla LCD: Imagina una ventana con una luz siempre encendida detrás (la luz de fondo o backlight). Para crear una imagen, la pantalla tiene miles de pequeñas "persianas" (los cristales líquidos) que se abren o se cierran para dejar pasar o bloquear la luz. Un píxel negro en una LCD no es realmente negro; es solo una persiana cerrada que intenta, no siempre con éxito, bloquear la luz de fondo que sigue encendida.
-Pantalla OLED: Ahora, olvídate de la luz de fondo y las persianas. Imagina un mosaico gigante hecho con millones de diminutas bombillas de colores. Cada una de estas bombillas (cada píxel) puede encenderse o apagarse de forma independiente.
-Esto nos da sus superpoderes:
-Contraste Infinito: Para mostrar el color negro, una pantalla OLED simplemente apaga los píxeles. No hay luz que bloquear, no hay luz que se filtre. El negro es el negro más puro posible, lo que hace que los demás colores resalten de manera espectacular.
-Eficiencia Energética: La pantalla solo gasta energía en los píxeles que están encendidos. Si tu interfaz es mayormente negra con texto blanco, la pantalla consume muy poca batería, ideal para proyectos portátiles. Una LCD, en cambio, siempre tiene su luz de fondo encendida, consumiendo energía constantemente.
-Velocidad y Diseño: Como cada píxel es su propia fuente de luz, pueden cambiar de estado mucho más rápido, eliminando el efecto "fantasma" en imágenes en movimiento. Además, al no necesitar una capa de retroiluminación, las pantallas son increíblemente delgadas.
+        <h3>🔬 Las Fórmulas del Asunto</h3>
+        <p>Para dotar a nuestro instrumento de capacidades profesionales, el microcontrolador leerá la temperatura base en grados Celsius y realizará dinámicamente las conversiones hacia las tres escalas termométricas restantes utilizando las siguientes ecuaciones estándar:</p>
+        
+        <div class="formula-box">
+            &bull; Fahrenheit: &deg;F = (&deg;C &times; 9/5) + 32<br>
+            &bull; Kelvin: &nbsp; &nbsp; &nbsp;K = &deg;C + 273.15<br>
+            &bull; Rankine: &nbsp; &nbsp; R = (&deg;C + 273.15) &times; 9/5
+        </div>
 
-☀️Protagonista 3: El Módulo Joystick 🕹️
-El joystick es un componente de entrada maravillosamente ingenioso porque combina tres dispositivos en uno solo, dándonos un control muy rico y compacto. Vamos a desarmarlo conceptualmente:
-Dos Potenciómetros en Ejes Perpendiculares: El corazón del joystick son dos potenciómetros, idénticos en principio al que usaron en el Tomo 7.
-Uno está montado para medir el movimiento en el eje X (izquierda-derecha).
-El otro mide el movimiento en el eje Y (arriba-abajo). Cuando mueves la palanca, estás girando las perillas de estos dos potenciómetros simultáneamente. Por eso, al leer los pines VRx y VRy con analogRead(), obtenemos dos valores independientes entre 0 y 1023 que nos dan una coordenada precisa de la posición de la palanca. En nuestro proyecto, ignoramos el eje X y solo usamos el Y para crear las zonas de "arriba" y "abajo" para nuestro menú.
-Un Pulsador Táctil: Debajo de la palanca, hay un pequeño pulsador, exactamente igual al que usaron en el Tomo 2. Cuando presionas la palanca hacia abajo, cierras el circuito de este botón. El pin SW (Switch) nos permite detectar esta acción, ideal para seleccionar una opción en un menú.
-Al combinar estas tres entradas, podemos crear sistemas de navegación muy complejos e intuitivos con un solo componente, tal como lo hacen los controles de las consolas de videojuegos.
+        <h2>🔌 El Circuito: Dispositivo de Medición Interactivo</h2>
+        
+        <h3>Componentes Necesarios:</h3>
+        <ul>
+            <li>Placa Arduino UNO, Protoboard y cables.</li>
+            <li>1 Sensor de Temperatura Digital <code>DS18B20</code>.</li>
+            <li>1 Resistencia fijada de <code>4.7k&Omega;</code> (Pull-Up obligatoria para el bus).</li>
+            <li>1 Pantalla <code>OLED SSD1306</code> de 128x64 píxeles I2C.</li>
+            <li>1 Módulo <code>Joystick KY-023</code>.</li>
+        </ul>
 
+        <h3>📝 Instrucciones de Conexión:</h3>
+        <ol>
+            <li><strong>Pantalla OLED (I2C):</strong> Conecta <code>GND</code> a GND, <code>VCC</code> a 5V, <code>SDA</code> al pin analógico <code>A4</code> y <code>SCL</code> al pin analógico <code>A5</code>.</li>
+            <li><strong>Sensor DS18B20:</strong> Mirando el sensor por su cara plana frontal: pin izquierdo a <code>GND</code>, pin central (DATA) al Pin Digital <strong>2</strong> y pin derecho (VDD) a <code>5V</code>.</li>
+            <li><strong>Resistencia de Pull-Up:</strong> Conecta de manera obligatoria la resistencia de <code>4.7k&Omega;</code> uniendo el pin central de DATA (Pin 2) con la línea de <code>5V</code> en la protoboard. ¡Sin esto, el protocolo One-Wire no responderá!</li>
+            <li><strong>Módulo Joystick:</strong> Conecta <code>GND</code> a GND, <code>VCC</code> a 5V y el terminal de señal vertical <code>VRy</code> al Pin Analógico <code>A0</code>. Los pines <code>VRx</code> y <code>SW</code> pueden quedarse libres por ahora.</li>
+        </ol>
 
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <img src="tomo10_termometro_bb.jpg" alt="Diagrama de armado Fritzing uniendo Arduino Uno, pantalla OLED I2C, Termómetro DS18B20 con Pull-up y Joystick">
+        </div>
 
-
-
-🔌 El Circuito: Un Dispositivo de Medición Interactivo
-Componentes Necesarios:
-Arduino, Protoboard, Cables
-Sensor DS18B20
-Resistencia de 4.7kΩ
-Pantalla OLED SSD1306
-Módulo Joystick KY-023
-📝 Instrucciones de Conexión:
-Conecta la Pantalla OLED (I2C):
-GND -> GND, VCC -> 5V, SDA -> A4, SCL -> A5.
-Conecta el Sensor DS18B20:
-GND -> GND, DATA -> Pin Digital 2, VDD -> 5V.
-Conecta la resistencia de 4.7kΩ entre el pin de DATA (Pin 2) y el pin de 5V.
-Conecta el Módulo Joystick:
-GND -> GND, VCC -> 5V.
-VRx (eje X) -> No lo usaremos, déjalo desconectado.
-VRy (eje Y) -> Pin Analógico A0.
-SW (botón) -> No lo usaremos, déjalo desconectado.
-
-
-
-
-⚡ Diagrama de armado
-
-🧠 El Código: El Sistema Operativo del Termómetro
-Necesitarán instalar tres librerías: OneWire, DallasTemperature (para el sensor), y las librerías de Adafruit SSD1306 y Adafruit GFX (para la pantalla).
-Este código es más avanzado. Usa una variable pantallaActual para saber qué menú mostrar. El joystick cambia el valor de esta variable, y un if/else if en el loop se encarga de dibujar la pantalla correcta.
+        <h2>🧠 El Código: El Sistema Operativo del Termómetro</h2>
+        <p>Para compilar con éxito este sistema operativo, recuerden instalar desde el Gestor de Librerías de Arduino las herramientas: <code>OneWire</code>, <code>DallasTemperature</code>, <code>Adafruit SSD1306</code> y <code>Adafruit GFX</code>.</p>
+        
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
 /*
- * Misión 12 (Modificada): Termómetro Multiescala con UI
+ * Tomo 10: Termómetro Multiescala con UI Gráfica
  * Descripción: Muestra 4 escalas de temperatura en 3 pantallas diferentes
- * en una OLED, navegando con un Joystick.
+ * utilizando una pantalla OLED SSD1306, navegando dinámicamente con un Joystick.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
 // --- INCLUSIÓN DE LIBRERÍAS ---
-// Incluimos las "cajas de herramientas" que nos dan funcionalidades extra.
-#include <OneWire.h>             // Librería para el protocolo de comunicación de 1 cable (para el DS18B20).
-#include <DallasTemperature.h>   // Librería que facilita la lectura del sensor DS18B20.
-#include <Wire.h>                // Librería para la comunicación I2C (para la pantalla OLED).
-#include <Adafruit_GFX.h>        // Librería gráfica base de Adafruit, necesaria para dibujar formas.
-#include <Adafruit_SSD1306.h>    // Librería específica para controlar la pantalla OLED SSD1306.
+#include &lt;Wire.h&gt;                // Comunicación I2C para la pantalla OLED
+#include &lt;Adafruit_GFX.h&gt;        // Librería gráfica base de Adafruit
+#include &lt;Adafruit_SSD1306.h&gt;    // Controlador específico para OLED SSD1306
+#include &lt;OneWire.h&gt;             // Protocolo de comunicación de un solo cable
+#include &lt;DallasTemperature.h&gt;   // Librería para la gestión del sensor DS18B20
 
 // --- CONFIGURACIÓN DE PANTALLA ---
-// Definimos constantes para el tamaño de nuestra pantalla. Es una buena práctica
-// para no tener "números mágicos" esparcidos por el código.
-#define SCREEN_WIDTH 128 // Ancho de la pantalla OLED en píxeles.
-#define SCREEN_HEIGHT 64 // Alto de la pantalla OLED en píxeles.
-
-// Creamos un "objeto" para nuestra pantalla. Piensa en esto como darle un nombre
-// y asignarle sus características para poder darle órdenes después.
+#define SCREEN_WIDTH 128 
+#define SCREEN_HEIGHT 64 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 // --- CONFIGURACIÓN DEL SENSOR ---
-#define ONE_WIRE_BUS 2 // Le decimos al programa que nuestro sensor DS18B20 está en el Pin Digital 2.
-
-// Creamos los objetos necesarios para manejar la comunicación One-Wire y el sensor.
+#define ONE_WIRE_BUS 2 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 // --- CONFIGURACIÓN DEL JOYSTICK ---
-const int pinJoyY = A0; // Le decimos al programa que leeremos el eje Y del joystick en el Pin Analógico 0.
+const int pinJoyY = A0; 
 
 // --- VARIABLES GLOBALES ---
-// Estas variables son "globales" porque se pueden usar en cualquier parte del programa.
-
-// Esta es la variable MÁS IMPORTANTE para el menú. Actúa como un "marcador de página".
-// Nos dice en qué pantalla estamos actualmente. 0=C/R, 1=F/K, 2=Gráficos.
+// Marcador de página del sistema operativo de UI. 0 = Escalas C/R, 1 = Escalas F/K, 2 = Modo Gráfico
 int pantallaActual = 0; 
 
-// Variables para almacenar las temperaturas en las diferentes escalas.
-// Usamos el tipo "float" porque las temperaturas pueden tener decimales.
-float tempC = 0.0; // Grados Celsius
-float tempF = 0.0; // Grados Fahrenheit
-float tempK = 0.0; // Grados Kelvin
-float tempR = 0.0; // Grados Rankine
+// Variables para almacenar las temperaturas calculadas de punto flotante
+float tempC = 0.0; 
+float tempF = 0.0; 
+float tempK = 0.0; 
+float tempR = 0.0; 
 
-// La función setup() se ejecuta UNA SOLA VEZ al inicio del programa.
 void setup() {
-  // Iniciamos la comunicación con el Monitor Serial de la computadora. Es útil para depurar.
   Serial.begin(9600);
-  
-  // Iniciamos el sensor de temperatura.
   sensors.begin();
 
-  // Intentamos iniciar la pantalla OLED.
-  // Si la función 'begin' devuelve 'false' (falso), significa que no encontró la pantalla.
+  // Inicialización y verificación de la pantalla OLED por hardware
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
-    Serial.println(F("Fallo al iniciar SSD1306")); // Mandamos un mensaje de error al monitor serial.
-    for(;;); // Creamos un bucle infinito para detener el programa si la pantalla no funciona.
+    Serial.println(F("Fallo de comunicación con SSD1306"));
+    for(;;); // Detiene el sistema en un bucle infinito en caso de falla
   }
   
-  // Mostramos un mensaje de bienvenida en la pantalla OLED.
-  display.clearDisplay();       // Primero, nos aseguramos de que la pantalla esté limpia.
-  display.println("Iniciando..."); // Escribimos el texto.
-  display.display();            // ¡Muy importante! Este comando "dibuja" en la pantalla física lo que preparamos.
-  delay(1000);                  // Esperamos un segundo para que se pueda leer.
+  // Mensaje gráfico de bienvenida inicial
+  display.clearDisplay(); 
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(20, 20);
+  display.println("Iniciando...");
+  display.setCursor(20, 35);
+  display.println("Manual Tomo 10");
+  display.display(); 
+  delay(1500);
+  display.clearDisplay();
 }
 
-// La función loop() se repite infinitamente mientras el Arduino tenga energía.
 void loop() {
-  // --- PASO 1: LEER TEMPERATURA Y HACER LAS CONVERSIONES ---
-  // Le pedimos a todos los sensores en el bus One-Wire que midan la temperatura.
+  // --- PASO 1: LECTURA COOPERATIVA Y CONVERSIÓN ---
   sensors.requestTemperatures(); 
+  tempC = sensors.getTempCByIndex(0); // Adquisición del valor base en Celsius
   
-  // Obtenemos la temperatura en Celsius del primer sensor que encuentre (índice 0).
-  tempC = sensors.getTempCByIndex(0);
-  
-  // Calculamos las otras escalas a partir de los grados Celsius.
-  tempF = tempC * 9.0 / 5.0 + 32.0;       // Fórmula de conversión a Fahrenheit.
-  tempK = tempC + 273.15;                 // Fórmula de conversión a Kelvin.
-  tempR = (tempC + 273.15) * 9.0 / 5.0;   // Fórmula de conversión a Rankine.
+  // Fórmulas matemáticas implementadas para las conversiones físicas
+  tempF = tempC * 9.0 / 5.0 + 32.0; 
+  tempK = tempC + 273.15; 
+  tempR = (tempC + 273.15) * 9.0 / 5.0; 
 
-  // --- PASO 2: LEER EL JOYSTICK PARA NAVEGAR ENTRE PANTALLAS ---
-  // Leemos el valor analógico del eje Y del joystick. Será un número entre 0 y 1023.
+  // --- PASO 2: LECTURA DEL JOYSTICK Y CONTROL DE MENÚS ---
   int valorJoy = analogRead(pinJoyY);
   
-  // Si el valor es muy bajo (joystick movido hacia abajo)...
+  // Desplazamiento de página hacia abajo
   if (valorJoy < 100) {
-    pantallaActual++; // ...incrementamos nuestro "marcador de página".
-    // Si nos pasamos de la última página (2), volvemos a la primera (0).
-    if (pantallaActual > 2) pantallaActual = 0;
-    delay(200); // Pequeño delay para evitar que cambie de pantalla múltiples veces con un solo toque.
+    pantallaActual++; 
+    if (pantallaActual > 2) pantallaActual = 0; // Cierre cíclico de menús
+    delay(250); // Antirrebote por software para evitar saltos accidentales
   }
   
-  // Si el valor es muy alto (joystick movido hacia arriba)...
+  // Desplazamiento de página hacia arriba
   if (valorJoy > 900) {
-    pantallaActual--; // ...decrementamos nuestro "marcador de página".
-    // Si nos pasamos de la primera página (0), vamos a la última (2).
+    pantallaActual--; 
     if (pantallaActual < 0) pantallaActual = 2;
-    delay(200); // Pequeño delay para evitar saltos múltiples.
+    delay(250); 
   }
 
-  // --- PASO 3: DIBUJAR LA PANTALLA CORRESPONDIENTE ---
-  display.clearDisplay();            // Limpiamos lo que había antes en la pantalla.
-  display.setTextColor(SSD1306_WHITE); // Fijamos el color del texto a blanco.
+  // --- PASO 3: DIBUJO ESTRUCTURADO DEL CANVAS ---
+  display.clearDisplay(); 
+  display.setTextColor(SSD1306_WHITE);
 
-  // Usando 'if / else if', decidimos qué función de dibujo llamar
-  // basándonos en el valor de nuestro "marcador de página".
+  // Selector condicional de ejecución gráfica según la página activa
   if (pantallaActual == 0) {
     dibujarPantallaCR();
   } else if (pantallaActual == 1) {
@@ -183,94 +230,118 @@ void loop() {
     dibujarPantallaGrafica();
   }
 
-  // Finalmente, después de preparar todo, actualizamos la pantalla física.
-  display.display();
-  delay(100); // Pequeña pausa general antes de empezar el loop de nuevo.
+  display.display(); // Envío físico del búfer gráfico hacia el chip SSD1306
+  delay(50); 
 }
 
-// --- FUNCIONES AUXILIARES DE DIBUJO ---
-// Dividir el código en funciones hace que sea mucho más organizado y fácil de leer.
+// --- FUNCIONES AUXILIARES DE DISEÑO GRÁFICO ---
 
-// Función para dibujar la primera pantalla (Celsius y Rankine).
 void dibujarPantallaCR() {
-  // Dibuja un ícono simple que cambia con la temperatura.
-  if (tempC >= 25) { // Si hace calor...
-    display.fillCircle(110, 15, 10, SSD1306_WHITE); // ...dibuja un sol.
-  } else { // Si hace frío...
-    display.setTextSize(2); display.setCursor(105, 10); display.print("*"); // ...dibuja un copo de nieve.
+  // Ícono reactivo dinámico según el umbral térmico industrial
+  if (tempC >= 26.0) { 
+    display.fillCircle(110, 15, 8, SSD1306_WHITE); // Representación gráfica de Sol
+  } else { 
+    display.setTextSize(2); 
+    display.setCursor(105, 10); 
+    display.print("*"); // Representación gráfica de Copo de Nieve
   }
   
-  // Dibuja la temperatura en Celsius.
-  display.setTextSize(2);      // Letra de tamaño mediano.
-  display.setCursor(5, 10);    // Posiciona el cursor en la columna 5, fila 10.
-  display.print(tempC, 1);     // Imprime la variable tempC con 1 decimal.
+  // Despliegue formal de Escala Celsius y Rankine
+  display.setTextSize(2); 
+  display.setCursor(5, 8); 
+  display.print(tempC, 1); 
   display.print(" C");
 
-  // Dibuja la temperatura en Rankine.
-  display.setTextSize(2);
-  display.setCursor(5, 40);
+  display.setCursor(5, 38);
   display.print(tempR, 1);
   display.print(" R");
 }
 
-// Función para dibujar la segunda pantalla (Fahrenheit y Kelvin).
 void dibujarPantallaFK() {
-  // Dibuja un ícono de termómetro usando formas básicas.
-  display.drawRect(105, 10, 15, 45, SSD1306_WHITE); // El cuerpo del termómetro.
-  display.fillCircle(112, 55, 7, SSD1306_WHITE);    // El bulbo del termómetro.
+  // Silueta de un termómetro clásico de mercurio mediante primitivas geométricas
+  display.drawRect(108, 10, 10, 35, SSD1306_WHITE); 
+  display.fillCircle(113, 48, 5, SSD1306_WHITE);    
   
-  // Dibuja la temperatura en Fahrenheit.
+  // Despliegue formal de Escala Fahrenheit y Kelvin
   display.setTextSize(2);
-  display.setCursor(5, 10);
+  display.setCursor(5, 8);
   display.print(tempF, 1);
   display.print(" F");
 
-  // Dibuja la temperatura en Kelvin.
-  display.setTextSize(2);
-  display.setCursor(5, 40);
+  display.setCursor(5, 38);
   display.print(tempK, 1);
   display.print(" K");
 }
 
-// Función para dibujar la tercera pantalla (los 4 termómetros gráficos).
 void dibujarPantallaGrafica() {
-  // Dibuja el encabezado de la tabla.
+  // Encabezados tabulares
   display.setTextSize(1);
-  display.setCursor(0,0);
-  display.println("  C    F    K    R");
-  display.drawLine(0, 10, 127, 10, SSD1306_WHITE); // Línea divisoria.
+  display.setCursor(0, 0);
+  display.println("   C    F    K    R");
+  display.drawLine(0, 10, 127, 10, SSD1306_WHITE); 
 
-  // Llama a nuestra función 'dibujarTermometro' para cada escala de temperatura.
-  // Le pasamos la posición X donde queremos dibujarlo, el valor a mostrar, y los
-  // valores mínimo y máximo de esa escala para la barra gráfica.
-  dibujarTermometro(10, tempC, -10, 50);    // Rango para Celsius: de -10 a 50
-  dibujarTermometro(40, tempF, 14, 122);    // Rango para Fahrenheit (equivalente a -10/50 C)
-  dibujarTermometro(70, tempK, 263, 323);   // Rango para Kelvin (equivalente a -10/50 C)
-  dibujarTermometro(100, tempR, 473, 581);  // Rango para Rankine (equivalente a -10/50 C)
+  // Invocación paralela de barras proporcionales escaladas en rangos industriales idénticos
+  dibujarTermometro(10, tempC, -10, 50);    // Celsius: Rango -10 a 50
+  dibujarTermometro(40, tempF, 14, 122);    // Fahrenheit: Equivalente térmico
+  dibujarTermometro(70, tempK, 263, 323);   // Kelvin: Equivalente térmico
+  dibujarTermometro(100, tempR, 473, 581);  // Rankine: Equivalente térmico
 }
 
-// Función súper útil para dibujar una barra de termómetro en una posición X.
 void dibujarTermometro(int x, float valor, float minVal, float maxVal) {
-  int altoBarra = 50; // La altura máxima en píxeles que tendrá nuestro termómetro.
+  int altoBarra = 46; 
   
-  // Aquí ocurre la magia: usamos map() para convertir el rango de temperatura
-  // (ej. -10 a 50) al rango de píxeles (0 a 50).
+  // Mapeo lineal matemático de la magnitud flotante a la escala de píxeles vertical
   int llenado = map(valor, minVal, maxVal, 0, altoBarra);
+  llenado = constrain(llenado, 0, altoBarra); // Limitador de seguridad geométrica
   
-  // La función constrain() es un seguro. Se asegura de que el valor de 'llenado'
-  // nunca sea menor que 0 ni mayor que la altura de la barra.
-  llenado = constrain(llenado, 0, altoBarra);
+  // Dibujo del contenedor exterior de la barra
+  display.drawRect(x, 14, 14, altoBarra + 2, SSD1306_WHITE);
   
-  // Dibuja el contorno exterior del termómetro.
-  display.drawRect(x, 12, 15, altoBarra + 2, SSD1306_WHITE);
-  
-  // Dibuja el relleno. La lógica de la posición 'y' es un poco tricky:
-  // (13 + (altoBarra - llenado)) hace que el rectángulo se "llene" desde abajo hacia arriba.
-  display.fillRect(x+1, 13 + (altoBarra - llenado), 13, llenado, SSD1306_WHITE);
+  // Relleno inverso de píxeles para forzar el crecimiento vertical ascendente
+  display.fillRect(x + 1, 15 + (altoBarra - llenado), 12, llenado, SSD1306_WHITE);
 }
+</code></pre>
+        </div>
 
+        <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
+        <ul>
+            <li><strong>Pantalla de Bienvenida Animada:</strong> 🎬 Dale a tu termómetro una personalidad única. Antes de entrar al bucle operativo del instrumento, programa dentro de la función <code>setup()</code> una animación ágil de bienvenida. Puedes hacer que el nombre del plantel <code>"CECyTEM 05"</code> se desplace desde los bordes laterales, o dibujar un logo geométrico que crezca desde el centro usando las funciones gráficas de la librería Adafruit GFX.</li>
+            <li><strong>Registrador de Historial Térmico (Máximos y Mínimos):</strong> 📈 Convierte tu dispositivo en un verdadero registrador de instrumentación profesional. Diseña una cuarta pantalla (<code>pantallaActual == 3</code>). Esta nueva interfaz deberá rastrear y mostrar permanentemente las temperaturas máxima y mínima registradas en grados Celsius desde el arranque del equipo. Conecta el pin <code>SW</code> del joystick a un pin digital libre del Arduino con resistencia interna de pull-up; cuando el alumno presione el botón, el historial deberá reiniciarse, tomando la lectura actual como nuevo punto de partida.</li>
+            <li><strong>Alarma Visual de Histograma Reactivo:</strong> 🔔 Haz que tu interfaz gráfica sea reactiva a las condiciones del entorno. En la tercera pantalla de termómetros gráficos, programa una alerta visual discreta. Si la temperatura en grados Celsius cruza el umbral de sobrecalentamiento (ej. mayor a 30&deg;C), haz que el rectángulo exterior (<code>drawRect</code>) del indicador de Celsius comience a parpadear encendiéndose y apagándose consecutivamente en cada ciclo. Si baja de una temperatura crítica de frío (ej. menor a 10&deg;C), aplica una animación de parpadeo con una velocidad diferente. Esto enseña a diseñar sistemas HMI reactivos sin saturar la pantalla con texto.</li>
+        </ul>
 
-🚀 ¡Inténtalo Tú Mismo! (Retos)
-Pantalla de Bienvenida Animada: 🎬 Dale a tu termómetro una personalidad única. Antes de que el programa principal comience (dentro de la función setup()), diseña una secuencia de inicio animada. Podrías hacer que el nombre "CECyTEM 05" aparezca letra por letra, dibujar el contorno de un termómetro que se "llena" como una barra de carga, o crear un pequeño ícono que se mueva por la pantalla. ¡Es tu oportunidad de ser creativo con las funciones de dibujo de la librería GFX!
-Registrador de Datos (Máximos y Mínimos): 📈 Convierte tu dispositivo en un verdadero instrumento de registro. Programa una cuarta pantalla en el menú de navegación. Esta pantalla deberá mostrar las temperaturas máxima y mínima en grados Celsius que se han registrado desde que el dispositivo se encendió. Para hacerlo más profesional, utiliza el botón del joystick (pin SW): al presionarlo, los valores máximo y mínimo deben reiniciarse a la temperatura actual.
-Alarma Visual de Temperatura con Gráficos: 🔔 Haz que tu interfaz sea más inteligente y reactiva. En la tercera pantalla (la de los termómetros gráficos), programa una alarma visual. Si la temperatura en grados Celsius supera un umbral de "calor" (por ejemplo, 30°C), haz que el contorno del termómetro de Celsius (drawRect) comience a parpadear. Si la temperatura baja de un umbral de "frío" (por ejemplo, 10°C), haz que el contorno parpadee con un patrón diferente. Esto enseña cómo proporcionar alertas visuales efectivas sin necesidad de texto.
+        <div class="nav-links bottom-nav-links">
+            <a href="tomo9.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo11.html" class="nav-link">Siguiente Tomo &rarr;</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
