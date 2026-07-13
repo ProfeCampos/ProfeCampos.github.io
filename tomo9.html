@@ -3,191 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomo 9: DHT11, Relé, LCD - Manual de Instrumentación</title>
+    <title>Tomo 9: Viendo con Sonido - Sensor Ultrasónico HC-SR04</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Cargamos MathJax para renderizar la fórmula física de forma elegante -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chhtml.js"></script>
+    
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="header-container">
-            <h1>Tomo 9: El Panorama Completo - DHT11, Relés y LCD</h1>
+            <h1>Tomo 9: Viendo con Sonido - Sensor Ultrasónico HC-SR04</h1>
         </div>
     </header>
     <main class="tomo-content">
         <div class="nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
-            <a href="tomo10.html" class="nav-link">Tomo Siguiente &rarr;</a>
+            <a href="proyecto2.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo10.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
-        <p>¡Saludos, futuros ingenieros! Hoy vamos a dar un salto gigante: aprenderemos a leer dos variables ambientales con un solo sensor, a controlar aparatos del mundo real (como los que se conectan a la pared) y a mostrar toda esa información de manera profesional en una pantalla de cristal líquido (LCD).</p>
-
-        <div class="protagonista-section">
-            <h3>🧠 Protagonista 1: Sensor DHT11 (El Combo Digital 2x1)</h3>
-            <p>El DHT11 es un sensor increíblemente práctico. Es como tener un termómetro y un medidor de humedad en un solo paquete digital. Con un solo pin de datos obtenemos dos mediciones.</p>
-       <div class="image-container">
-            <img src="dht11-pinout-o-patillaje-700x569.png" alt="pin out DTH11">
-        </div>
-        </div>
-        <div class="protagonista-section">
-            <h3>⚙️ Protagonista 2: El Módulo de Relé (El Interruptor de Alto Voltaje)</h3>
-            <p>¿Qué pasa si queremos controlar una lámpara de 120V? ¡NUNCA la conectes a tu Arduino! Para eso usamos un <strong>Relé</strong>. Es un interruptor electromagnético que usa una señal segura de 5V de Arduino para activar un interruptor interno, completamente aislado, que puede manejar alto voltaje de forma segura.</p>
-                <div class="image-container">
-            <img src="Single-Channel-Relay-Module-Pinout.jpg" alt="pin out RELE">
-                  </div>
-        </div>
-        <div class="protagonista-section">
-            <h3>🖥️ Protagonista 3: La Pantalla LCD 16x2 con I2C</h3>
-            <p>Para que nuestro proyecto sea independiente de la computadora, necesitamos una pantalla. La LCD 16x2 puede mostrar 2 filas de 16 caracteres. Para no usar todos nuestros pines, usamos un pequeño módulo <strong>I2C</strong> soldado detrás, que reduce los cables necesarios a solo 4: VCC, GND, SDA (A4) y SCL (A5).</p>
-               <div class="image-container">
-            <img src="I2C-LCD-Display-Pinout.png" alt="pin out LDC con I2C">
-                  </div>
+        
+        <p>¡¡Saludos, equipo de innovadores! Hoy vamos a darle a nuestro Arduino un súper poder digno de un murciélago o un submarino: la <strong>ecolocalización</strong>. No sólo mediremos distancias con el sensor ultrasónico HC-SR04, sino que también visualizaremos esos datos en tiempo real en una pantalla LCD, crearemos una respuesta física moviendo un servomotor, y mostraremos la proximidad en una barra de 8 LEDs que se llena y se vacía. ¡Construiremos un radar visual completo!</p>
+        
+        <h2>🧠 Protagonista de Hoy: El Sensor Ultrasónico HC-SR04</h2>
+        <p>Este sensor es un pequeño sonar. Funciona emitiendo un pulso de sonido a una frecuencia tan alta que los humanos no podemos oírla (ultrasonido). Luego, espera y escucha el "eco" de ese sonido rebotando en un objeto de la siguiente manera:</p>
+        
+        <div class="protagonista-section" style="background-color: #e8f4fd; border-left-color: #2196f3;">
+            <h3>¿Cómo funciona el viaje del sonido?</h3>
+            <ol>
+                <li>Nosotros le ordenamos al pin <code>Trig</code> (Trigger o Disparador) que envíe un pulso de sonido corto.</li>
+                <li>El sensor emite el pulso ultrasónico y, al mismo tiempo, pone en <code>HIGH</code> su pin <code>Echo</code> (Eco).</li>
+                <li>El pin <code>Echo</code> se mantiene en <code>HIGH</code> hasta que el eco del sonido regresa al sensor tras rebotar con el obstáculo.</li>
+                <li>El tiempo que el pin <code>Echo</code> estuvo en <code>HIGH</code> es exactamente el tiempo que tardó el sonido en ir y volver.</li>
+            </ol>
         </div>
 
-        <h2>🧠 El Código: El Centro de Comando</h2>
-        <p>Este código necesita varias librerías. Asegúrate de instalarlas desde el Gestor de Librerías de Arduino IDE: <em>DHT sensor library (de Adafruit)</em> y <em>LiquidCrystal_I2C</em>.</p>
+        <h3>🔬 La Física del Asunto</h3>
+        <p>Sabemos que el sonido viaja por el aire a una velocidad aproximada de $343\text{ m/s}$ (que equivale a $0.0343\text{ cm/}\mu\text{s}$). Como el tiempo medido por el pin Echo contempla el viaje de **ida y vuelta**, debemos dividir el resultado entre 2 utilizando la siguiente ecuación fundamental:</p>
+        
+        <div style="font-size: 1.3rem; margin: 1.5rem 0; text-align: center;">
+            $$\text{Distancia (cm)} = \frac{\text{Tiempo en HIGH }(\mu\text{s}) \times 0.0343\text{ cm/}\mu\text{s}}{2}$$
+        </div>
+
+        <h2>🔌 El Circuito: Radar Visual Completo</h2>
+        
+        <h3>Componentes Necesarios:</h3>
+        <ul>
+            <li>Placa Arduino UNO, Protoboard y cables de conexión.</li>
+            <li>1 Sensor Ultrasónico <code>HC-SR04</code>.</li>
+            <li>1 Pantalla <code>LCD 16x2</code> con adaptador <code>I2C</code>.</li>
+            <li>1 Micro Servomotor <code>SG90</code>.</li>
+            <li>8 LEDs (pueden ser del mismo color o distribuidos para el reto).</li>
+            <li>8 Resistencias de <code>220Ω</code>.</li>
+        </ul>
+
+        <h3>📝 Instrucciones de Conexión:</h3>
+        <ol>
+            <li><strong>Sensor HC-SR04:</strong> Conecta <code>VCC</code> a 5V, <code>Trig</code> al Pin Digital <strong>3</strong>, <code>Echo</code> al Pin Digital <strong>2</strong> y <code>GND</code> a GND.</li>
+            <li><strong>Pantalla LCD (I2C):</strong> Conecta <code>GND</code> a GND, <code>VCC</code> a 5V, <code>SDA</code> al pin analógico <code>A4</code> y <code>SCL</code> al pin analógico <code>A5</code>.</li>
+            <li><strong>Servomotor SG90:</strong> Cable café o negro a <code>GND</code>, cable rojo a <code>5V</code> y el cable naranja o amarillo de señal al Pin Digital <strong>5</strong>.</li>
+            <li><strong>Barra de 8 LEDs:</strong>
+                <ul>
+                    <li>Coloca los 8 LEDs en fila sobre la protoboard.</li>
+                    <li>Conecta la pata corta (Cátodo, $-$) de <strong>TODOS</strong> los LEDs al riel de GND común.</li>
+                    <li>Conecta una resistencia de <code>220Ω</code> a la pata larga (Ánodo, $+$) de cada uno de los LEDs.</li>
+                    <li>Desde el otro extremo libre de cada resistencia, conecta un cable hacia los pines digitales de tu Arduino respetando de forma estricta este orden posicional:
+                        <ul>
+                            <li>LED 1 ➜ Pin 6</li>
+                            <li>LED 2 ➜ Pin 7</li>
+                            <li>LED 3 ➜ Pin 8</li>
+                            <li>LED 4 ➜ Pin 9</li>
+                            <li>LED 5 ➜ Pin 10</li>
+                            <li>LED 6 ➜ Pin 11</li>
+                            <li>LED 7 ➜ Pin 12</li>
+                            <li>LED 8 ➜ Pin 13</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ol>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <!-- Asegúrate de que el diagrama del radar use este nombre exacto en tu repositorio -->
+            <img src="tomo9_radar_bb.jpg" alt="Diagrama Fritzing del Radar Visual Completo uniendo HC-SR04, LCD I2C, Servo SG90 y Barra de 8 LEDs">
+        </div>
+
+        <h2>🧠 El Código: El Cerebro del Radar Visual</h2>
+        <p>Este código integra todos los periféricos simultáneamente. Nota cómo la función matemática <code>map()</code> nos ayuda a transformar la distancia física de forma proporcional tanto para el ángulo del servo como para la cantidad de LEDs que se deben encender.</p>
+        
         <div class="code-container"> 
-    <div class="code-header">
-        <span>Código Arduino</span>
-        <button class="copy-btn">Copiar</button>
-    </div> 
+            <div class="code-header">
+                <span>Código Arduino</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
 <pre><code class="language-cpp code-block">
 /*
- * Misión 09: El Panorama Completo
- * Descripción: Muestra Temp/Humedad del DHT11 en una LCD y activa un relé.
+ * Tomo 9: Radar Visual de Proximidad
+ * Descripción: Mide distancia, la muestra en LCD de manera estable, mueve un servo 
+ * y controla una barra de 8 LEDs de forma proporcional e inversa.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-// --- INCLUIR LIBRERÍAS ---
+// --- LIBRERÍAS ---
 #include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt; // Para la pantalla LCD
-#include "DHT.h"                 // Para el sensor DHT
+#include &lt;LiquidCrystal_I2C.h&gt;
+#include &lt;Servo.h&gt;
 
-// --- CONFIGURACIÓN DE COMPONENTES ---
-#define DHTPIN 2       // Pin donde está el DHT11
-#define DHTTYPE DHT11  // Definimos que es un DHT11
-const int pinRele = 7; // Pin para controlar el relé
+// --- PINES ---
+const int pinTrig = 3;
+const int pinEcho = 2;
+const int pinServo = 5;
+// Array para indexar los pines de los 8 LEDs secuenciales
+const int pinesLeds[] = {6, 7, 8, 9, 10, 11, 12, 13};
+const int numLeds = 8;
 
-// Inicializamos los objetos
-DHT dht(DHTPIN, DHTTYPE);
-LiquidCrystal_I2C lcd(0x27, 16, 2); // Dirección I2C, 16 columnas, 2 filas
+// --- OBJETOS ---
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+Servo miServo;
+
+// --- VARIABLES ---
+long duracion;
+int distancia;
+int angulo;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(pinRele, OUTPUT);
-  digitalWrite(pinRele, LOW); // Nos aseguramos que el relé empiece apagado
-
-  dht.begin(); // Iniciamos el sensor DHT
   
-  lcd.init();      // Iniciamos la pantalla LCD
-  lcd.backlight(); // Encendemos la luz de fondo
-  lcd.setCursor(0, 0); // Ponemos el cursor en la columna 0, fila 0
-  lcd.print("Estacion CTEC");
-  lcd.setCursor(0, 1); // Columna 0, fila 1
-  lcd.print("Iniciando...");
-  delay(2000);
-  lcd.clear(); // Limpiamos la pantalla
+  pinMode(pinTrig, OUTPUT);
+  pinMode(pinEcho, INPUT);
+  
+  // Configurar automáticamente todos los pines de la barra de LEDs como salidas
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(pinesLeds[i], OUTPUT);
+  }
+  
+  miServo.attach(pinServo);
+  
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print(" Radar Activado ");
+  lcd.setCursor(0, 1);
+  lcd.print("   CECyTEM 05   ");
+  delay(1500);
+  lcd.clear();
 }
 
 void loop() {
-  delay(2000); // Esperamos 2 segundos entre lecturas
+  // --- PASO 1: EMISIÓN Y RECEPCIÓN DEL PULSO ULTRASÓNICO ---
+  digitalWrite(pinTrig, LOW);
+  delayMicroseconds(2);
+  digitalWrite(pinTrig, HIGH);
+  delayMicroseconds(10); // Pulso de disparo obligatorio de 10 microsegundos
+  digitalWrite(pinTrig, LOW);
+  
+  duracion = pulseIn(pinEcho, HIGH);  // Mide el tiempo en microsegundos que tarda en volver
+  distancia = duracion * 0.0343 / 2;  // Conversión física a centímetros
 
-  // Leer la humedad y la temperatura toma unos 250ms
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
-
-  // Verificamos si la lectura falló (muy común con los DHT)
-  if (isnan(h) || isnan(t)) {
-    Serial.println("Error al leer del sensor DHT!");
-    lcd.setCursor(0, 0);
-    lcd.print("Error de Sensor");
-    return; // Salimos del loop y lo intentamos de nuevo
-  }
-
-  // --- MOSTRAMOS EN LCD ---
+  // --- PASO 2: DESPLIEGUE EN MONITOR SERIE Y LCD (SIN PARPADEO) ---
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+  
   lcd.setCursor(0, 0);
-  lcd.print("Temp: ");
-  lcd.print(t);
-  lcd.print(" C");
-
+  lcd.print("Radar de Control");
   lcd.setCursor(0, 1);
-  lcd.print("Hum:  ");
-  lcd.print(h);
-  lcd.print(" %");
+  lcd.print("Dist: ");
+  lcd.print(distancia);
+  lcd.print(" cm    "); // Espacios vacíos al final limpian caracteres fantasmas antiguos
 
-  // --- LÓGICA DEL RELÉ ---
-  if (t > 30.0) { // Si la temperatura supera los 30 grados
-    digitalWrite(pinRele, HIGH); // Activamos el relé
-  } else {
-    digitalWrite(pinRele, LOW);  // Lo desactivamos
+  // --- PASO 3: CONTROL DE POSICIÓN DEL SERVO ---
+  // Mapeamos distancias de 4 a 50 cm a un barrido angular de 0 a 180 grados
+  angulo = map(distancia, 4, 50, 0, 180);
+  angulo = constrain(angulo, 0, 180); // Asegura que el servo no reciba datos fuera de rango
+  miServo.write(angulo);
+
+  // --- PASO 4: CONTROL DE LA BARRA DE LEDS PROPORCIONAL ---
+  // Mapeamos de forma inversa: a menor distancia (4cm), más LEDs encendidos (8)
+  int ledsEncendidos = map(distancia, 50, 4, 0, numLeds);
+  ledsEncendidos = constrain(ledsEncendidos, 0, numLeds);
+
+  // Ciclo para prender o apagar cada LED de la barra según corresponda
+  for (int i = 0; i < numLeds; i++) {
+    if (i < ledsEncendidos) {
+      digitalWrite(pinesLeds[i], HIGH); // Enciende si el índice entra en el rango de proximidad
+    } else {
+      digitalWrite(pinesLeds[i], LOW);  // Apaga los LEDs restantes
+    }
   }
-}
-        </code></pre>
-</div>
-        <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Conectaremos los tres módulos principales. La parte más delicada es la conexión del foco al lado de potencia del relé. <strong>¡Pide supervisión del Profe Campos para este paso!</strong></p>
-        <div class="image-container">
-            <h3>Diagrama del Circuito 9</h3>
-            <img src="tomo 9.png" alt="Diagrama de conexión de un sensor DHT11, una pantalla LCD I2C y un módulo de relé">
-        </div>
 
-        <h2>💡 Conceptos Clave de la Misión</h2>
-        <ul>
-            <li><strong>Aislamiento Eléctrico:</strong> El relé aísla completamente el circuito de control de bajo voltaje del circuito de potencia de alto voltaje, lo que es crucial por seguridad.</li>
-            <li><strong>Comunicación I2C:</strong> Un protocolo que permite conectar múltiples dispositivos (sensores, pantallas) usando solo dos pines (SDA y SCL).</li>
-        </ul>
+  delay(100); // Muestreo rápido cada 100 milisegundos para actualización ágil del radar
+}
+</code></pre>
+        </div>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>Control de Humedad:</strong> Modifica la lógica para que el relé se active si la humedad supera el 70%, simulando un deshumidificador.</li>
-            <li><strong>Doble Condición:</strong> Cambia el código para que el relé solo se active si la temperatura es alta Y la humedad también es alta (operador `&&`).</li>
-            <li><strong>Mensajes en LCD:</strong> Haz que en la pantalla LCD aparezca un mensaje como "Ventilador ON" o "Ventilador OFF" según el estado del relé.</li>
+            <li><strong>Indicador Visual Semáforo por Estado:</strong> Transforma la barra utilizando LEDs de colores para crear una escala real de advertencia de proximidad industrial:
+                <ul>
+                    <li><strong>4 LEDs Verdes:</strong> Se encienden ante distancias seguras (ej. mayor a $30\text{ cm}$) y la LCD debe mostrar el mensaje: <code>"DESPEJADO"</code>.</li>
+                    <li><strong>2 LEDs Amarillos:</strong> Se suman al encendido si el objeto entra en zona de advertencia (ej. entre $15\text{ cm}$ y $30\text{ cm}$) mostrando en la LCD: <code>"PRECAUCIÓN"</code>.</li>
+                    <li><strong>2 LEDs Rojos:</strong> Se encienden todos al llegar a una alerta de peligro inminente (ej. menor a $15\text{ cm}$) mostrando en la LCD de forma clara: <code>"¡ALERTA MÁXIMA!"</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Modo Inverso con Pulsador:</strong> Añade un botón mecánico al circuito. Si no está presionado, la barra trabaja de forma normal (se llena al acercarse). Si se mantiene presionado, invierte la lógica por completo: la barra inicia llena y se va vaciando de forma proporcional a medida que el objeto se aproxima al sensor.</li>
+            <li><strong>Radar Acústico de Mapeo Sonar:</strong> Añade un buzzer piezoeléctrico al circuito. Modifica la estructura del código para que el servomotor realice un paneo automático autónomo de forma continua (de 0° a 180° y de regreso paso a paso). Mientras se mueve, el sensor debe disparar lecturas y hacer que el buzzer emita pequeños bips de rastreo cuyo tono cambie según la distancia: un tono muy agudo para objetos críticos cercanos y un tono grave para el fondo libre. ¡Crearás un mapa sonoro de la habitación!</li>
         </ul>
-<div class="nav-links bottom-nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
-            <a href="tomo10.html" class="nav-link">Tomo Siguiente &rarr;</a>
-        </div>    </main>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="proyecto2.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo10.html" class="nav-link">Siguiente Tomo &rarr;</a>
+        </div>
+    </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
-    <script>hljs.highlightAll();</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Busca todos los botones de copiar
-    const allCopyButtons = document.querySelectorAll('.copy-btn');
 
-    allCopyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Encuentra el contenedor de código más cercano
-            const codeContainer = this.closest('.code-container');
-            // Encuentra el bloque de código dentro de ese contenedor
-            const codeBlock = codeContainer.querySelector('code');
-            
-            if (codeBlock) {
-                // Copia el texto del código al portapapeles
-                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                    // Feedback visual para el usuario
-                    this.innerText = '¡Copiado!';
-                    setTimeout(() => {
-                        this.innerText = 'Copiar';
-                    }, 2000); // Vuelve al texto original después de 2 segundos
-                }).catch(err => {
-                    console.error('Error al copiar el código: ', err);
-                });
-            }
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
