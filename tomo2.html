@@ -3,11 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomo 2: Escuchar - Manual de Instrumentación</title>
+    <title>Tomo 2: ¡El Arduino Aprende a Escuchar! - El Pulsador</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1em;
+            font-family: sans-serif;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        .component-table thead tr {
+            background-color: #0056b3;
+            color: #ffffff;
+            text-align: left;
+        }
+        .component-table th, .component-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        .component-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .component-table tbody tr:last-of-type {
+            border-bottom: 2px solid #0056b3;
+        }
+        .success-box {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -19,121 +62,234 @@
         <div class="nav-links">
             <a href="tomo1.html" class="nav-link">&larr; Tomo Anterior</a>
             <a href="index.html" class="nav-link">Índice</a>
-            <a href="tomo3.html" class="nav-link">Tomo Siguiente &rarr;</a>
-            
-            </div>
-        <p>En nuestra misión anterior, le dimos "voz" al Arduino para que controlara un LED. Ahora, le daremos "oídos". Aprenderemos a usar un pulsador, un componente fundamental que permite al usuario interactuar con el circuito. Haremos que nuestro Arduino reaccione a nuestras órdenes.</p>
-
-        <div class="protagonista-section">
-            <h3>🧠 Protagonista de Hoy: El Push Botton</h3>
-            <p>Un pulsador es un interruptor momentáneo. Cuando lo presionas, cierra un circuito y deja pasar la corriente. Cuando lo sueltas, se abre de nuevo. El reto es que, cuando el botón está abierto, el pin de Arduino queda "flotando", sin un estado claro. Para solucionar esto, usamos una resistencia <strong>PULL-UP</strong>, que mantiene el pin en estado ALTO (HIGH) por defecto, y al presionar el botón (conectado a GND), lo llevamos a BAJO (LOW). Afortunadamente, ¡Arduino tiene una resistencia PULL-UP interna que podemos activar por software!</p>
-            <div class="image-container">
-            <img src="pulsadores_protoboard.jpg" alt="forma de conectar botón">
+            <a href="tomo3.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
+        
+        <p>¡Saludos, equipo! En nuestra misión anterior, le enseñamos al Arduino a "hablar" usando un LED. Ahora, vamos a darle "oídos" para que pueda escucharnos. Le enseñaremos a recibir órdenes del mundo real a través de un pulsador (o botón).</p>
+        <p>Hoy dejaremos de ser solo programadores para convertirnos en usuarios. Haremos que nuestro circuito reaccione a nuestras acciones.</p>
+
+        <hr>
+
+        <h2>🌟 El Protagonista de Hoy: El Pulsador Táctil</h2>
+        <p>Un pulsador es uno de los sensores más sencillos y útiles que existen. Su trabajo es simple: cerrar o abrir un camino para la electricidad cuando lo presionas.</p>
+        <ul>
+            <li><strong>Estado NORMAL:</strong> Cuando no lo presionas, el camino está abierto. La electricidad no puede pasar. Es como un puente levadizo que está levantado.</li>
+            <li><strong>Estado PRESIONADO:</strong> Cuando lo presionas, el camino se cierra. La electricidad puede fluir a través de él. El puente levadizo ha bajado, permitiendo el paso.</li>
+        </ul>
+        
+        <div class="image-container">
+            <!-- Asegúrate de tener esta imagen en tu carpeta -->
+            <img src="pulsador_pines.jpg" alt="Una foto de un push button de 4 pines, mostrando cuáles son sus pines de conexión y cómo se vería internamente.">
+        </div>
+        <div class="image-container">
+            <!-- Asegúrate de tener esta imagen en tu carpeta -->
+            <img src="pulsador_protoboard.jpg" alt="Una foto de un push button de 4 pines, mostrando la forma correcta de conexión en el protoboard cruzando el canal central.">
         </div>
 
-        <h2>🧠 El Código: Leyendo el Mundo Exterior</h2>
-        <p>Este código introduce la lectura de una entrada digital y la toma de decisiones con una estructura `if/else`.</p>
+        <hr>
+
+        <h2>🔌 El Circuito: Un Botón para Controlar un LED</h2>
+        <p>Vamos a construir un circuito donde al presionar un botón, se encienda un LED.</p>
+        
+        <h3>Componentes Necesarios:</h3>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Cant.</th>
+                    <th>Componente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Placa Arduino UNO</strong></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Protoboard</strong></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>LED</strong> (cualquier color)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Resistencia de 220&Omega;</strong> (el guardaespaldas del LED)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><strong>Pulsador táctil (Push Button)</strong></td>
+                </tr>
+                <tr>
+                    <td>Varios</td>
+                    <td><strong>Cables Jumper</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>📝 Instrucciones de Conexión:</h3>
+        <h4>Circuito del LED (ya lo conoces):</h4>
+        <ol>
+            <li>Conecta una resistencia de <code>220&Omega;</code> al <strong>Pin 13</strong>.</li>
+            <li>Conecta el otro extremo de la resistencia a la pata larga (<code>+</code>) del LED.</li>
+            <li>Conecta la pata corta (<code>-</code>) del LED a <strong>GND</strong>.</li>
+        </ol>
+        
+        <h4>Circuito del Botón (usando PULL-UP interno):</h4>
+        <ol>
+            <li>Coloca el pulsador en la protoboard (cruzando el canal central).</li>
+            <li>Conecta una pata del botón al <strong>Pin Digital 2</strong> del Arduino.</li>
+            <li>Conecta la pata diagonalmente opuesta del botón a <strong>GND</strong>. ¡Así de fácil!</li>
+        </ol>
+
+        <div class="image-container">
+            <h3>⚡ Diagrama de armado</h3>
+            <img src="tomo2_diagrama.jpg" alt="Un diagrama de TINKERCAD mostrando el circuito completo. El LED en el pin 13 y el botón en el pin 2, conectado a GND.">
+        </div>
+
+        <hr>
+
+        <h2>💡 Conceptos Clave: ¿Está Presionado o No?</h2>
+        <h3>El Ruido Eléctrico (Estado Flotante)</h3>
+        <p>Aquí viene un concepto súper importante en la electrónica. Si solo conectamos el pin de Arduino al botón, cuando el botón no está presionado, el pin queda "flotando". No está conectado ni a 5V ni a GND.</p>
+        <p>Imagina que le preguntas a un amigo: "¿Vienes a la fiesta? Responde SÍ o NO". Si se queda callado, ¿qué significa? No sabes la respuesta. Para un pin de Arduino, ese silencio es ruido eléctrico. Puede interpretar cualquier cosa, ¡un 1, un 0, un 1, un 0! A esto se le llama estado flotante.</p>
+        <p>Necesitamos asegurarnos de que el pin <strong>SIEMPRE</strong> tenga una respuesta clara: o es un <code>HIGH</code> (5V) o es un <code>LOW</code> (0V). Para eso, usamos a nuestras viejas amigas: las resistencias.</p>
+
+        <h3>La Solución: Las Resistencias Pull-Up y Pull-Down</h3>
+        <p>Estas resistencias son como "anclas". Amarran el pin a un estado seguro (HIGH o LOW) cuando el botón no está presionado, evitando que quede flotando.</p>
+
+        <h4>1. Configuración PULL-DOWN (La más intuitiva):</h4>
+        <ul>
+            <li><strong>¿Qué hace?:</strong> "Ancla" el pin a GND (0V) a través de una resistencia.</li>
+            <li><strong>En estado normal:</strong> El pin lee <code>LOW</code> (0V).</li>
+            <li><strong>Cuando presionas el botón:</strong> El pin se conecta directamente a 5V. Como la electricidad prefiere el camino fácil (sin resistencia), el pin lee <code>HIGH</code> (5V).</li>
+            <li><strong>En resumen:</strong> LOW por defecto, HIGH cuando presionas.</li>
+        </ul>
+        <div class="image-container">
+            <img src="pulldown_diagrama.jpg" alt="Diagrama simple de un circuito PULL-DOWN. Muestra el pin de Arduino conectado al botón y a una resistencia de 10k ohmios que va a GND.">
+        </div>
+
+        <h4>2. Configuración PULL-UP (La que usa Arduino internamente):</h4>
+        <ul>
+            <li><strong>¿Qué hace?:</strong> "Ancla" el pin a 5V a través de una resistencia.</li>
+            <li><strong>En estado normal:</strong> El pin lee <code>HIGH</code> (5V).</li>
+            <li><strong>Cuando presionas el botón:</strong> El pin se conecta directamente a GND, el camino más fácil. El pin lee <code>LOW</code> (0V).</li>
+            <li><strong>En resumen:</strong> HIGH por defecto, LOW cuando presionas. ¡Funciona al revés!</li>
+        </ul>
+        <div class="image-container">
+            <img src="pullup_diagrama.jpg" alt="Diagrama simple de un circuito PULL-UP. Muestra el pin de Arduino conectado al botón y a una resistencia de 10k ohmios que va a 5V.">
+        </div>
+        
+        <blockquote>
+            <strong>¡Buenas noticias!</strong> Arduino tiene resistencias de Pull-up internas que podemos activar por software. ¡Así nos ahorramos un componente en la protoboard! Hoy usaremos esa.
+        </blockquote>
+
+        <hr>
+
+        <h2>🧠 El Código: Leyendo el Botón</h2>
+        <p>Este código le dirá al Arduino cómo "escuchar" al botón en el Pin 2 y cómo "hablar" con el LED en el Pin 13.</p>
+        
         <div class="code-container"> 
-    <div class="code-header">
-        <span>Código Arduino</span>
-        <button class="copy-btn">Copiar</button>
-    </div> 
+            <div class="code-header">
+                <span>Código Arduino - Misión 02</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
 <pre><code class="language-cpp code-block">
 /*
- * Misión 02: Controlar un LED con un Pulsador
- * Descripción: Enciende un LED mientras se mantiene presionado un botón.
+ * Misión 02: Escuchando al Mundo - Controlar un LED con un Pulsador
+ * Descripción: Al presionar el botón, el LED se enciende.
+ * Usaremos la resistencia PULL-UP interna de Arduino.
  * Por: Profe Campos
  * CECyTEM 05 Guacamayas
 */
 
-// --- PINES ---
-const int pinBoton = 2; // Pin donde conectamos el botón.
-const int pinLed = 13;  // Pin para el LED.
+// --- ZONA DE CONFIGURACIÓN ---
+// Aquí declaramos variables para no usar "números mágicos" en el código.
+// Es una buena práctica para que tu código sea más fácil de leer y modificar.
+int pinBoton = 2; // El pin donde conectamos el botón.
+int pinLed = 13;  // El pin donde está nuestro LED.
 
-// --- VARIABLES ---
-int estadoBoton = 0; // Variable para guardar si el botón está presionado o no.
+// Esta variable guardará el estado del botón (si está presionado o no).
+int estadoBoton = 0;
 
+// El bloque setup() se ejecuta UNA SOLA VEZ.
 void setup() {
+  // Configuramos el pin del LED como una SALIDA.
   pinMode(pinLed, OUTPUT);
-  // Configuramos el pin del botón como ENTRADA y activamos la resistencia PULL-UP interna.
-  // Ahora, el pin leerá HIGH por defecto, y LOW solo cuando se presione el botón.
+  
+  // Configuramos el pin del botón como una ENTRADA con la resistencia PULL-UP interna activada.
+  // ¡Esto nos ahorra poner una resistencia externa!
   pinMode(pinBoton, INPUT_PULLUP); 
 }
 
+// El bloque loop() se repite infinitamente.
 void loop() {
-  // Leemos el estado del pin del botón y lo guardamos en nuestra variable.
+  // 1. LEEMOS el estado del pin del botón.
+  // La función digitalRead() nos dice si el pin está recibiendo una señal HIGH o LOW.
   estadoBoton = digitalRead(pinBoton);
 
-  // Tomamos una decisión:
-  // SI el estado del botón es BAJO (LOW)...
+  // 2. TOMAMOS UNA DECISIÓN con la estructura "if/else" (Si/Si no).
+  // Recordatorio: con PULL-UP, el pin es LOW cuando se presiona.
   if (estadoBoton == LOW) {
-    digitalWrite(pinLed, HIGH); // ...entonces encendemos el LED.
-  } else { // SI NO (si es cualquier otra cosa, o sea, HIGH)...
-    digitalWrite(pinLed, LOW); // ...entonces apagamos el LED.
+    // Si la condición es VERDADERA (el botón está presionado)...
+    // ...entonces encendemos el LED.
+    digitalWrite(pinLed, HIGH);
+  } else {
+    // Si no (si la condición es FALSA, el botón no está presionado)...
+    // ...entonces apagamos el LED.
+    digitalWrite(pinLed, LOW);
   }
+  
+  // El loop vuelve a empezar, leyendo y decidiendo una y otra vez, muy rápido.
 }
-        </code></pre>
-</div> 
-        <h2>🔌 Manos a la Obra: El Circuito</h2>
-        <p>Construiremos un circuito donde al presionar un botón, se encienda un LED. Gracias a la resistencia PULL-UP interna, el cableado es muy limpio.</p>
-        <div class="image-container">
-            <h3>Diagrama del Circuito 2</h3>
-            <img src="Tomo 2.png" alt="Diagrama de conexión de un botón y un LED">
+</code></pre>
         </div>
 
-        <h2>💡 Conceptos Clave de la Misión</h2>
-        <ul>
-            <li><strong>Pull-up / Pull-down:</strong> Resistencias usadas para asegurar que un pin de entrada tenga un estado lógico definido (HIGH o LOW) cuando no está activo.</li>
-            <li><strong>INPUT_PULLUP:</strong> Configuración de Arduino que activa una resistencia interna conectada a 5V, simplificando el cableado.</li>
-        </ul>
+        <hr>
 
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
-            <li><strong>Modo Inverso:</strong> Haz que el LED esté encendido por defecto y se apague SOLO cuando presionas el botón.</li>
-            <li><strong>Botón de Pánico:</strong> Añade un buzzer al circuito y haz que, al presionar el botón, el LED parpadee rápidamente y el buzzer suene.</li>
-            <li><strong>Modo Interruptor (Toggle):</strong> Este es un reto avanzado. Haz que al presionar el botón una vez, el LED se quede encendido, y al volver a presionar, se apague. ¡Como un interruptor de luz!</li>
+            <li>🔄 <strong>Modo Inverso:</strong> ¿Puedes hacer que el LED esté encendido por defecto y se apague SOLO cuando presionas el botón? (<em>Pista: solo tienes que invertir la lógica en el if/else</em>).</li>
+            <li>🚨 <strong>Botón de Pánico:</strong> Añade un buzzer al circuito y haz que, al presionar el botón, el LED parpadee rápidamente y el buzzer suene.</li>
         </ul>
+
+        <div class="success-box">
+            <p><strong>¡Misión cumplida!</strong> Ahora tu Arduino no solo habla, sino que también escucha. Has aprendido uno de los conceptos más importantes: cómo recibir una señal del mundo exterior de forma fiable.</p>
+            <p>¡Sigue experimentando! - <em>Profe Campos</em></p>
+        </div>
+
         <div class="nav-links bottom-nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
-            <a href="tomo3.html" class="nav-link">Tomo Siguiente &rarr;</a>
+            <a href="tomo1.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
+            <a href="tomo3.html" class="nav-link">Siguiente Tomo &rarr;</a>
         </div>
     </main>
     <footer>
         <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
     </footer>
-     <script>hljs.highlightAll();</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Busca todos los botones de copiar
-    const allCopyButtons = document.querySelectorAll('.copy-btn');
 
-    allCopyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Encuentra el contenedor de código más cercano
-            const codeContainer = this.closest('.code-container');
-            // Encuentra el bloque de código dentro de ese contenedor
-            const codeBlock = codeContainer.querySelector('code');
-            
-            if (codeBlock) {
-                // Copia el texto del código al portapapeles
-                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-                    // Feedback visual para el usuario
-                    this.innerText = '¡Copiado!';
-                    setTimeout(() => {
-                        this.innerText = 'Copiar';
-                    }, 2000); // Vuelve al texto original después de 2 segundos
-                }).catch(err => {
-                    console.error('Error al copiar el código: ', err);
-                });
-            }
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            this.innerText = 'Copiar';
+                        }, 2000); 
+                    }).catch(err => {
+                        console.error('Error al copiar el código: ', err);
+                    });
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
-
 </html>
-
-
-
