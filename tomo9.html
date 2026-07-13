@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     
-    <!-- Cargamos MathJax de forma segura para renderizar la fórmula física de forma elegante -->
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chhtml.js"></script>
+   
     
     <style>
         .tomo-content p code, 
@@ -53,12 +52,12 @@
             </ol>
         </div>
 
-        <h3>🔬 La Física del Asunto</h3>
-        <p>Sabemos que el sonido viaja por el aire a una velocidad aproximada de $343\text{ m/s}$ (que equivale a $0.0343\text{ cm/}\mu\text{s}$). Como el tiempo medido por el pin Echo contempla el viaje de **ida y vuelta**, debemos dividir el resultado entre 2 utilizando la siguiente ecuación fundamental:</p>
-        
-        <div style="font-size: 1.3rem; margin: 1.5rem 0; text-align: center;">
-            $$\text{Distancia (cm)} = \frac{\text{Tiempo en HIGH }(\mu\text{s}) \times 0.0343\text{ cm/}\mu\text{s}}{2}$$
-        </div>
+       <h3>🔬 La Física del Asunto</h3>
+<p>Sabemos que el sonido viaja por el aire a una velocidad aproximada de <strong>343 m/s</strong> (que equivale a <strong>0.0343 cm/µs</strong>). Como el tiempo medido por el pin Echo contempla el viaje de <strong>ida y vuelta</strong>, debemos dividir el resultado entre 2 utilizando la siguiente ecuación fundamental:</p>
+
+<div style="font-size: 1.3rem; margin: 1.5rem 0; text-align: center; background-color: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; font-family: 'Courier New', Courier, monospace; font-weight: bold;">
+    Distancia (cm) = (Tiempo en HIGH (µs) &times; 0.0343) &div; 2
+</div>
 
         <h2>🔌 El Circuito: Radar Visual Completo</h2>
         
@@ -216,12 +215,12 @@ void loop() {
         <h2>🚀 ¡Inténtalo Tú Mismo! (Retos)</h2>
         <ul>
             <li><strong>Indicador Visual Semáforo por Estado:</strong> Transforma la barra utilizando LEDs de colores para crear una escala real de advertencia de proximidad industrial:
-                <ul>
-                    <li><strong>4 LEDs Verdes:</strong> Se encienden ante distancias seguras (ej. mayor a $30\text{ cm}$) y la LCD debe mostrar el mensaje: <code>"DESPEJADO"</code>.</li>
-                    <li><strong>2 LEDs Amarillos:</strong> Se suman al encendido si el objeto entra en zona de advertencia (ej. entre $15\text{ cm}$ y $30\text{ cm}$) mostrando en la LCD: <code>"PRECAUCIÓN"</code>.</li>
-                    <li><strong>2 LEDs Rojos:</strong> Se encienden todos al llegar a una alerta de peligro inminente (ej. menor a $15\text{ cm}$) mostrando en la LCD de forma clara: <code>"¡ALERTA MÁXIMA!"</code>.</li>
-                </ul>
-            </li>
+    <ul>
+        <li><strong>4 LEDs Verdes:</strong> Se encienden ante distancias seguras (ej. mayor a <strong>30 cm</strong>) y la LCD debe mostrar el mensaje: <code>"DESPEJADO"</code>.</li>
+        <li><strong>2 LEDs Amarillos:</strong> Se suman al encendido si el objeto entra en zona de advertencia (ej. entre <strong>15 cm</strong> y <strong>30 cm</strong>) mostrando en la LCD: <code>"PRECAUCIÓN"</code>.</li>
+        <li><strong>2 LEDs Rojos:</strong> Se encienden todos al llegar a una alerta de peligro inminente (ej. menor a <strong>15 cm</strong>) mostrando en la LCD de forma clara: <code>"¡ALERTA MÁXIMA!"</code>.</li>
+    </ul>
+</li>
             <li><strong>Modo Inverso con Pulsador:</strong> Añade un botón mecánico al circuito. Si no está presionado, la barra trabaja de forma normal (se llena al acercarse). Si se mantiene presionado, invierte la lógica por completo: la barra inicia llena y se va vaciando de forma proporcional a medida que el objeto se aproxima al sensor.</li>
             <li><strong>Radar Acústico de Mapeo Sonar:</strong> Añade un buzzer piezoeléctrico al circuito. Modifica la estructura del código para que el servomotor realice un paneo automático autónomo de forma continua (de 0° a 180° y de regreso paso a paso). Mientras se mueve, el sensor debe disparar lecturas y hacer que el buzzer emita pequeños bips de rastreo cuyo tono cambie según la distancia: un tono muy agudo para objetos críticos cercanos y un tono grave para el fondo libre. ¡Crearás un mapa sonoro de la habitación!</li>
         </ul>
