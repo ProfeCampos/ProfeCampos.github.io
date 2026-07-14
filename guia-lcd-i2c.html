@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
+        /* Estilo para que los comandos en el texto aparezcan en rojo y resaltados */
         .tomo-content p code, 
         .tomo-content li code,
         .protagonista-section p code {
@@ -20,75 +21,234 @@
             border-radius: 4px;
             font-family: monospace;
         }
+
+        /* Estilo especial para la Tabla de Contenidos */
+        .toc-container {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1976d2;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .toc-container h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .toc-container ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc-container li {
+            margin-bottom: 8px;
+        }
+        .toc-container a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .toc-container a:hover {
+            color: #d35400;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="header-container">
-            <h1>Guía de Dispositivo: Pantalla LCD 16x2 con Módulo I2C</h1>
+            <h1>Guía Avanzada: Interfaz I2C para Pantalla LCD 16x2</h1>
         </div>
     </header>
     <main class="tomo-content">
         <div class="nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="index.html" class="nav-link">&larr; Volver al Punto de Partida</a>
         </div>
         
-        <p>¡Hola, creadores! En esta guía profunda aprenderemos a utilizar una Pantalla LCD (Display de Cristal Líquido) de 16 columnas por 2 filas. Pero no lo haremos de la forma tradicional, sino utilizando un módulo de comunicación llamado <strong>I2C</strong>, el cual nos ahorrará una enorme cantidad de cables.</p>
+        <p>¡Hola, ingenieros del CECyTEM! Esta es una guía de profundización completa para conectar y dominar una pantalla LCD 16x2 usando el protocolo de comunicación I2C con Arduino. Aprenderemos a dejar atrás los circuitos llenos de cables para crear proyectos limpios y profesionales.</p>
+        
+        <p>A lo largo de esta guía, no solo mostraremos mensajes básicos; crearemos animaciones de texto desplazable, mostraremos variables de sensores en tiempo real y, para cerrar con broche de oro, ¡aprenderemos a dibujar nuestros propios caracteres personalizados (emojis) en la pantalla!</p>
 
-        <div class="protagonista-section">
-            <h3>🧠 ¿Qué es el protocolo I2C?</h3>
-            <p>El estándar I2C (Inter-Integrated Circuit) es un bus de comunicación que permite a múltiples dispositivos "hablar" con el Arduino usando solo <strong>dos cables de datos</strong>. Un LCD normal requiere hasta 6 cables de datos al Arduino; con el módulo I2C soldado en la parte trasera, lo reducimos a solo 4 cables en total (incluyendo energía).</p>
+        <!-- Tabla de Contenidos -->
+        <div class="toc-container">
+            <h3>📑 Tabla de Contenido</h3>
             <ul>
-                <li><strong>GND:</strong> Al negativo de la protoboard.</li>
-                <li><strong>VCC:</strong> A los 5V de Arduino.</li>
-                <li><strong>SDA (Serial Data):</strong> Por aquí viajan los datos. En el Arduino UNO va al pin <strong>A4</strong>.</li>
-                <li><strong>SCL (Serial Clock):</strong> El reloj que sincroniza la comunicación. En el Arduino UNO va al pin <strong>A5</strong>.</li>
+                <li><a href="#modulo-i2c">1. ¿Qué es el módulo LCD I2C y su conexión?</a></li>
+                <li><a href="#libreria">2. Instalación de la biblioteca LCD I2C</a></li>
+                <li><a href="#ejemplo-basico">3. Proyecto 1: Texto y variables en pantalla</a></li>
+                <li><a href="#ejemplo-scroll">4. Proyecto 2: Texto desplazable (Efecto Marquesina)</a></li>
+                <li><a href="#ejemplo-custom">5. Proyecto 3: Creación de caracteres personalizados</a></li>
+                <li><a href="#solucion-problemas">6. Solución de problemas comunes (Pantalla en blanco o cuadros negros)</a></li>
             </ul>
         </div>
 
-        <h2>🔌 El Circuito</h2>
-        <div class="image-container">
-            <h3>⚡ Diagrama de conexión LCD I2C</h3>
-            <!-- Cambia el src por el de tu imagen -->
-            <img src="diagrama_lcd_i2c.png" alt="Diagrama de conexión de LCD con I2C a Arduino"> 
+        <hr>
+
+        <h2 id="modulo-i2c">🧠 1. ¿Qué es el módulo LCD I2C y su conexión?</h2>
+        <p>El estándar I2C (Inter-Integrated Circuit) es un bus de comunicación que permite a tu Arduino hablar con la pantalla usando solo <strong>dos cables de datos</strong>. Si miras detrás de tu LCD, verás una pequeña placa negra soldada: ese es el expansor I2C (usualmente el chip PCF8574).</p>
+        
+        <div class="protagonista-section">
+            <h3>🔌 Configuración de Pines (Solo 4 cables)</h3>
+            <ul>
+                <li><strong>GND:</strong> Al pin GND de tu Arduino.</li>
+                <li><strong>VCC:</strong> A los 5V de tu Arduino.</li>
+                <li><strong>SDA (Datos):</strong> Al pin <strong>A4</strong> en el Arduino UNO.</li>
+                <li><strong>SCL (Reloj):</strong> Al pin <strong>A5</strong> en el Arduino UNO.</li>
+            </ul>
         </div>
 
-        <h2>🧠 El Código y la Librería</h2>
-        <p>Para que el Arduino entienda este protocolo, necesitamos instalar una <strong>librería</strong> especial llamada <code>LiquidCrystal_I2C</code>. Una vez instalada, el código es muy sencillo.</p>
+        <h2 id="libreria">⚙️ 2. Instalación de la biblioteca LCD I2C</h2>
+        <p>Para que el Arduino entienda este protocolo de comunicación sin tener que escribir miles de líneas de código complejo, necesitamos usar una biblioteca externa. Ve a tu Arduino IDE, abre el <strong>Gestor de Librerías</strong> (Programa > Incluir Librería > Administrar Bibliotecas) y busca <code>LiquidCrystal I2C</code> por <em>Frank de Brabander</em>. ¡Instálala!</p>
+
+        <hr>
+
+        <h2 id="ejemplo-basico">💻 3. Proyecto 1: Texto y variables en pantalla</h2>
+        <p>Vamos a probar que todo funcione imprimiendo un saludo y un contador de segundos. Observa cómo usamos <code>lcd.setCursor(columna, fila)</code> para ubicar el texto. Recuerda que empezamos a contar desde el 0.</p>
         
         <div class="code-container"> 
             <div class="code-header">
-                <span>Código Arduino</span>
+                <span>Código Arduino - Texto y Variables</span>
                 <button class="copy-btn">Copiar</button>
             </div> 
 <pre><code class="language-cpp code-block">
 #include &lt;Wire.h&gt; 
 #include &lt;LiquidCrystal_I2C.h&gt;
 
-// Crear el objeto lcd. 
-// Parámetros: (Dirección I2C, número de columnas, número de filas)
-// La dirección suele ser 0x27 o 0x3F.
+// Dirección I2C típica: 0x27 o 0x3F, pantalla de 16 columnas y 2 filas
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
 
 void setup() {
-  lcd.init();       // Inicializar el LCD
-  lcd.backlight();  // Encender la luz de fondo
+  lcd.init();       // Inicia la comunicación con la pantalla
+  lcd.backlight();  // Enciende la luz de fondo azul
   
-  lcd.setCursor(0, 0); // Posicionarse en la columna 0, fila 0
+  lcd.setCursor(0, 0); // Columna 0, Fila 0 (Arriba a la izquierda)
   lcd.print("Hola CECyTEM!");
-  
-  lcd.setCursor(0, 1); // Posicionarse en la columna 0, fila 1
-  lcd.print("Ingenieros :)");
 }
 
 void loop() {
-  // En este ejemplo el texto es fijo, no necesitamos nada en el loop
+  lcd.setCursor(0, 1); // Columna 0, Fila 1 (Abajo a la izquierda)
+  lcd.print("Segundos: ");
+  // millis() devuelve los milisegundos desde que el Arduino encendió
+  lcd.print(millis() / 1000); 
 }
 </code></pre>
         </div>
 
+        <hr>
+
+        <h2 id="ejemplo-scroll">🎬 4. Proyecto 2: Texto desplazable (Efecto Marquesina)</h2>
+        <p>¿Qué pasa si queremos mostrar un mensaje de más de 16 letras? ¡Lo hacemos rodar! Usaremos la función <code>lcd.scrollDisplayLeft()</code> dentro de un bucle <code>for</code> para crear un letrero dinámico.</p>
+        
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino - Scroll de Texto</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
+#include &lt;Wire.h&gt; 
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Alerta: Fuera de rango de control!");
+  delay(1000); // Esperamos un segundo antes de moverlo
+}
+
+void loop() {
+  // Desplazamos el texto hacia la izquierda 13 posiciones
+  for (int i = 0; i < 13; i++) {
+    lcd.scrollDisplayLeft();
+    delay(300); // Velocidad del movimiento
+  }
+  
+  delay(1000);
+  
+  // Regresamos el texto a su posición original
+  for (int i = 0; i < 13; i++) {
+    lcd.scrollDisplayRight();
+    delay(300);
+  }
+}
+</code></pre>
+        </div>
+
+        <hr>
+
+        <h2 id="ejemplo-custom">🎨 5. Proyecto 3: Creación de caracteres personalizados</h2>
+        <p>La pantalla LCD nos permite crear hasta 8 símbolos propios que no existen en el abecedario. Cada símbolo se dibuja encendiendo y apagando píxeles en una cuadrícula de 5x8. Los representamos usando números binarios (donde 1 es encendido y 0 es apagado).</p>
+
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino - Emojis Personalizados</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
+#include &lt;Wire.h&gt; 
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+// Matriz binaria para un icono de un corazón
+byte corazon[8] = {
+  B00000,
+  B01010,
+  B11111,
+  B11111,
+  B01110,
+  B00100,
+  B00000,
+  B00000
+};
+
+// Matriz binaria para una carita feliz
+byte carita[8] = {
+  B00000,
+  B01010,
+  B01010,
+  B00000,
+  B10001,
+  B01110,
+  B00000,
+  B00000
+};
+
+void setup() {
+  lcd.init();
+  lcd.backlight();
+  
+  // Guardamos nuestros símbolos en la memoria de la pantalla (Espacios 0 y 1)
+  lcd.createChar(0, corazon);
+  lcd.createChar(1, carita);
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Robot Feliz ");
+  lcd.write(0); // Dibujamos el corazón
+  lcd.write(1); // Dibujamos la carita
+}
+
+void loop() {
+}
+</code></pre>
+        </div>
+
+        <hr>
+
+        <h2 id="solucion-problemas">🛠️ 6. Solución de Problemas Comunes</h2>
+        <div class="protagonista-section" style="background-color: #fff3e0; border-left-color: #ff9800;">
+            <h3 style="color: #ef6c00;">¿Cargaste el código y no se ve nada?</h3>
+            <p>¡No entres en pánico! Este es el problema más común de todo instrumentista:</p>
+            <ul>
+                <li><strong>El Ajuste del Contraste:</strong> Detrás de tu módulo I2C hay un pequeño componente azul con un tornillo dorado en el centro (es un potenciómetro). Toma un desarmador de cruz pequeño y gíralo suavemente mientras el circuito está encendido hasta que las letras aparezcan.</li>
+                <li><strong>La pantalla solo muestra cuadros negros sólidos:</strong> Esto significa que la pantalla tiene energía, pero no está recibiendo datos. Verifica que el cable de SDA vaya a A4 y el de SCL a A5, ¡suelen confundirse mucho!</li>
+                <li><strong>Dirección I2C Incorrecta:</strong> Si los cables y el contraste están bien, puede que tu módulo no responda al "nombre" <code>0x27</code>. Intenta cambiar en el código esa línea a <code>LiquidCrystal_I2C lcd(0x3F, 16, 2);</code>.</li>
+            </ul>
+        </div>
+
         <div class="nav-links bottom-nav-links">
-            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+            <a href="index.html" class="nav-link">&larr; Volver al Punto de Partida</a>
         </div>
     </main>
     <footer>
