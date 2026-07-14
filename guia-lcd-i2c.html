@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía: LCD 16x2 con I2C - Manual de Instrumentación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomo-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        .tomo-content p code, 
+        .tomo-content li code,
+        .protagonista-section p code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Guía de Dispositivo: Pantalla LCD 16x2 con Módulo I2C</h1>
+        </div>
+    </header>
+    <main class="tomo-content">
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+        </div>
+        
+        <p>¡Hola, creadores! En esta guía profunda aprenderemos a utilizar una Pantalla LCD (Display de Cristal Líquido) de 16 columnas por 2 filas. Pero no lo haremos de la forma tradicional, sino utilizando un módulo de comunicación llamado <strong>I2C</strong>, el cual nos ahorrará una enorme cantidad de cables.</p>
+
+        <div class="protagonista-section">
+            <h3>🧠 ¿Qué es el protocolo I2C?</h3>
+            <p>El estándar I2C (Inter-Integrated Circuit) es un bus de comunicación que permite a múltiples dispositivos "hablar" con el Arduino usando solo <strong>dos cables de datos</strong>. Un LCD normal requiere hasta 6 cables de datos al Arduino; con el módulo I2C soldado en la parte trasera, lo reducimos a solo 4 cables en total (incluyendo energía).</p>
+            <ul>
+                <li><strong>GND:</strong> Al negativo de la protoboard.</li>
+                <li><strong>VCC:</strong> A los 5V de Arduino.</li>
+                <li><strong>SDA (Serial Data):</strong> Por aquí viajan los datos. En el Arduino UNO va al pin <strong>A4</strong>.</li>
+                <li><strong>SCL (Serial Clock):</strong> El reloj que sincroniza la comunicación. En el Arduino UNO va al pin <strong>A5</strong>.</li>
+            </ul>
+        </div>
+
+        <h2>🔌 El Circuito</h2>
+        <div class="image-container">
+            <h3>⚡ Diagrama de conexión LCD I2C</h3>
+            <!-- Cambia el src por el de tu imagen -->
+            <img src="diagrama_lcd_i2c.png" alt="Diagrama de conexión de LCD con I2C a Arduino"> 
+        </div>
+
+        <h2>🧠 El Código y la Librería</h2>
+        <p>Para que el Arduino entienda este protocolo, necesitamos instalar una <strong>librería</strong> especial llamada <code>LiquidCrystal_I2C</code>. Una vez instalada, el código es muy sencillo.</p>
+        
+        <div class="code-container"> 
+            <div class="code-header">
+                <span>Código Arduino</span>
+                <button class="copy-btn">Copiar</button>
+            </div> 
+<pre><code class="language-cpp code-block">
+#include &lt;Wire.h&gt; 
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+// Crear el objeto lcd. 
+// Parámetros: (Dirección I2C, número de columnas, número de filas)
+// La dirección suele ser 0x27 o 0x3F.
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+void setup() {
+  lcd.init();       // Inicializar el LCD
+  lcd.backlight();  // Encender la luz de fondo
+  
+  lcd.setCursor(0, 0); // Posicionarse en la columna 0, fila 0
+  lcd.print("Hola CECyTEM!");
+  
+  lcd.setCursor(0, 1); // Posicionarse en la columna 0, fila 1
+  lcd.print("Ingenieros :)");
+}
+
+void loop() {
+  // En este ejemplo el texto es fijo, no necesitamos nada en el loop
+}
+</code></pre>
+        </div>
+
+        <div class="nav-links bottom-nav-links">
+            <a href="index.html" class="nav-link">&larr; Volver al Índice</a>
+        </div>
+    </main>
+    <footer>
+        <p>Manual Digital de Instrumentación Industrial | CECyTEM 05 Guacamayas</p>
+    </footer>
+    <script>hljs.highlightAll();</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCopyButtons = document.querySelectorAll('.copy-btn');
+        allCopyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const codeContainer = this.closest('.code-container');
+                const codeBlock = codeContainer.querySelector('code');
+                if (codeBlock) {
+                    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                        this.innerText = '¡Copiado!';
+                        setTimeout(() => { this.innerText = 'Copiar'; }, 2000);
+                    }).catch(err => { console.error('Error al copiar: ', err); });
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
