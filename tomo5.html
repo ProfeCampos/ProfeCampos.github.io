@@ -8,6 +8,21 @@
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+        /* Estilo para que los comandos en el texto aparezcan en rojo y resaltados */
+        .tomo-content p code, 
+        .tomo-content li code,
+        .protagonista-section p code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+
 </head>
 <body>
     <header>
@@ -160,7 +175,8 @@ void loop() {
         </ul>
 
         <div class="nav-links bottom-nav-links">
-            <a href="tomo4.html" class="nav-link">&larr; Tomo Anterior</a>
+             <a href="tomo4.html" class="nav-link">&larr; Tomo Anterior</a>
+            <a href="index.html" class="nav-link">Índice</a>
             <a href="proyecto-integrador1.html" class="nav-link">Proyecto Integrador 1 &rarr;</a>
         </div>
     </main>
