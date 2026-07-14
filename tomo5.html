@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="tomo-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        /* Estilo para que los comandos en el texto aparezcan en rojo y resaltados */
+        .tomo-content p code, 
+        .tomo-content li code,
+        .protagonista-section p code {
+            color: #d32f2f; 
+            font-size: 1.15em; 
+            font-weight: bold;
+            background-color: #f1f2f6; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -36,7 +50,7 @@
             
             <h4>¿Cómo "leemos" la resistencia? El Divisor de Voltaje</h4>
             <p>A diferencia del botón (que es digital y solo nos dice HIGH o LOW), la LDR es un <strong>sensor analógico</strong>. Esto significa que nos entregará una escala continua de valores que va desde <strong>0</strong> (oscuridad total) hasta <strong>1023</strong> (luz brillante). Para escuchar este sensor, utilizaremos las entradas analógicas de nuestro Arduino (A0 a A5) mediante el comando <code>analogRead()</code>.</p>
-            <p>Arduino no puede medir resistencia directamente, pero sí puede medir voltaje. Para leer la LDR, la usaremos junto a una resistencia normal (de 10kΩ) para crear un <strong>Divisor de Voltaje</strong>.</p>
+            <p>Arduino no puede medir resistencia directamente, pero sí puede medir voltaje. Para leer la LDR, la usaremos junto a una resistencia normal (de 10k&Omega;) para crear un <strong>Divisor de Voltaje</strong>.</p>
             <p>Existen dos formas básicas para la conexión de nuestra LDR, pueden ser utilizadas dependiendo del fin deseado. Si disponemos de un controlador es posible modificar los resultados mediante programación:</p>
             <ul>
                 <li><strong>Mayor luz, mayor voltaje:</strong> Al conectar la fotoresistencia al nodo positivo de nuestra fuente de voltaje tendremos que, al incidir una mayor cantidad de luz, provocará una menor caída de voltaje o diferencial de potencial entre la fuente y el pin de referencia (Vout), por lo tanto se tendrá una lectura mayor.</li>
@@ -46,8 +60,8 @@
             <h4>Valores comerciales de LDR</h4>
             <p>Las fotorresistencias están disponibles en una amplia gama de sensibilidades y tamaños, adaptándose a distintas aplicaciones. A continuación, se presentan algunos valores típicos:</p>
             <ul>
-                <li><strong>Resistencia mínima</strong> (en luz intensa): 500Ω – 5kΩ.</li>
-                <li><strong>Resistencia máxima</strong> (en oscuridad): 1MΩ – 10MΩ.</li>
+                <li><strong>Resistencia mínima</strong> (en luz intensa): 500&Omega; – 5k&Omega;.</li>
+                <li><strong>Resistencia máxima</strong> (en oscuridad): 1M&Omega; – 10M&Omega;.</li>
                 <li><strong>Rango espectral de sensibilidad:</strong> Usualmente entre 400 nm y 700 nm (luz visible).</li>
             </ul>
         </div>
@@ -63,9 +77,9 @@
         <ul>
             <li>1 Placa Arduino UNO y Protoboard</li>
             <li>1 Fotoresistencia (LDR)</li>
-            <li>1 Resistencia de 10kΩ (¡importante este valor!)</li>
+            <li>1 Resistencia de 10k&Omega; (¡importante este valor!)</li>
             <li>1 LED (el que será nuestra lámpara nocturna)</li>
-            <li>1 Resistencia de 220Ω (para proteger el LED)</li>
+            <li>1 Resistencia de 220&Omega; (para proteger el LED)</li>
             <li>Cables Jumper</li>
         </ul>
         
@@ -78,15 +92,15 @@
                     <li>Conecta la otra pata de la LDR a una fila vacía.</li>
                     <li><strong>¡El punto clave!</strong> En esa misma fila donde terminó la LDR, conecta dos cosas:
                         <br>1. Un cable que vaya al pin Analógico <strong>A0</strong> de Arduino. ¡Este es el punto que vamos a "leer"!
-                        <br>2. Una pata de la resistencia de 10kΩ.
+                        <br>2. Una pata de la resistencia de 10k&Omega;.
                     </li>
-                    <li>Conecta la otra pata de la resistencia de 10kΩ a GND.</li>
+                    <li>Conecta la otra pata de la resistencia de 10k&Omega; a GND.</li>
                 </ul>
             </li>
             <li><strong>Conecta el LED (la lámpara):</strong>
                 <ul>
                     <li>Conecta la pata corta (-) del LED a GND.</li>
-                    <li>Conecta la resistencia de 220Ω a la pata larga (+) del LED.</li>
+                    <li>Conecta la resistencia de 220&Omega; a la pata larga (+) del LED.</li>
                     <li>El otro extremo de la resistencia conéctalo al Pin 9 de tu Arduino.</li>
                 </ul>
             </li>
