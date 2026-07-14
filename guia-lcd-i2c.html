@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/arduino-light.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        /* Estilo para que los comandos en el texto aparezcan en rojo y resaltados */
         .tomo-content p code, 
         .tomo-content li code,
         .protagonista-section p code {
@@ -22,7 +21,6 @@
             font-family: monospace;
         }
 
-        /* Estilo especial para la Tabla de Contenidos */
         .toc-container {
             background-color: #f8f9fa;
             border-left: 4px solid #1976d2;
@@ -31,26 +29,26 @@
             border-radius: 0 8px 8px 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .toc-container h3 {
-            margin-top: 0;
-            color: #1976d2;
+        .toc-container h3 { margin-top: 0; color: #1976d2; }
+        .toc-container ul { list-style-type: none; padding-left: 0; }
+        .toc-container li { margin-bottom: 8px; }
+        .toc-container a { text-decoration: none; color: #333; font-weight: 500; transition: color 0.2s; }
+        .toc-container a:hover { color: #d35400; }
+
+        .diagrama-box {
+            background-color: #f8f9fa;
+            border: 1px dashed #cfd8dc;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            color: #555;
         }
-        .toc-container ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .toc-container li {
-            margin-bottom: 8px;
-        }
-        .toc-container a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .toc-container a:hover {
-            color: #d35400;
-        }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9em; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #1976d2; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
@@ -64,16 +62,14 @@
             <a href="index.html" class="nav-link">&larr; Volver al Punto de Partida</a>
         </div>
         
-        <p>¡Hola, ingenieros del CECyTEM! Esta es una guía de profundización completa para conectar y dominar una pantalla LCD 16x2 usando el protocolo de comunicación I2C con Arduino. Aprenderemos a dejar atrás los circuitos llenos de cables para crear proyectos limpios y profesionales.</p>
+        <p>¡Hola, ingenieros del CECyTEM! Esta es una guía de profundización completa para conectar y dominar una pantalla LCD 1602 usando un adaptador de comunicación I2C con Arduino[cite: 2]. Aprenderemos a dejar atrás los circuitos llenos de cables para crear proyectos limpios y profesionales.</p>
         
-        <p>A lo largo de esta guía, no solo mostraremos mensajes básicos; crearemos animaciones de texto desplazable, mostraremos variables de sensores en tiempo real y, para cerrar con broche de oro, ¡aprenderemos a dibujar nuestros propios caracteres personalizados (emojis) en la pantalla!</p>
-
         <!-- Tabla de Contenidos -->
         <div class="toc-container">
             <h3>📑 Tabla de Contenido</h3>
             <ul>
                 <li><a href="#modulo-i2c">1. ¿Qué es el módulo LCD I2C y su conexión?</a></li>
-                <li><a href="#libreria">2. Instalación de la biblioteca LCD I2C</a></li>
+                <li><a href="#libreria">2. Instalación de la biblioteca LCD I2C y Funciones Útiles</a></li>
                 <li><a href="#ejemplo-basico">3. Proyecto 1: Texto y variables en pantalla</a></li>
                 <li><a href="#ejemplo-scroll">4. Proyecto 2: Texto desplazable (Efecto Marquesina)</a></li>
                 <li><a href="#ejemplo-custom">5. Proyecto 3: Creación de caracteres personalizados</a></li>
@@ -84,51 +80,97 @@
         <hr>
 
         <h2 id="modulo-i2c">🧠 1. ¿Qué es el módulo LCD I2C y su conexión?</h2>
-        <p>El estándar I2C (Inter-Integrated Circuit) es un bus de comunicación que permite a tu Arduino hablar con la pantalla usando solo <strong>dos cables de datos</strong>. Si miras detrás de tu LCD, verás una pequeña placa negra soldada: ese es el expansor I2C (usualmente el chip PCF8574).</p>
+        <p>El adaptador LCD I2C permite convertir una conexión paralela de una pantalla LCD a una serie que requiere sólo de dos cables para datos[cite: 2]. Este adaptador está especialmente diseñado para conectarse con un módulo modelo 1602 (16 columnas por 2 filas)[cite: 2].</p>
         
         <div class="protagonista-section">
-            <h3>🔌 Configuración de Pines (Solo 4 cables)</h3>
-            <ul>
-                <li><strong>GND:</strong> Al pin GND de tu Arduino.</li>
-                <li><strong>VCC:</strong> A los 5V de tu Arduino.</li>
-                <li><strong>SDA (Datos):</strong> Al pin <strong>A4</strong> en el Arduino UNO.</li>
-                <li><strong>SCL (Reloj):</strong> Al pin <strong>A5</strong> en el Arduino UNO.</li>
-            </ul>
+            <h3>🔌 Diagramas de Conexión</h3>
+            <p>A continuación se presentan las configuraciones principales para conectar el adaptador a tu Arduino:</p>
+            
+            <div class="diagrama-box">
+                <strong>Diagrama 1:</strong> Conectando el adaptador a Arduino por entradas analógicas y sin soldar[cite: 2].<br>
+                <em>(Inserta aquí la imagen de tu Diagrama 1)</em>
+            </div>
+            
+            <div class="diagrama-box">
+                <strong>Diagrama 2:</strong> Conectando el adaptador a Arduino por las entradas SDA y SCL directamente, soldado[cite: 2].<br>
+                <em>(Inserta aquí la imagen de tu Diagrama 2)</em>
+            </div>
+            
+            <div class="diagrama-box">
+                <strong>Diagrama 3:</strong> Como queda soldado el LCD con el adaptador I2C[cite: 2].<br>
+                <em>(Inserta aquí la imagen de tu Diagrama 3)</em>
+            </div>
         </div>
 
-        <h2 id="libreria">⚙️ 2. Instalación de la biblioteca LCD I2C</h2>
-        <p>Para que el Arduino entienda este protocolo de comunicación sin tener que escribir miles de líneas de código complejo, necesitamos usar una biblioteca externa. Ve a tu Arduino IDE, abre el <strong>Gestor de Librerías</strong> (Programa > Incluir Librería > Administrar Bibliotecas) y busca <code>LiquidCrystal I2C</code> por <em>Frank de Brabander</em>. ¡Instálala!</p>
+        <hr>
+
+        <h2 id="libreria">⚙️ 2. Instalación de la biblioteca LCD I2C y Funciones Útiles</h2>
+        <p>Para lograr la programación del LCD con el adaptador I2C, es necesario instalar una nueva librería[cite: 2]. Esta no se encuentra disponible en el gestor normal, por lo que haremos una instalación manual por única vez:</p>
+        
+        <ol>
+            <li>Ingresa con tu navegador web a la dirección: <code>https://github.com/fmalpartida/New-LiquidCrystal</code>[cite: 2].</li>
+            <li>Da clic en el botón verde <strong>Code</strong> y selecciona <strong>Download ZIP</strong>[cite: 2].</li>
+            <li>En el IDE de Arduino, ve al menú <strong>Programas &rarr; Incluir librería &rarr; Añadir biblioteca .ZIP</strong>[cite: 2] (busca el archivo descargado y ábrelo).</li>
+            <li>Verifica la instalación buscando "New-LiquidCrystal-master" en el menú Incluir Librería[cite: 2].</li>
+        </ol>
+
+        <h3>🔧 La Función Constructora</h3>
+        <p>Con esta librería, inicializamos el objeto definiendo los pines internos del adaptador mediante la siguiente estructura[cite: 2]:</p>
+        <p><code>LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);</code>[cite: 2]</p>
+        <p><em>(Donde 0x27 es la dirección, y los demás números corresponden a los pines E, RW, RS, D4-D7, P3 y la polaridad para encender la luz trasera[cite: 2]).</em></p>
+
+        <h3>📚 API: Funciones Útiles de la Librería</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Función</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>lcd.init();</code></td><td>Inicializa la interfaz a la pantalla LCD I2C y especifica la dirección y dimensiones. Debe ser llamada antes que cualquier otro comando.</td></tr>
+                <tr><td><code>lcd.backlight();</code></td><td>Habilita (activa) el LED de retroiluminación del LCD.</td></tr>
+                <tr><td><code>lcd.noBacklight();</code></td><td>Deshabilita (apaga) la luz de fondo del LCD.</td></tr>
+                <tr><td><code>lcd.clear();</code></td><td>Borra la pantalla LCD y posiciona el cursor en la esquina superior izquierda.</td></tr>
+                <tr><td><code>lcd.home();</code></td><td>Establece el cursor en la esquina superior izquierda sin borrar el texto en la pantalla.</td></tr>
+                <tr><td><code>lcd.setCursor(col, row);</code></td><td>Posiciona el cursor del LCD en una ubicación deseada (columna, fila).</td></tr>
+                <tr><td><code>lcd.noCursor();</code></td><td>Oculta el cursor del LCD.</td></tr>
+                <tr><td><code>lcd.cursor();</code></td><td>Muestra el cursor del LCD si ha sido ocultado.</td></tr>
+                <tr><td><code>lcd.scrollDisplayLeft();</code></td><td>Desplaza el contenido de la pantalla (texto y cursor) un espacio a la izquierda.</td></tr>
+                <tr><td><code>lcd.scrollDisplayRight();</code></td><td>Desplaza el contenido de la pantalla (texto y cursor) un espacio a la derecha.</td></tr>
+            </tbody>
+        </table>
 
         <hr>
 
         <h2 id="ejemplo-basico">💻 3. Proyecto 1: Texto y variables en pantalla</h2>
-        <p>Vamos a probar que todo funcione imprimiendo un saludo y un contador de segundos. Observa cómo usamos <code>lcd.setCursor(columna, fila)</code> para ubicar el texto. Recuerda que empezamos a contar desde el 0.</p>
+        <p>Vamos a probar que todo funcione imprimiendo un saludo y un contador de segundos utilizando la librería que acabamos de instalar.</p>
         
         <div class="code-container"> 
             <div class="code-header">
-                <span>Código Arduino - Texto y Variables</span>
+                <span>Código Arduino - Proyecto 1</span>
                 <button class="copy-btn">Copiar</button>
             </div> 
 <pre><code class="language-cpp code-block">
 #include &lt;Wire.h&gt; 
+#include &lt;LCD.h&gt;
 #include &lt;LiquidCrystal_I2C.h&gt;
 
-// Dirección I2C típica: 0x27 o 0x3F, pantalla de 16 columnas y 2 filas
-LiquidCrystal_I2C lcd(0x27, 16, 2); 
+// Configuración de pines internos del adaptador según la librería New-LiquidCrystal
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
 
 void setup() {
-  lcd.init();       // Inicia la comunicación con la pantalla
-  lcd.backlight();  // Enciende la luz de fondo azul
-  
-  lcd.setCursor(0, 0); // Columna 0, Fila 0 (Arriba a la izquierda)
-  lcd.print("Hola CECyTEM!");
+  lcd.begin(16, 2); // 16 columnas por 2 lineas
+  lcd.clear();      // Limpia la pantalla
 }
 
 void loop() {
-  lcd.setCursor(0, 1); // Columna 0, Fila 1 (Abajo a la izquierda)
-  lcd.print("Segundos: ");
-  // millis() devuelve los milisegundos desde que el Arduino encendió
+  lcd.setCursor(0, 0); 
+  lcd.print("Hola, han pasado"); 
+  
+  lcd.setCursor(0, 1); 
   lcd.print(millis() / 1000); 
+  lcd.print(" seg."); 
 }
 </code></pre>
         </div>
@@ -136,7 +178,7 @@ void loop() {
         <hr>
 
         <h2 id="ejemplo-scroll">🎬 4. Proyecto 2: Texto desplazable (Efecto Marquesina)</h2>
-        <p>¿Qué pasa si queremos mostrar un mensaje de más de 16 letras? ¡Lo hacemos rodar! Usaremos la función <code>lcd.scrollDisplayLeft()</code> dentro de un bucle <code>for</code> para crear un letrero dinámico.</p>
+        <p>Para mostrar un mensaje largo o darle dinamismo a nuestro proyecto, usaremos la función de scroll para desplazar el texto hacia la izquierda[cite: 2].</p>
         
         <div class="code-container"> 
             <div class="code-header">
@@ -145,32 +187,22 @@ void loop() {
             </div> 
 <pre><code class="language-cpp code-block">
 #include &lt;Wire.h&gt; 
+#include &lt;LCD.h&gt;
 #include &lt;LiquidCrystal_I2C.h&gt;
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); 
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
 
 void setup() {
-  lcd.init();
-  lcd.backlight();
-  lcd.setCursor(0, 0);
-  lcd.print("Alerta: Fuera de rango de control!");
-  delay(1000); // Esperamos un segundo antes de moverlo
+  lcd.begin(16, 2);
+  lcd.clear();
 }
 
 void loop() {
-  // Desplazamos el texto hacia la izquierda 13 posiciones
-  for (int i = 0; i < 13; i++) {
-    lcd.scrollDisplayLeft();
-    delay(300); // Velocidad del movimiento
-  }
+  lcd.setCursor(2, 0);   
+  lcd.print("Prueba scroll");  
   
-  delay(1000);
-  
-  // Regresamos el texto a su posición original
-  for (int i = 0; i < 13; i++) {
-    lcd.scrollDisplayRight();
-    delay(300);
-  }
+  lcd.scrollDisplayLeft();  // Desplaza un carácter a la vez hacia la izquierda
+  delay(1000);   
 }
 </code></pre>
         </div>
@@ -178,7 +210,7 @@ void loop() {
         <hr>
 
         <h2 id="ejemplo-custom">🎨 5. Proyecto 3: Creación de caracteres personalizados</h2>
-        <p>La pantalla LCD nos permite crear hasta 8 símbolos propios que no existen en el abecedario. Cada símbolo se dibuja encendiendo y apagando píxeles en una cuadrícula de 5x8. Los representamos usando números binarios (donde 1 es encendido y 0 es apagado).</p>
+        <p>La librería nos permite dibujar hasta 8 símbolos propios que no existen en el abecedario representados mediante matrices binarias (ceros y unos)[cite: 2].</p>
 
         <div class="code-container"> 
             <div class="code-header">
@@ -187,49 +219,39 @@ void loop() {
             </div> 
 <pre><code class="language-cpp code-block">
 #include &lt;Wire.h&gt; 
+#include &lt;LCD.h&gt;
 #include &lt;LiquidCrystal_I2C.h&gt;
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); 
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); 
 
-// Matriz binaria para un icono de un corazón
-byte corazon[8] = {
-  B00000,
-  B01010,
-  B11111,
-  B11111,
-  B01110,
-  B00100,
-  B00000,
-  B00000
+// Matriz para una carita feliz
+byte sonrisa[8] = {
+  0b00000, 0b00000, 0b11011, 0b11011, 0b00000, 0b10001, 0b01110, 0b00000
 };
 
-// Matriz binaria para una carita feliz
-byte carita[8] = {
-  B00000,
-  B01010,
-  B01010,
-  B00000,
-  B10001,
-  B01110,
-  B00000,
-  B00000
+// Matriz para un Alien
+byte Alien[] = {
+  B11111, B10101, B11111, B11111, B01110, B01010, B11011, B00000
 };
 
 void setup() {
-  lcd.init();
-  lcd.backlight();
+  lcd.begin(16, 2);
+  lcd.clear();
   
-  // Guardamos nuestros símbolos en la memoria de la pantalla (Espacios 0 y 1)
-  lcd.createChar(0, corazon);
-  lcd.createChar(1, carita);
+  // Guardamos nuestros símbolos en la memoria (Espacios 0 y 1)
+  lcd.createChar(0, sonrisa);
+  lcd.createChar(1, Alien);
   
-  lcd.setCursor(0, 0);
-  lcd.print("Robot Feliz ");
-  lcd.write(0); // Dibujamos el corazón
-  lcd.write(1); // Dibujamos la carita
+  lcd.home(); // Posiciona el cursor en 0,0
+  lcd.print("Robot Alien ");
+  lcd.write(byte(1)); // Dibuja el Alien
 }
 
 void loop() {
+  lcd.setCursor(0, 1);
+  lcd.print("Feliz ");
+  lcd.print(char(0)); // Dibuja la carita feliz (forma alternativa)
+  delay(1000);
 }
 </code></pre>
         </div>
@@ -239,11 +261,11 @@ void loop() {
         <h2 id="solucion-problemas">🛠️ 6. Solución de Problemas Comunes</h2>
         <div class="protagonista-section" style="background-color: #fff3e0; border-left-color: #ff9800;">
             <h3 style="color: #ef6c00;">¿Cargaste el código y no se ve nada?</h3>
-            <p>¡No entres en pánico! Este es el problema más común de todo instrumentista:</p>
+            <p>¡No entres en pánico, ingeniero! Verifica estos tres puntos clave:</p>
             <ul>
-                <li><strong>El Ajuste del Contraste:</strong> Detrás de tu módulo I2C hay un pequeño componente azul con un tornillo dorado en el centro (es un potenciómetro). Toma un desarmador de cruz pequeño y gíralo suavemente mientras el circuito está encendido hasta que las letras aparezcan.</li>
-                <li><strong>La pantalla solo muestra cuadros negros sólidos:</strong> Esto significa que la pantalla tiene energía, pero no está recibiendo datos. Verifica que el cable de SDA vaya a A4 y el de SCL a A5, ¡suelen confundirse mucho!</li>
-                <li><strong>Dirección I2C Incorrecta:</strong> Si los cables y el contraste están bien, puede que tu módulo no responda al "nombre" <code>0x27</code>. Intenta cambiar en el código esa línea a <code>LiquidCrystal_I2C lcd(0x3F, 16, 2);</code>.</li>
+                <li><strong>El Ajuste del Contraste:</strong> El adaptador tiene un preset (potenciómetro) para la regulación del nivel de contraste de la pantalla[cite: 2]. Toma un desarmador pequeño y gíralo suavemente hasta que las letras aparezcan.</li>
+                <li><strong>Cuadros negros sólidos:</strong> Esto significa que la pantalla tiene energía, pero no está recibiendo datos o falló la inicialización. Verifica que el cable de SDA vaya correctamente a su pin y el de SCL al suyo, ¡suelen confundirse mucho!</li>
+                <li><strong>Dirección I2C Incorrecta:</strong> Nuestro adaptador tiene por defecto la dirección <code>0x27</code>[cite: 2]. Si tu módulo es distinto, podría usar la dirección <code>0x3F</code>. Prueba cambiando el <code>0x27</code> en la línea de configuración del <code>LiquidCrystal_I2C</code>.</li>
             </ul>
         </div>
 
