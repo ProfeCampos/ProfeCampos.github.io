@@ -78,9 +78,10 @@
 
         .header-titles h2 {
             margin: 5px 0 0;
-            font-weight: 300;
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-weight: 400;
+            font-size: 1.3rem;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
         }
 
         .header-titles p {
@@ -117,7 +118,7 @@
             padding-bottom: 8px;
         }
 
-        /* Cajas Informativas (Meta, Ponderación, Classroom) */
+        /* Cajas Informativas (Meta, Ponderación) */
         .info-box {
             background-color: #e3f2fd;
             border-left: 5px solid #1976d2;
@@ -133,7 +134,7 @@
 
         .grid-eval {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
@@ -142,14 +143,14 @@
             background: white;
             padding: 15px;
             border-radius: 6px;
-            border: 1px solid #bbdefb;
+            border: 1px solid #c8e6c9;
             text-align: center;
         }
 
         .eval-card .porcentaje {
             font-size: 1.8rem;
             font-weight: bold;
-            color: var(--primary);
+            color: #2e7d32;
         }
 
         /* Tarjetas de Unidades */
@@ -207,6 +208,34 @@
             padding-left: 18px;
         }
 
+        /* Botón de Repositorio Final */
+        .repo-section {
+            text-align: center;
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 8px;
+            border: 2px dashed #0056b3;
+        }
+
+        .btn-repo {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-top: 10px;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+
+        .btn-repo:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -238,12 +267,13 @@
         <a href="../index.html">← Volver al Portal Principal</a>
     </nav>
 
+    <!-- Encabezado -->
     <header>
         <div class="header-container">
             <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
             <div class="header-titles">
                 <h1>Pensamiento Matemático 1</h1>
-                <h2>Pensamiento Aritmético</h2>
+                <h2>Aritmética</h2>
                 <p>CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</p>
             </div>
             <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
@@ -252,7 +282,7 @@
 
     <main>
 
-        <!-- Meta Educativa y Criterios de Evaluación -->
+        <!-- 1. Meta Educativa y Criterios de Evaluación -->
         <section>
             <div class="info-box">
                 <h3>🎯 Meta Educativa</h3>
@@ -272,17 +302,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="info-box" style="background-color: #fff3cd; border-left-color: #ffc107;">
-                <h3 style="color: #856404;">📚 Bibliografía y Google Classroom</h3>
-                <p style="margin: 0; color: #856404; font-size: 0.92rem;">
-                    <strong>Textos de Consulta:</strong> <i>Aritmética</i> y <i>Álgebra (Lógica)</i> — CONAMAT, Ed. Pearson Educación.<br>
-                    📌 <strong>Nota:</strong> No es necesario comprar los libros; se encuentran disponibles en formato PDF dentro de la plataforma <strong>Classroom</strong> en el apartado de Bibliografía.
-                </p>
-            </div>
         </section>
 
-        <!-- Primer Parcial -->
+        <!-- 2. Primer Parcial -->
         <section>
             <h2>PRIMER PARCIAL</h2>
             <div class="grid">
@@ -339,7 +361,7 @@
             </div>
         </section>
 
-        <!-- Segundo Parcial -->
+        <!-- 3. Segundo Parcial -->
         <section>
             <h2>SEGUNDO PARCIAL</h2>
             <div class="grid">
@@ -381,7 +403,7 @@
             </div>
         </section>
 
-        <!-- Tercer Parcial -->
+        <!-- 4. Tercer Parcial -->
         <section>
             <h2>TERCER PARCIAL</h2>
             <div class="grid">
@@ -414,11 +436,20 @@
                         </ul>
                     </div>
                     <div class="proposito">
-                        <strong>Propósito:</strong> Aplica los elementos de la aritmética para resolver cálculos combinados complejos.
+                        <strong>Propósito:</strong> Aplica los elementos dela aritmética para resolver cálculos combinados complejos.
                     </div>
                 </a>
 
             </div>
+        </section>
+
+        <!-- 5. Bibliografía y Repositorio de Archivos (al final) -->
+        <section class="repo-section">
+            <h2 style="border-bottom: none; color: var(--primary); margin-bottom: 8px;">📚 Repositorio de Bibliografía y Archivos</h2>
+            <p style="color: #555; margin-bottom: 15px;">Accede a los libros de texto de consulta (CONAMAT), guías de estudio y material complementario en PDF.</p>
+            
+            <!-- Puedes cambiar el enlace "bibliografia.html" por el link directo de tu Classroom o Drive si lo prefieres -->
+            <a href="bibliografia.html" class="btn-repo">📁 Abrir Repositorio de Archivos</a>
         </section>
 
     </main>
