@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unidad 1: Lógica Matemática y Razonamiento | Profe Campos</title>
+  
+  <!-- Ícono para la pestaña del navegador -->
+  <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+
+  <!-- Configuración de MathJax para renderizado de símbolos -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --card-bg: #161f30;
+      --card-inner: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --cecyte-cyan: #00979d;
+      --cecyte-dark: #00686b;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --th-bg: rgba(0, 151, 157, 0.15);
+      --btn-sec-bg: rgba(255, 255, 255, 0.08);
+      --nav-bg: #0b1329;
+    }
+
+    body.light-mode {
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-inner: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --cecyte-cyan: #008388;
+      --cecyte-dark: #005658;
+      --accent-gold: #d97706;
+      --accent-green: #059669;
+      --accent-red: #dc2626;
+      --th-bg: rgba(0, 131, 136, 0.15);
+      --btn-sec-bg: rgba(0, 0, 0, 0.05);
+      --nav-bg: #0f2a4a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    /* BARRA DE NAVEGACIÓN */
+    nav {
+      background-color: var(--nav-bg);
+      padding: 10px 20px;
+      text-align: left;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* CABECERA CON LOGOS */
+    header {
+      max-width: 1150px;
+      margin: 0 auto 20px auto;
+      padding: 15px 15px 15px 15px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .header-titles {
+      text-align: center;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .header-titles h1 {
+      color: var(--cecyte-cyan);
+      font-size: 1.6rem;
+      margin-bottom: 2px;
+    }
+
+    .header-titles h2 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .header-titles p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .logo {
+      max-height: 75px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .theme-toggle-btn {
+      background-color: var(--btn-sec-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--cecyte-cyan);
+    }
+
+    /* PESTAÑAS DE NAVEGACIÓN */
+    .nav-tabs {
+      max-width: 1150px;
+      margin: 0 auto 20px auto;
+      padding: 0 15px;
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background-color: var(--cecyte-cyan);
+      color: #fff;
+    }
+
+    .section-container {
+      display: none;
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .section-container.active {
+      display: block;
+    }
+
+    /* TARJETAS Y ESTRUCTURA */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cecyte-cyan);
+      margin-bottom: 14px;
+    }
+
+    /* SECCIÓN I: PAEC */
+    .paec-fixed-header {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .paec-instructions {
+      background-color: rgba(0, 151, 157, 0.1);
+      border-left: 4px solid var(--cecyte-cyan);
+      padding: 10px 12px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+
+    .paec-legend {
+      font-size: 0.88rem;
+    }
+
+    .paec-legend ul {
+      margin-left: 20px;
+      margin-top: 4px;
+    }
+
+    .paec-scroll-container {
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .paec-scroll-container::-webkit-scrollbar,
+    .exercise-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .paec-scroll-container::-webkit-scrollbar-thumb,
+    .exercise-list::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    .paec-item {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    .paec-item p {
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .paec-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .paec-opt-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .paec-opt-btn:hover {
+      border-color: var(--cecyte-cyan);
+    }
+
+    .paec-opt-btn.correct {
+      background-color: var(--accent-green) !important;
+      color: #ffffff !important;
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .paec-opt-btn.incorrect {
+      background-color: var(--accent-red) !important;
+      color: #ffffff !important;
+      border-color: var(--accent-red) !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    }
+
+    .paec-feedback {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background-color: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    /* SECCIÓN II & III: TABLAS DE VERDAD */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 880px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+      .header-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      .logo {
+        max-height: 60px;
+      }
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 560px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .exercise-btn {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.86rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .exercise-btn:hover {
+      border-color: var(--cecyte-cyan);
+    }
+
+    .exercise-btn.active {
+      background: linear-gradient(135deg, var(--cecyte-cyan), var(--cecyte-dark));
+      border-color: var(--cecyte-cyan);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .badge-vars {
+      background-color: rgba(255,255,255,0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .controls-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      background-color: var(--card-inner);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .btn {
+      background-color: var(--cecyte-cyan);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: var(--btn-sec-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .step-indicator {
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+    }
+
+    .step-box {
+      background-color: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--accent-gold);
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 16px;
+      font-size: 0.88rem;
+    }
+
+    .step-box h4 {
+      color: var(--accent-gold);
+      margin-bottom: 4px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-inner);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 9px 12px;
+      border: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: var(--th-bg);
+      color: var(--cecyte-cyan);
+      font-weight: 700;
+    }
+
+    th.header-hidden {
+      opacity: 0.15;
+      filter: blur(1px);
+    }
+
+    th.col-base {
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+    }
+
+    th.col-active {
+      background-color: var(--cecyte-cyan);
+      color: #fff;
+    }
+
+    th.col-final {
+      background-color: var(--accent-gold);
+      color: #000;
+    }
+
+    td.val-v {
+      color: var(--accent-green);
+      font-weight: 800;
+    }
+
+    td.val-f {
+      color: var(--accent-red);
+      font-weight: 800;
+    }
+
+    td.val-hidden {
+      opacity: 0.15;
+      user-select: none;
+    }
+
+    .conclusion-card {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    .tautologia {
+      background-color: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .contingencia {
+      background-color: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .contradiccion {
+      background-color: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    .conclusion-badge {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .conclusion-note {
+      font-size: 0.9rem;
+      margin-top: 4px;
+      opacity: 0.95;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 30px;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
+  <nav>
+    <a href="index.html">← Volver al Temario Principal</a>
+  </nav>
+
+  <!-- CABECERA DE LA PÁGINA CON LOGOS -->
+  <header>
+    <div class="header-container">
+      <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
+      <div class="header-titles">
+        <h1>Unidad 1: Lógica Matemática y Razonamiento</h1>
+        <h2>Guía Interactiva de Examen Paso a Paso</h2>
+        <p>CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</p>
+      </div>
+      <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span id="themeIcon">☀️</span> Cambiar Modo Claro / Oscuro
+      </button>
+    </div>
+  </header>
+
+  <!-- PESTAÑAS DE NAVEGACIÓN INTERNA -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('tabPAEC', event)">Sección I: Formalización PAEC (5 Ejercicios)</button>
+    <button class="tab-btn" onclick="switchTab('tabTables', event)">Secciones II y III: Tablas de Verdad (10 Ejercicios)</button>
+  </div>
+
+  <!-- CONTENIDO SECCIÓN I: PAEC -->
+  <div id="tabPAEC" class="section-container active">
+    <div class="card">
+      <div class="card-title">🌱 Sección I: Formalización Lógica y Transversalidad PAEC</div>
+      
+      <div class="paec-fixed-header">
+        <div class="paec-instructions">
+          <strong>📋 Instrucciones:</strong> Selecciona la opción que consideres correcta para cada enunciado. La opción elegida se iluminará en <strong style="color:var(--accent-green);">VERDE</strong> si acertaste o en <strong style="color:var(--accent-red);">ROJO</strong> si cometiste un error, mostrándote una pista específica para reflexionar sin revelar inmediatamente la respuesta final.
+        </div>
+        <div class="paec-legend">
+          <strong>Proposiciones Simples del Contexto Comunitario y Salud:</strong>
+          <ul>
+            <li><strong>p:</strong> El estudiantado clasifica adecuadamente los desechos sólidos en el plantel.</li>
+            <li><strong>q:</strong> Se aplican pausas activas de respiración consciente antes de la clase.</li>
+            <li><strong>r:</strong> Se reducen los niveles de estrés académico en el grupo.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="paec-scroll-container" id="paecExercises"></div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO SECCIÓN II & III: TABLAS DE VERDAD -->
+  <div id="tabTables" class="section-container">
+    <div class="main-layout">
+      
+      <div class="card">
+        <div class="card-title">📌 Ejercicios de la Guía</div>
+        <div class="exercise-list" id="exerciseList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" id="currentTitle">Ejercicio 1</div>
+
+        <div class="controls-panel">
+          <button class="btn" id="btnNextStep" onclick="nextStep()">⏩ Siguiente Paso</button>
+          <button class="btn btn-secondary" onclick="revealAll()">👁️ Mostrar Todo</button>
+          <button class="btn btn-secondary" onclick="resetSteps()">🔄 Reiniciar</button>
+          <span class="step-indicator" id="stepCounter">Paso 0 de 0</span>
+        </div>
+
+        <div class="step-box" id="stepBox">
+          <h4 id="stepBoxTitle">Paso Inicial</h4>
+          <p id="stepBoxDesc">Presiona "Siguiente Paso" para identificar primero las columnas necesarias para la proposición.</p>
+        </div>
+
+        <div class="table-container">
+          <table id="truthTable">
+            <thead><tr id="tableHeader"></tr></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="conclusion-card" id="conclusionCard">
+          <div class="conclusion-badge" id="conclusionBadge"></div>
+          <div class="conclusion-note" id="conclusionDesc"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; Pensamiento Matemático 1 — M.C. Edgar Campos Díaz | CECyTEM 05 Guacamayas</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      document.getElementById('themeIcon').innerText = isLight ? '🌙' : '☀️';
+    }
+
+    function switchTab(tabId, evt) {
+      document.querySelectorAll('.section-container').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      evt.target.classList.add('active');
+    }
+
+    const paecData = [
+      {
+        id: 1,
+        text: "1. Si el estudiantado clasifica adecuadamente los desechos (p) y aplica pausas activas (q), entonces se reducen los niveles de estrés académico (r).",
+        options: ["(p ∨ q) ⇒ r", "(p ∧ q) ⇒ r", "r ⇔ (p ∧ q)", "~(p ∧ q) ⇒ r"],
+        correct: 1,
+        hints: [
+          "💡 Pista: Revisa el conector entre 'p' y 'q'. La palabra 'y' representa una conjunción (∧), no una disyunción (∨).",
+          "¡Excelente! La conjunción (∧) une 'p' y 'q' como antecedente de la condicional (⇒) que concluye en 'r'.",
+          "💡 Pista: Atención al orden de la implicación. La frase dice 'Si [causa], entonces [efecto]', no es una doble equivalencia (⇔).",
+          "💡 Pista: Analiza bien los signos. En el enunciado original no hay negaciones; las proposiciones p y q son afirmativas."
+        ]
+      },
+      {
+        id: 2,
+        text: "2. No es cierto que el estudiantado no clasifique los desechos (~p) o no reduzca el estrés (~r).",
+        options: ["~p ∨ ~r", "~(p ∧ r)", "~(~p ∨ ~r)", "~p ⇒ ~r"],
+        correct: 2,
+        hints: [
+          "💡 Pista: Te falta considerar la negación externa 'No es cierto que...' que abarca a todo el enunciado.",
+          "💡 Pista: Cuidado con el conector interno. El enunciado dice 'o no reduzca' (disyunción ∨), no 'y' (conjunción ∧).",
+          "¡Excelente! La negación externa ~ afecta a la disyunción entre las dos proposiciones negadas (~p ∨ ~r).",
+          "💡 Pista: El operador interno debe ser una disyunción ('o'), no un condicional ('entonces')."
+        ]
+      },
+      {
+        id: 3,
+        text: "3. Se reducen los niveles de estrés académico (r) si y solo si se aplican pausas activas (q) y se mantiene un entorno limpio (p).",
+        options: ["r ⇔ (q ∧ p)", "r ⇒ (q ∨ p)", "(q ∧ p) ⇒ r", "r ∧ (q ⇔ p)"],
+        correct: 0,
+        hints: [
+          "¡Excelente! La expresión 'si y solo si' establece un bicondicional (⇔) con la conjunción (q ∧ p).",
+          "💡 Pista: La expresión 'si y solo si' equivale a un bicondicional (⇔), no a una implicación simple (⇒). Además, se indica 'y' (∧).",
+          "💡 Pista: 'Si y solo si' requiere de una equivalencia bidireccional (⇔), no solamente un condicional de ida (⇒).",
+          "💡 Pista: El bicondicional principal conecta a 'r' con la conjunción completa de (q y p)."
+        ]
+      },
+      {
+        id: 4,
+        text: "4. Si no se aplican pausas activas (~q) y no se clasifican los desechos (~p), entonces no se reducen los niveles de estrés (~r).",
+        options: ["(~q ∧ ~p) ⇒ ~r", "~q ∨ ~p ⇒ r", "r ⇒ (~q ∧ ~p)", "~(~q ∧ ~p) ⇒ ~r"],
+        correct: 0,
+        hints: [
+          "¡Excelente! El antecedente es la conjunción de las negaciones (~q ∧ ~p) y el consecuente es ~r.",
+          "💡 Pista: La palabra 'y' indica conjunción (∧). Además, el efecto final también debe estar negado ('no se reducen').",
+          "💡 Pista: Cuidado con la causa y el efecto. La condición 'Si...' va en el antecedente (izquierda del signo ⇒).",
+          "💡 Pista: Hay una negación externa al inicio de los paréntesis que no está presente en la oración original."
+        ]
+      },
+      {
+        id: 5,
+        text: "5. Es falso que si se aplican pausas activas (q), no se clasifiquen adecuadamente los desechos (~p).",
+        options: ["~(q ∧ ~p)", "~(q ⇒ ~p)", "~q ⇒ ~p", "q ⇒ ~(~p)"],
+        correct: 1,
+        hints: [
+          "💡 Pista: La estructura interna es 'si [q], entonces [no p]', la cual representa un condicional (⇒), no una conjunción (∧).",
+          "¡Excelente! La negación externa '~' envuelve a la relación condicional entre 'q' y '~p'.",
+          "💡 Pista: La frase 'Es falso que' debe negar a toda la estructura condicional entre paréntesis, no solo a 'q'.",
+          "💡 Pista: La negación principal debe ir antes de toda la expresión para indicar 'Es falso que...'."
+        ]
+      }
+    ];
+
+    function renderPAEC() {
+      const container = document.getElementById("paecExercises");
+      container.innerHTML = "";
+      paecData.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "paec-item";
+        let optsHtml = item.options.map((opt, oIdx) => 
+          `<button class="paec-opt-btn" onclick="checkPAEC(${item.id}, ${oIdx})">${opt}</button>`
+        ).join("");
+
+        div.innerHTML = `
+          <p>${item.text}</p>
+          <div class="paec-options" id="paec-opts-${item.id}">${optsHtml}</div>
+          <div class="paec-feedback" id="paec-fb-${item.id}"></div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function checkPAEC(itemId, selectedIdx) {
+      const item = paecData.find(x => x.id === itemId);
+      const fb = document.getElementById(`paec-fb-${itemId}`);
+      const optsContainer = document.getElementById(`paec-opts-${itemId}`);
+      const buttons = optsContainer.querySelectorAll('.paec-opt-btn');
+
+      buttons.forEach((btn, idx) => {
+        btn.classList.remove('correct', 'incorrect');
+        if (idx === selectedIdx) {
+          if (selectedIdx === item.correct) {
+            btn.classList.add('correct');
+          } else {
+            btn.classList.add('incorrect');
+          }
+        }
+      });
+
+      fb.style.display = "block";
+      const hintText = item.hints[selectedIdx];
+      
+      if (selectedIdx === item.correct) {
+        fb.style.color = "var(--accent-green)";
+        fb.style.borderColor = "var(--accent-green)";
+        fb.innerText = hintText;
+      } else {
+        fb.style.color = "var(--accent-red)";
+        fb.style.borderColor = "var(--accent-red)";
+        fb.innerText = hintText;
+      }
+    }
+
+    const exercises = [
+      {
+        id: 1,
+        title: "Ejercicio 1: p ∨ ~q",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "~q", values: ["F", "V", "F", "V"], desc: "Negación de q (~q): Invierte el valor de verdad de q." },
+          { header: "p ∨ ~q", values: ["V", "V", "F", "V"], desc: "Disyunción (p ∨ ~q): Verdadera si p es V o ~q es V.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "La tabla de valores de verdad contiene una combinación de valores Verdaderos (V) y Falsos (F)."
+      },
+      {
+        id: 2,
+        title: "Ejercicio 2: ~p ⇒ ~q",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "~p", values: ["F", "F", "V", "V"], desc: "Negación de p (~p): Invierte el valor de p." },
+          { header: "~q", values: ["F", "V", "F", "V"], desc: "Negación de q (~q): Invierte el valor de q." },
+          { header: "~p ⇒ ~q", values: ["V", "V", "F", "V"], desc: "Condicional (~p ⇒ ~q): Falsa solo cuando ~p es V y ~q es F.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "El resultado de la proposición compuesta combina valores V y F."
+      },
+      {
+        id: 3,
+        title: "Ejercicio 3: ~(p ∨ q) ⇒ ~q",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "p ∨ q", values: ["V", "V", "V", "F"], desc: "Disyunción (p ∨ q): Verdadera si al menos una es V." },
+          { header: "~(p ∨ q)", values: ["F", "F", "F", "V"], desc: "Negación ~(p ∨ q): Invierte el resultado de (p ∨ q)." },
+          { header: "~q", values: ["F", "V", "F", "V"], desc: "Negación de q (~q)." },
+          { header: "~(p ∨ q) ⇒ ~q", values: ["V", "V", "V", "V"], desc: "Condicional (⇒): Evalúa Columna 4 ⇒ Columna 5. Como no ocurre V ⇒ F, todas son V.", isFinal: true }
+        ],
+        conclusionType: "Tautología (T)",
+        classType: "tautologia",
+        explanation: "Todas las combinaciones posibles en la columna final resultaron VERDADERAS (V)."
+      },
+      {
+        id: 4,
+        title: "Ejercicio 4: (p ∧ q) ⇔ (p ∨ q)",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "p ∧ q", values: ["V", "F", "F", "F"], desc: "Conjunción (p ∧ q): V solo si p y q son ambas V." },
+          { header: "p ∨ q", values: ["V", "V", "V", "F"], desc: "Disyunción (p ∨ q): V si al menos una es V." },
+          { header: "(p ∧ q) ⇔ (p ∨ q)", values: ["V", "F", "F", "V"], desc: "Bicondicional (⇔): V únicamente si ambas columnas tienen exactamente el mismo valor de verdad.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "La última columna contiene una mezcla de valores Verdaderos (V) y Falsos (F)."
+      },
+      {
+        id: 5,
+        title: "Ejercicio 5: (p ⇒ q) ∧ (~q ⇒ ~p)",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "p ⇒ q", values: ["V", "F", "V", "V"], desc: "Condicional directa (p ⇒ q): Falsa únicamente cuando V ⇒ F." },
+          { header: "~q", values: ["F", "V", "F", "V"], desc: "Negación de q (~q)." },
+          { header: "~p", values: ["F", "F", "V", "V"], desc: "Negación de p (~p)." },
+          { header: "~q ⇒ ~p", values: ["V", "F", "V", "V"], desc: "Condicional contrapuesta (~q ⇒ ~p): Falsa solo cuando ~q es V y ~p es F." },
+          { header: "(p ⇒ q) ∧ (~q ⇒ ~p)", values: ["V", "F", "V", "V"], desc: "Conjunción (∧) entre columna 3 y columna 6.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "La evaluación final alterna valores verdaderos y falsos."
+      },
+      {
+        id: 6,
+        title: "Ejercicio 6: (p ∧ q) ∨ (~p ⇒ q)",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "p ∧ q", values: ["V", "F", "F", "F"], desc: "Conjunción (p ∧ q)." },
+          { header: "~p", values: ["F", "F", "V", "V"], desc: "Negación de p (~p)." },
+          { header: "~p ⇒ q", values: ["V", "V", "V", "F"], desc: "Condicional entre ~p y q: Falsa en la última fila (V ⇒ F)." },
+          { header: "(p ∧ q) ∨ (~p ⇒ q)", values: ["V", "V", "V", "F"], desc: "Disyunción (∨) entre Columna 3 y Columna 5.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "Muestra tres valores verdaderos y uno falso en su resultado final."
+      },
+      {
+        id: 7,
+        title: "Ejercicio 7: (p ∨ q) ∧ (p ∨ r)",
+        vars: ["p", "q", "r"],
+        columns: [
+          { header: "p", values: ["V","V","V","V","F","F","F","F"], isBase: true },
+          { header: "q", values: ["V","V","F","F","V","V","F","F"], isBase: true },
+          { header: "r", values: ["V","F","V","F","V","F","V","F"], isBase: true },
+          { header: "p ∨ q", values: ["V","V","V","V","V","V","F","F"], desc: "Disyunción de p y q." },
+          { header: "p ∨ r", values: ["V","V","V","V","V","F","V","F"], desc: "Disyunción de p y r." },
+          { header: "(p ∨ q) ∧ (p ∨ r)", values: ["V","V","V","V","V","F","F","F"], desc: "Conjunción (∧) entre las dos disyunciones previas.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "Tabla de 3 proposiciones simples (8 renglones) con mezcla de valores V y F."
+      },
+      {
+        id: 8,
+        title: "Ejercicio 8: (p ∧ r) ⇒ (q ∨ p)",
+        vars: ["p", "q", "r"],
+        columns: [
+          { header: "p", values: ["V","V","V","V","F","F","F","F"], isBase: true },
+          { header: "q", values: ["V","V","F","F","V","V","F","F"], isBase: true },
+          { header: "r", values: ["V","F","V","F","V","F","V","F"], isBase: true },
+          { header: "p ∧ r", values: ["V","F","V","F","F","F","F","F"], desc: "Conjunción p y r." },
+          { header: "q ∨ p", values: ["V","V","V","V","V","V","F","F"], desc: "Disyunción q y p." },
+          { header: "(p ∧ r) ⇒ (q ∨ p)", values: ["V","V","V","V","V","V","V","V"], desc: "Condicional (⇒): En ningún caso ocurre V ⇒ F, por lo que todas las salidas son V.", isFinal: true }
+        ],
+        conclusionType: "Tautología (T)",
+        classType: "tautologia",
+        explanation: "Todos los 8 renglones de la tabla de verdad resultan en valores VERDADEROS (V)."
+      },
+      {
+        id: 9,
+        title: "Ejercicio 9: (p ∧ q) ∨ (q ∧ r)",
+        vars: ["p", "q", "r"],
+        columns: [
+          { header: "p", values: ["V","V","V","V","F","F","F","F"], isBase: true },
+          { header: "q", values: ["V","V","F","F","V","V","F","F"], isBase: true },
+          { header: "r", values: ["V","F","V","F","V","F","V","F"], isBase: true },
+          { header: "p ∧ q", values: ["V","V","F","F","F","F","F","F"], desc: "Conjunción p y q." },
+          { header: "q ∧ r", values: ["V","F","F","F","V","F","F","F"], desc: "Conjunción q y r." },
+          { header: "(p ∧ q) ∨ (q ∧ r)", values: ["V","V","F","F","V","F","F","F"], desc: "Disyunción (∨) entre las dos conjunciones.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "El resultado final presenta una mezcla de valores V y F."
+      },
+      {
+        id: 10,
+        title: "Ejercicio 10: (p ∨ q) ⇒ (p ⇒ q)",
+        vars: ["p", "q"],
+        columns: [
+          { header: "p", values: ["V", "V", "F", "F"], isBase: true },
+          { header: "q", values: ["V", "F", "V", "F"], isBase: true },
+          { header: "p ∨ q", values: ["V", "V", "V", "F"], desc: "Disyunción (p ∨ q)." },
+          { header: "p ⇒ q", values: ["V", "F", "V", "V"], desc: "Condicional directa (p ⇒ q)." },
+          { header: "(p ∨ q) ⇒ (p ⇒ q)", values: ["V", "F", "V", "V"], desc: "Condicional entre Columna 3 y Columna 4.", isFinal: true }
+        ],
+        conclusionType: "Contingencia (K)",
+        classType: "contingencia",
+        explanation: "La tabla de valores de verdad contiene salidas tanto verdaderas como falsas."
+      }
+    ];
+
+    let currentExIndex = 0;
+    let currentStep = 0;
+
+    function initTables() {
+      const listEl = document.getElementById("exerciseList");
+      listEl.innerHTML = "";
+      exercises.forEach((ex, idx) => {
+        const btn = document.createElement("button");
+        btn.className = `exercise-btn ${idx === 0 ? "active" : ""}`;
+        btn.onclick = () => selectExercise(idx);
+        btn.innerHTML = `
+          <span>${ex.title}</span>
+          <span class="badge-vars">${ex.vars.length} var</span>
+        `;
+        listEl.appendChild(btn);
+      });
+      loadExercise(0);
+    }
+
+    function selectExercise(idx) {
+      currentExIndex = idx;
+      document.querySelectorAll(".exercise-btn").forEach((b, i) => b.classList.toggle("active", i === idx));
+      loadExercise(idx);
+    }
+
+    function loadExercise(idx) {
+      currentStep = 0;
+      const ex = exercises[idx];
+      document.getElementById("currentTitle").innerText = ex.title;
+      document.getElementById("conclusionCard").style.display = "none";
+      renderTable();
+      updateStepUI();
+    }
+
+    function getDerivedCols(ex) {
+      return ex.columns.filter(c => !c.isBase);
+    }
+
+    function getTotalSteps(ex) {
+      return 1 + getDerivedCols(ex).length + 1;
+    }
+
+    function renderTable() {
+      const ex = exercises[currentExIndex];
+      const baseCols = ex.columns.filter(c => c.isBase);
+      const derivedCols = getDerivedCols(ex);
+
+      const headersVisible = currentStep >= 1; 
+      const revealedValuesCount = currentStep >= 2 ? Math.min(currentStep - 1, derivedCols.length) : 0; 
+
+      const headerRow = document.getElementById("tableHeader");
+      headerRow.innerHTML = "";
+
+      ex.columns.forEach((col, cIdx) => {
+        const th = document.createElement("th");
+        th.innerText = col.header;
+
+        if (col.isBase) {
+          th.className = "col-base";
+        } else {
+          if (!headersVisible) {
+            th.className = "header-hidden";
+          } else if (cIdx === baseCols.length + revealedValuesCount - 1) {
+            th.className = col.isFinal ? "col-final" : "col-active";
+          }
+        }
+        headerRow.appendChild(th);
+      });
+
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+      const rowCount = ex.columns[0].values.length;
+
+      for (let r = 0; r < rowCount; r++) {
+        const tr = document.createElement("tr");
+        ex.columns.forEach((col, cIdx) => {
+          const td = document.createElement("td");
+          const isBase = col.isBase;
+          const derivedIndex = cIdx - baseCols.length;
+          const isValRevealed = isBase || (derivedIndex < revealedValuesCount);
+
+          if (isValRevealed) {
+            const val = col.values[r];
+            td.innerText = val;
+            td.className = val === "V" ? "val-v" : "val-f";
+          } else {
+            td.innerText = "•";
+            td.className = "val-hidden";
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+    }
+
+    function updateStepUI() {
+      const ex = exercises[currentExIndex];
+      const derivedCols = getDerivedCols(ex);
+      const totalSteps = getTotalSteps(ex);
+
+      document.getElementById("stepCounter").innerText = `Paso ${currentStep} de ${totalSteps}`;
+
+      const btnNext = document.getElementById("btnNextStep");
+      btnNext.disabled = currentStep >= totalSteps;
+      btnNext.style.opacity = currentStep >= totalSteps ? "0.5" : "1";
+
+      const boxTitle = document.getElementById("stepBoxTitle");
+      const boxDesc = document.getElementById("stepBoxDesc");
+
+      if (currentStep === 0) {
+        boxTitle.innerText = "Paso 0: Proposiciones Simples Base";
+        boxDesc.innerText = `Se presentan las ${ex.vars.length} proposiciones simples con sus 2^${ex.vars.length} (${ex.columns[0].values.length}) combinaciones posibles. Presiona 'Siguiente Paso' para identificar las columnas necesarias.`;
+      } else if (currentStep === 1) {
+        const titles = derivedCols.map(c => `[ ${c.header} ]`).join(", ");
+        boxTitle.innerText = "Paso 1: Identificación de Columnas Solución";
+        boxDesc.innerText = `Para resolver esta proposición se requieren ${derivedCols.length} columnas consecutivas: ${titles}.`;
+      } else if (currentStep >= 2 && currentStep <= 1 + derivedCols.length) {
+        const derivedIndex = currentStep - 2;
+        const col = derivedCols[derivedIndex];
+        
+        if (derivedIndex === derivedCols.length - 1) {
+          boxTitle.innerText = `Paso ${currentStep}: Evaluación de la Columna Final [ ${col.header} ]`;
+          boxDesc.innerText = `${col.desc || "Cálculo final completado."} Observa los valores obtenidos en esta columna para analizar en qué categoría cae la proposición. Presiona 'Siguiente Paso' para ver la conclusión.`;
+        } else {
+          boxTitle.innerText = `Paso ${currentStep}: Evaluación de la Columna [ ${col.header} ]`;
+          boxDesc.innerText = col.desc || "Cálculo de valores de verdad por fila.";
+        }
+      } else if (currentStep === totalSteps) {
+        boxTitle.innerText = "Paso Final: Conclusión Formal";
+        boxDesc.innerText = "Se verifica la clasificación resultante según la combinación de valores en la columna principal.";
+      }
+
+      const concCard = document.getElementById("conclusionCard");
+      if (currentStep === totalSteps) {
+        const concBadge = document.getElementById("conclusionBadge");
+        const concDesc = document.getElementById("conclusionDesc");
+
+        concCard.className = `conclusion-card ${ex.classType}`;
+        concBadge.innerText = `Se concluye que la tabla de valores de verdad es una ${ex.conclusionType}`;
+        concDesc.innerText = ex.explanation;
+        concCard.style.display = "block";
+      } else {
+        concCard.style.display = "none";
+      }
+    }
+
+    function nextStep() {
+      const ex = exercises[currentExIndex];
+      if (currentStep < getTotalSteps(ex)) {
+        currentStep++;
+        renderTable();
+        updateStepUI();
+      }
+    }
+
+    function revealAll() {
+      const ex = exercises[currentExIndex];
+      currentStep = getTotalSteps(ex);
+      renderTable();
+      updateStepUI();
+    }
+
+    function resetSteps() {
+      currentStep = 0;
+      renderTable();
+      updateStepUI();
+    }
+
+    window.onload = function() {
+      renderPAEC();
+      initTables();
+    };
+  </script>
+</body>
+</html>
