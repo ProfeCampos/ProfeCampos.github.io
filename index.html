@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Académico | Ing. Edgar Campos Díaz</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-top: 5px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #004085;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Portal Académico Digital</h1>
+        <p>CECyTEM 05 Guacamayas — Ing. Edgar Campos Díaz</p>
+    </header>
+
+    <div class="container">
+        <div class="welcome">
+            <h2>Bienvenido a tus Cursos y Manuales 🚀</h2>
+            <p>Selecciona tu submódulo o materia para acceder al material didáctico, prácticas y manuales.</p>
+        </div>
+
+        <div class="grid">
+            <!-- Materia 1 -->
+            <div class="card">
+                <div>
+                    <h3>⚙️ Módulo I - Submódulo 2</h3>
+                    <p>Accede al material de estudio, proyectos y prácticas asignadas para este submódulo.</p>
+                </div>
+                <a href="m1s2/index.html" class="btn">Entrar al Curso</a>
+            </div>
+
+            <!-- Materia 2 (Instrumentación) -->
+            <div class="card">
+                <div>
+                    <h3>🔌 Módulo II - Submódulo 2</h3>
+                    <p><strong>Instrumentación Industrial:</strong> Manual digital, sensores, actuadores y Arduino.</p>
+                </div>
+                <a href="m2s2/index.html" class="btn">Entrar al Curso</a>
+            </div>
+
+            <!-- Materia 3 -->
+            <div class="card">
+                <div>
+                    <h3>🤖 Módulo V - Submódulo 1</h3>
+                    <p>Sistemas avanzados, prácticas integradoras y documentación del curso.</p>
+                </div>
+                <a href="m5s1/index.html" class="btn">Entrar al Curso</a>
+            </div>
+
+            <!-- Materia 4 -->
+            <div class="card">
+                <div>
+                    <h3>📐 Pensamiento Matemático I</h3>
+                    <p>Guías de ejercicios, conceptos clave, fórmulas e interacción matemática.</p>
+                </div>
+                <a href="matematicas/index.html" class="btn">Entrar al Curso</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; Portal Docente — Profe Campos | CECyTEM 05 Guacamayas</p>
+    </footer>
+
+</body>
+</html>
