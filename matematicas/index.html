@@ -8,7 +8,14 @@
     <!-- Ícono para la pestaña del navegador -->
     <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
 
-    <!-- Librería MathJax para renderizar ecuaciones y símbolos de lógica -->
+    <!-- Configuración para habilitar el uso del signo $ en MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -280,7 +287,7 @@
                         <ul class="subtemas">
                             <li>1.1 Concepto de lógica matemática</li>
                             <li>1.2 Proposiciones simples y compuestas</li>
-                            <li>1.3 Operadores lógicos ($\sim, \land, \lor, \rightarrow, \leftrightarrow$)</li>
+                            <li>1.3 Operadores lógicos (∼, ∧, ∨, →, ↔)</li>
                             <li>1.4 Construcción de tablas de verdad</li>
                             <li>1.5 Aplicaciones cotidianas</li>
                         </ul>
@@ -311,7 +318,7 @@
                     <div>
                         <h3>Unidad 3: Números y Operaciones Básicas</h3>
                         <ul class="subtemas">
-                            <li>3.1 Clasificación de reales ($\mathbb{N}, \mathbb{Z}, \mathbb{Q}, \mathbb{I}$)</li>
+                            <li>3.1 Clasificación de reales (ℕ, ℤ, ℚ, 𝕀)</li>
                             <li>3.2 Propiedades (conmutativa, asociativa, distributiva)</li>
                             <li>3.3 Operaciones con enteros</li>
                             <li>3.4 Divisibilidad, criterios, MCD y mcm</li>
