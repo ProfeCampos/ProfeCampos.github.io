@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Académico | Ing. Edgar Campos Díaz</title>
+
+    <!-- Icono para la pestaña del navegador -->
+    <link rel="icon" href="m2s2/logoprofecampos.jpeg" type="image/jpeg">
+
     <style>
         :root {
             --primary: #0056b3;
@@ -20,25 +24,50 @@
             padding: 0;
         }
 
+        /* Cabecera Adaptable / Responsiva */
         header {
             background-color: var(--primary);
             color: white;
-            padding: 2.5rem 1rem;
-            text-align: center;
+            padding: 1.5rem 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        header h1 {
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap; /* Permite que los elementos se acomoden en móviles */
+        }
+
+        .header-titles {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .header-titles h1 {
             margin: 0;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
         }
 
-        header p {
-            margin-top: 0.5rem;
+        .header-titles p {
+            margin: 5px 0 0;
             opacity: 0.9;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
+        /* Ajuste de Imágenes de Logos (Protección para que no se deformen) */
+        .logo {
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        /* Estilos para el Contenido Principal */
         .container {
             max-width: 1100px;
             margin: 2rem auto;
@@ -48,6 +77,10 @@
         .welcome {
             text-align: center;
             margin-bottom: 2.5rem;
+        }
+
+        .welcome h2 {
+            color: var(--primary);
         }
 
         .grid {
@@ -107,13 +140,39 @@
             font-size: 0.9rem;
             margin-top: 3rem;
         }
+
+        /* Ajustes específicos para Celulares */
+        @media (max-width: 650px) {
+            .header-container {
+                flex-direction: column; /* Apila los logos y título en vertical */
+                text-align: center;
+            }
+
+            .logo {
+                max-height: 65px; /* Logos un poco más pequeños en celular */
+            }
+
+            .header-titles h1 {
+                font-size: 1.4rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Portal Académico Digital</h1>
-        <p>CECyTEM 05 Guacamayas — Ing. Edgar Campos Díaz</p>
+        <div class="header-container">
+            <!-- Logo CECyTEM -->
+            <img src="m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
+            
+            <div class="header-titles">
+                <h1>Portal Académico Digital</h1>
+                <p>CECyTEM 05 Guacamayas — Ing. Edgar Campos Díaz</p>
+            </div>
+
+            <!-- Logo Personal -->
+            <img src="m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
+        </div>
     </header>
 
     <div class="container">
