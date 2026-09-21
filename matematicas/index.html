@@ -1,1 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pensamiento Matemático I | Profe Campos</title>
+    
+    <!-- Ícono para la pestaña del navegador -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
 
+    <!-- Librería MathJax para renderizar ecuaciones matemáticas -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #004085;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* Barra de navegación superior */
+        nav {
+            background-color: #0f2a4a;
+            padding: 10px 20px;
+            text-align: left;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Cabecera Adaptable */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .header-titles {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .header-titles h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .header-titles h2 {
+            margin: 5px 0 0;
+            font-weight: 300;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .header-titles p {
+            margin: 5px 0 0;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .logo {
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: #f1f3f5;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s, background-color 0.2s;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background: #e9ecef;
+        }
+
+        .card.project {
+            border-left-color: #28a745;
+        }
+
+        .card h3 {
+            margin: 0 0 5px;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .card.project h3 {
+            color: #28a745;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 650px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                max-height: 65px;
+            }
+
+            .header-titles h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación para volver al Portal Principal -->
+    <nav>
+        <a href="../index.html">← Volver al Portal Principal</a>
+    </nav>
+
+    <header>
+        <div class="header-container">
+            <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
+            <div class="header-titles">
+                <h1>Pensamiento Matemático I</h1>
+                <h2>Curso e Interacción Matemática Digital</h2>
+                <p>CECyTEM 05 Guacamayas — Ing. Edgar Campos Díaz</p>
+            </div>
+            <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Bienvenido al Pensamiento Matemático 📐</h2>
+            <p>Las matemáticas no son solo números y fórmulas, son un lenguaje para entender el mundo y estructurar el pensamiento crítico. En este curso aprenderás a analizar problemas, abstraer situaciones reales y construir soluciones lógicas utilizando herramientas aritméticas, algebraicas y geométricas.</p>
+        </section>
+
+        <section>
+            <h2>Punto de Partida</h2>
+            <div class="grid">
+                <a href="evaluacion-diagnostica.html" class="card project"><div><h3>📝 Evaluación Diagnóstica</h3><p>Pon a prueba tus conocimientos previos.</p></div></a>
+                <a href="formulario.html" class="card project"><div><h3>📐 Formulario Digital</h3><p>Propiedades, leyes de exponentes y fórmulas clave.</p></div></a>
+                <a href="calculadora-guia.html" class="card project"><div><h3>🧮 Guía de Uso de Calculadora</h3><p>Uso eficiente de funciones científicas básicas.</p></div></a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Primer Parcial: Razonamiento Aritmético y Planteamiento</h2>
+            <div class="grid">
+                <a href="bloque1.html" class="card"><div><h3>Bloque 1</h3><p>Números Reales y Operaciones Básicas</p></div></a>
+                <a href="bloque2.html" class="card"><div><h3>Bloque 2</h3><p>Leyes de los Exponentes y Radicación</p></div></a>
+                <a href="bloque3.html" class="card"><div><h3>Bloque 3</h3><p>Razones, Proporciones y Porcentajes</p></div></a>
+                <a href="proyecto-integrador1.html" class="card project"><div><h3>Proyecto 1</h3><p>Modelado de Situaciones Financieras Cotidianas</p></div></a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Segundo Parcial: Transición al Lenguaje Algebraico</h2>
+            <div class="grid">
+                <a href="bloque4.html" class="card"><div><h3>Bloque 4</h3><p>Expresiones Algebraicas y Operaciones</p></div></a>
+                <a href="bloque5.html" class="card"><div><h3>Bloque 5</h3><p>Ecuaciones Lineales de Una Incógnita</p></div></a>
+                <a href="bloque6.html" class="card"><div><h3>Bloque 6</h3><p>Sistemas de Ecuaciones $2 \times 2$</p></div></a>
+                <a href="proyecto-integrador2.html" class="card project"><div><h3>Proyecto 2</h3><p>Optimizando Procesos con Ecuaciones</p></div></a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Tercer Parcial: Geometría, Variación y Datos</h2>
+            <div class="grid">
+                <a href="bloque7.html" class="card"><div><h3>Bloque 7</h3><p>Ecuaciones Cuadráticas ($ax^2 + bx + c = 0$)</p></div></a>
+                <a href="bloque8.html" class="card"><div><h3>Bloque 8</h3><p>Introducción a la Estadística y Análisis de Datos</p></div></a>
+                <a href="proyecto-integrador3.html" class="card project"><div><h3>Proyecto 3</h3><p>Análisis Estadístico de un Fenómeno Social</p></div></a>
+            </div>
+        </section>
+
+        <div style="background-color: #e8f4f8; border-left: 4px solid #0288d1; padding: 20px; border-radius: 8px; margin-top: 30px;">
+            <h2 style="color: #0288d1; margin-top: 0;">🌐 Herramientas Interactivas</h2>
+            <p>Explora gráficas y problemas geométricos interactivos:</p>
+            <div class="grid">
+                <a href="https://www.geogebra.org/calculator" target="_blank" style="text-decoration: none; color: inherit;">
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #b3e5fc;">
+                        <h3 style="margin-top: 0; color: #0288d1;">📊 Graficadora GeoGebra</h3>
+                        <p style="font-size: 0.9em; color: #555;">Visualiza funciones, ecuaciones y figuras geométricas en tiempo real.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; Pensamiento Matemático I — Profe Campos | CECyTEM 05 Guacamayas</p>
+    </footer>
+
+</body>
+</html>
