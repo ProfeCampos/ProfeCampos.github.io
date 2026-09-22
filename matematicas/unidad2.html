@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistemas de Numeración - Guía Interactiva Completa</title>
-  
-  <!-- FAVICON (Remplaza "favicon.png" por la ruta de tu imagen de icono) -->
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Unidad 2: Sistemas de Numeración - Profe Campos</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 
   <style>
     :root {
@@ -56,64 +56,6 @@
       line-height: 1.5;
     }
 
-    /* REGLAS PARA IMÁGENES Y LOGOS SIN DISTORSIÓN */
-    img {
-      max-width: 100%;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .header-logos {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .logo-img {
-      max-height: 60px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    /* NAVEGACIÓN SUPERIOR DE UNIDADES */
-    .units-nav {
-      max-width: 1150px;
-      margin: 0 auto 20px auto;
-      display: flex;
-      gap: 10px;
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .unit-btn {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    .unit-btn.active {
-      background-color: var(--cecyte-cyan);
-      color: #fff;
-      border-color: var(--cecyte-cyan);
-    }
-
-    /* CONTENEDORES PRINCIPALES DE UNIDAD */
-    .unit-content {
-      display: none;
-    }
-
-    .unit-content.active {
-      display: block;
-    }
-
-    /* ESTILOS DEL HEADER */
     header {
       max-width: 1150px;
       margin: 0 auto 20px auto;
@@ -124,6 +66,18 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 15px;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
     }
 
     .header-title h1 {
@@ -304,352 +258,321 @@
 </head>
 <body>
 
-  <!-- BARRA DE SELECCIÓN DE UNIDADES -->
-  <div class="units-nav">
-    <button class="unit-btn" onclick="switchUnit('unit1', event)">Unidad 1</button>
-    <button class="unit-btn active" onclick="switchUnit('unit2', event)">Unidad 2: Sistemas de Numeración</button>
-  </div>
-
-  <!-- CONTENIDO DE UNIDAD 1 (SECCIÓN VACÍA / OTROS TEMAS) -->
-  <div id="unit1" class="unit-content">
-    <div class="card" style="max-width: 1150px; margin: 0 auto;">
-      <div class="card-title">📘 Unidad 1</div>
-      <p style="color: var(--text-muted);">Aquí se desplegará el contenido correspondiente a la Unidad 1.</p>
-    </div>
-  </div>
-
-  <!-- CONTENIDO DE UNIDAD 2 (MÓDULO COMPLETO DE NUMERACIÓN) -->
-  <div id="unit2" class="unit-content active">
-
-    <header>
-      <!-- CONTENEDOR DE LOGOS INSTITUCIONALES -->
-      <div class="header-logos">
-        <img src="logo-cecyte.png" alt="Logo CECyTE" class="logo-img">
-        <img src="logo-institucion.png" alt="Logo Institucional" class="logo-img">
-      </div>
-
+  <header>
+    <div class="header-brand">
+      <img src="logo.png" alt="Logo CECyTE" class="header-logo" onerror="this.style.display='none'">
       <div class="header-title">
-        <h1>Sistemas de Numeración: Guía de Conversión</h1>
+        <h1>Unidad 2: Sistemas de Numeración</h1>
         <p>Aprende paso a paso a convertir cifras entre diferentes bases matemáticas y civilizaciones antiguas.</p>
       </div>
-
-      <button class="theme-toggle-btn" onclick="toggleTheme()">
-        <span id="themeIcon">☀️</span> Modo Claro / Oscuro
-      </button>
-    </header>
-
-    <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('tabQuiz', event)">Sección I: Cuestionario</button>
-      <button class="tab-btn" onclick="switchTab('tabInteractive', event)">Sección II: Cambios de Base</button>
-      <button class="tab-btn" onclick="switchTab('tabBabylonian', event)">Sección III: Babilónico</button>
-      <button class="tab-btn" onclick="switchTab('tabEgyptian', event)">Sección IV: Egipcio</button>
-      <button class="tab-btn" onclick="switchTab('tabMayan', event)">Sección V: Maya</button>
-      <button class="tab-btn" onclick="switchTab('tabRoman', event)">Sección VI: Romano</button>
     </div>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> Modo Claro / Oscuro
+    </button>
+  </header>
 
-    <!-- SECCIÓN I: CUESTIONARIO -->
-    <div id="tabQuiz" class="section-container active">
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('tabQuiz', event)">Sección I: Cuestionario</button>
+    <button class="tab-btn" onclick="switchTab('tabInteractive', event)">Sección II: Cambios de Base</button>
+    <button class="tab-btn" onclick="switchTab('tabBabylonian', event)">Sección III: Babilónico</button>
+    <button class="tab-btn" onclick="switchTab('tabEgyptian', event)">Sección IV: Egipcio</button>
+    <button class="tab-btn" onclick="switchTab('tabMayan', event)">Sección V: Maya</button>
+    <button class="tab-btn" onclick="switchTab('tabRoman', event)">Sección VI: Romano</button>
+  </div>
+
+  <!-- SECCIÓN I: CUESTIONARIO -->
+  <div id="tabQuiz" class="section-container active">
+    <div class="card">
+      <div class="card-title">🧠 Cuestionario de Evaluación</div>
+      <div class="paec-fixed-header">
+        <div class="paec-instructions">
+          <strong>📋 Instrucciones:</strong> Selecciona la opción correcta. Si aciertas, se iluminará en <strong style="color:var(--accent-green);">VERDE</strong>; si fallas, en <strong style="color:var(--accent-red);">ROJO</strong>.
+        </div>
+      </div>
+      <div class="paec-scroll-container" id="quizExercises"></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN II: PASO A PASO (BASES b) -->
+  <div id="tabInteractive" class="section-container">
+    <div class="main-layout">
       <div class="card">
-        <div class="card-title">🧠 Cuestionario de Evaluación</div>
-        <div class="paec-fixed-header">
-          <div class="paec-instructions">
-            <strong>📋 Instrucciones:</strong> Selecciona la opción correcta. Si aciertas, se iluminará en <strong style="color:var(--accent-green);">VERDE</strong>; si fallas, en <strong style="color:var(--accent-red);">ROJO</strong>.
-          </div>
+        <div class="card-title">📌 Selecciona Categoría</div>
+        <div class="exercise-list">
+          <button class="exercise-btn active" id="btnCat0" onclick="selectCategory(0)">Base <em>b</em> a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+          <button class="exercise-btn" id="btnCat1" onclick="selectCategory(1)">Decimal a Base <em>b</em><br><small style="font-weight:normal">(10 Ejercicios)</small></button>
         </div>
-        <div class="paec-scroll-container" id="quizExercises"></div>
       </div>
-    </div>
 
-    <!-- SECCIÓN II: PASO A PASO (BASES b) -->
-    <div id="tabInteractive" class="section-container">
-      <div class="main-layout">
-        <div class="card">
-          <div class="card-title">📌 Selecciona Categoría</div>
-          <div class="exercise-list">
-            <button class="exercise-btn active" id="btnCat0" onclick="selectCategory(0)">Base <em>b</em> a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-            <button class="exercise-btn" id="btnCat1" onclick="selectCategory(1)">Decimal a Base <em>b</em><br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-          </div>
+      <div class="card">
+        <div class="ex-navigator">
+          <button class="btn btn-secondary" id="btnPrevEx" onclick="changeExercise(-1)">⬅️ Anterior</button>
+          <span id="exNavIndicator">Ejercicio 1 de 10</span>
+          <button class="btn btn-secondary" id="btnNextEx" onclick="changeExercise(1)">Siguiente ➡️</button>
+        </div>
+        <div class="card-title" id="currentTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+        
+        <div class="controls-panel" style="margin-top: 15px;">
+          <button class="btn" id="btnNextStep" onclick="nextStep()">⏩ Siguiente Paso</button>
+          <button class="btn btn-secondary" onclick="revealAll()">👁️ Mostrar Todo</button>
+          <button class="btn btn-secondary" onclick="resetSteps()">🔄 Reiniciar</button>
+          <span class="step-indicator" id="stepCounter">Paso 0</span>
         </div>
 
-        <div class="card">
-          <div class="ex-navigator">
-            <button class="btn btn-secondary" id="btnPrevEx" onclick="changeExercise(-1)">⬅️ Anterior</button>
-            <span id="exNavIndicator">Ejercicio 1 de 10</span>
-            <button class="btn btn-secondary" id="btnNextEx" onclick="changeExercise(1)">Siguiente ➡️</button>
-          </div>
-          <div class="card-title" id="currentTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
-          
-          <div class="controls-panel" style="margin-top: 15px;">
-            <button class="btn" id="btnNextStep" onclick="nextStep()">⏩ Siguiente Paso</button>
-            <button class="btn btn-secondary" onclick="revealAll()">👁️ Mostrar Todo</button>
-            <button class="btn btn-secondary" onclick="resetSteps()">🔄 Reiniciar</button>
-            <span class="step-indicator" id="stepCounter">Paso 0</span>
-          </div>
+        <div class="step-box" id="stepBox">
+          <h4 id="stepBoxTitle">Paso Inicial</h4>
+          <p id="stepBoxDesc">Descripción del paso actual.</p>
+        </div>
 
-          <div class="step-box" id="stepBox">
-            <h4 id="stepBoxTitle">Paso Inicial</h4>
-            <p id="stepBoxDesc">Descripción del paso actual.</p>
-          </div>
+        <div class="table-container">
+          <table id="dataTable">
+            <thead><tr id="tableHeader"></tr></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
 
-          <div class="table-container">
-            <table id="dataTable">
-              <thead><tr id="tableHeader"></tr></thead>
-              <tbody id="tableBody"></tbody>
-            </table>
-          </div>
-
-          <div class="conclusion-card" id="conclusionCard">
-            <div class="conclusion-badge" id="conclusionBadge">¡Conversión Finalizada!</div>
-            <div class="conclusion-note" id="conclusionDesc"></div>
-          </div>
+        <div class="conclusion-card" id="conclusionCard">
+          <div class="conclusion-badge" id="conclusionBadge">¡Conversión Finalizada!</div>
+          <div class="conclusion-note" id="conclusionDesc"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SECCIÓN III: SISTEMA BABILÓNICO -->
-    <div id="tabBabylonian" class="section-container">
-      <div class="main-layout">
-        <div class="card">
-          <div class="card-title">📌 Símbolos Originales</div>
-          <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-muted);">
-            El sistema es posicional (base 60). Los símbolos se suman dentro de cada casilla:<br><br>
-            <span class="bab-10">◀</span> = <strong>10</strong> (Cuña lateral)<br><br>
-            <span class="bab-1">▼</span> = <strong>1</strong> (Cuña vertical)
-          </p>
-          <div class="exercise-list">
-             <button class="exercise-btn active" id="btnBabCat0" onclick="selectBabCategory(0)">Babilónico a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-             <button class="exercise-btn" id="btnBabCat1" onclick="selectBabCategory(1)">Decimal a Babilónico<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-          </div>
+  <!-- SECCIÓN III: SISTEMA BABILÓNICO -->
+  <div id="tabBabylonian" class="section-container">
+    <div class="main-layout">
+      <div class="card">
+        <div class="card-title">📌 Símbolos Originales</div>
+        <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-muted);">
+          El sistema es posicional (base 60). Los símbolos se suman dentro de cada casilla:<br><br>
+          <span class="bab-10">◀</span> = <strong>10</strong> (Cuña lateral)<br><br>
+          <span class="bab-1">▼</span> = <strong>1</strong> (Cuña vertical)
+        </p>
+        <div class="exercise-list">
+           <button class="exercise-btn active" id="btnBabCat0" onclick="selectBabCategory(0)">Babilónico a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+           <button class="exercise-btn" id="btnBabCat1" onclick="selectBabCategory(1)">Decimal a Babilónico<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ex-navigator">
+          <button class="btn btn-secondary" id="btnPrevBab" onclick="changeBabExercise(-1)">⬅️ Anterior</button>
+          <span id="babNavIndicator">Ejercicio 1 de 10</span>
+          <button class="btn btn-secondary" id="btnNextBab" onclick="changeBabExercise(1)">Siguiente ➡️</button>
+        </div>
+        
+        <div class="card-title" id="babTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+        
+        <div style="text-align: center; margin: 20px 0; padding: 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+           <div id="babylonianDisplay" style="display: flex; justify-content: center; gap: 10px; font-size: 1.5rem; flex-wrap: wrap;"></div>
         </div>
 
-        <div class="card">
-          <div class="ex-navigator">
-            <button class="btn btn-secondary" id="btnPrevBab" onclick="changeBabExercise(-1)">⬅️ Anterior</button>
-            <span id="babNavIndicator">Ejercicio 1 de 10</span>
-            <button class="btn btn-secondary" id="btnNextBab" onclick="changeBabExercise(1)">Siguiente ➡️</button>
-          </div>
-          
-          <div class="card-title" id="babTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
-          
-          <div style="text-align: center; margin: 20px 0; padding: 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
-             <div id="babylonianDisplay" style="display: flex; justify-content: center; gap: 10px; font-size: 1.5rem; flex-wrap: wrap;"></div>
-          </div>
+        <div class="controls-panel">
+          <button class="btn" id="btnNextStepBab" onclick="nextStepBab()">⏩ Siguiente Paso</button>
+          <button class="btn btn-secondary" onclick="revealAllBab()">👁️ Mostrar Todo</button>
+          <button class="btn btn-secondary" onclick="resetStepsBab()">🔄 Reiniciar</button>
+          <span class="step-indicator" id="stepCounterBab">Paso 0</span>
+        </div>
 
-          <div class="controls-panel">
-            <button class="btn" id="btnNextStepBab" onclick="nextStepBab()">⏩ Siguiente Paso</button>
-            <button class="btn btn-secondary" onclick="revealAllBab()">👁️ Mostrar Todo</button>
-            <button class="btn btn-secondary" onclick="resetStepsBab()">🔄 Reiniciar</button>
-            <span class="step-indicator" id="stepCounterBab">Paso 0</span>
-          </div>
+        <div class="step-box" id="stepBoxBab">
+          <h4 id="stepBoxTitleBab">Paso Inicial</h4>
+          <p id="stepBoxDescBab">Descripción del paso actual.</p>
+        </div>
 
-          <div class="step-box" id="stepBoxBab">
-            <h4 id="stepBoxTitleBab">Paso Inicial</h4>
-            <p id="stepBoxDescBab">Descripción del paso actual.</p>
-          </div>
+        <div class="table-container">
+          <table id="dataTableBab">
+            <thead><tr id="tableHeaderBab"></tr></thead>
+            <tbody id="tableBodyBab"></tbody>
+          </table>
+        </div>
 
-          <div class="table-container">
-            <table id="dataTableBab">
-              <thead><tr id="tableHeaderBab"></tr></thead>
-              <tbody id="tableBodyBab"></tbody>
-            </table>
-          </div>
-
-          <div class="conclusion-card" id="conclusionCardBab">
-            <div class="conclusion-badge">¡Conversión Finalizada!</div>
-            <div class="conclusion-note" id="conclusionDescBab"></div>
-          </div>
+        <div class="conclusion-card" id="conclusionCardBab">
+          <div class="conclusion-badge">¡Conversión Finalizada!</div>
+          <div class="conclusion-note" id="conclusionDescBab"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SECCIÓN IV: SISTEMA EGIPCIO -->
-    <div id="tabEgyptian" class="section-container">
-      <div class="main-layout">
-        <div class="card">
-          <div class="card-title">📌 Símbolos Originales</div>
-          <p class="egy-legend">
-            El sistema egipcio es <strong>aditivo</strong> (base 10). Se suman los valores de todos los jeroglíficos:<br>
-            <span>𓁨</span> = 1,000,000 (Dios / Asombrado)<br>
-            <span>𓆐</span> = 100,000 (Rana / Renacuajo)<br>
-            <span>𓂭</span> = 10,000 (Dedo)<br>
-            <span>𓆼</span> = 1,000 (Flor de loto)<br>
-            <span>𓍢</span> = 100 (Cuerda enrollada)<br>
-            <span>𓎆</span> = 10 (Herradura / Grillete)<br>
-            <span>𓏤</span> = 1 (Bastón / Trazo)
-          </p>
-          <div class="exercise-list">
-             <button class="exercise-btn active" id="btnEgyCat0" onclick="selectEgyCategory(0)">Egipcio a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-             <button class="exercise-btn" id="btnEgyCat1" onclick="selectEgyCategory(1)">Decimal a Egipcio<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-          </div>
+  <!-- SECCIÓN IV: SISTEMA EGIPCIO -->
+  <div id="tabEgyptian" class="section-container">
+    <div class="main-layout">
+      <div class="card">
+        <div class="card-title">📌 Símbolos Originales</div>
+        <p class="egy-legend">
+          El sistema egipcio es <strong>aditivo</strong> (base 10). Se suman los valores de todos los jeroglíficos:<br>
+          <span>𓁨</span> = 1,000,000 (Dios / Asombrado)<br>
+          <span>𓆐</span> = 100,000 (Rana / Renacuajo)<br>
+          <span>𓂭</span> = 10,000 (Dedo)<br>
+          <span>𓆼</span> = 1,000 (Flor de loto)<br>
+          <span>𓍢</span> = 100 (Cuerda enrollada)<br>
+          <span>𓎆</span> = 10 (Herradura / Grillete)<br>
+          <span>𓏤</span> = 1 (Bastón / Trazo)
+        </p>
+        <div class="exercise-list">
+           <button class="exercise-btn active" id="btnEgyCat0" onclick="selectEgyCategory(0)">Egipcio a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+           <button class="exercise-btn" id="btnEgyCat1" onclick="selectEgyCategory(1)">Decimal a Egipcio<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ex-navigator">
+          <button class="btn btn-secondary" id="btnPrevEgy" onclick="changeEgyExercise(-1)">⬅️ Anterior</button>
+          <span id="egyNavIndicator">Ejercicio 1 de 10</span>
+          <button class="btn btn-secondary" id="btnNextEgy" onclick="changeEgyExercise(1)">Siguiente ➡️</button>
+        </div>
+        
+        <div class="card-title" id="egyTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+        
+        <div style="text-align: center; margin: 20px 0; padding: 25px 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+           <div id="egyptianDisplay" style="display: flex; flex-direction: column; align-items: center; gap: 10px;"></div>
         </div>
 
-        <div class="card">
-          <div class="ex-navigator">
-            <button class="btn btn-secondary" id="btnPrevEgy" onclick="changeEgyExercise(-1)">⬅️ Anterior</button>
-            <span id="egyNavIndicator">Ejercicio 1 de 10</span>
-            <button class="btn btn-secondary" id="btnNextEgy" onclick="changeEgyExercise(1)">Siguiente ➡️</button>
-          </div>
-          
-          <div class="card-title" id="egyTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
-          
-          <div style="text-align: center; margin: 20px 0; padding: 25px 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
-             <div id="egyptianDisplay" style="display: flex; flex-direction: column; align-items: center; gap: 10px;"></div>
-          </div>
+        <div class="controls-panel">
+          <button class="btn" id="btnNextStepEgy" onclick="nextStepEgy()">⏩ Siguiente Paso</button>
+          <button class="btn btn-secondary" onclick="revealAllEgy()">👁️ Mostrar Todo</button>
+          <button class="btn btn-secondary" onclick="resetStepsEgy()">🔄 Reiniciar</button>
+          <span class="step-indicator" id="stepCounterEgy">Paso 0</span>
+        </div>
 
-          <div class="controls-panel">
-            <button class="btn" id="btnNextStepEgy" onclick="nextStepEgy()">⏩ Siguiente Paso</button>
-            <button class="btn btn-secondary" onclick="revealAllEgy()">👁️ Mostrar Todo</button>
-            <button class="btn btn-secondary" onclick="resetStepsEgy()">🔄 Reiniciar</button>
-            <span class="step-indicator" id="stepCounterEgy">Paso 0</span>
-          </div>
+        <div class="step-box" id="stepBoxEgy">
+          <h4 id="stepBoxTitleEgy">Paso Inicial</h4>
+          <p id="stepBoxDescEgy">Descripción del paso actual.</p>
+        </div>
 
-          <div class="step-box" id="stepBoxEgy">
-            <h4 id="stepBoxTitleEgy">Paso Inicial</h4>
-            <p id="stepBoxDescEgy">Descripción del paso actual.</p>
-          </div>
+        <div class="table-container">
+          <table id="dataTableEgy">
+            <thead><tr id="tableHeaderEgy"></tr></thead>
+            <tbody id="tableBodyEgy"></tbody>
+          </table>
+        </div>
 
-          <div class="table-container">
-            <table id="dataTableEgy">
-              <thead><tr id="tableHeaderEgy"></tr></thead>
-              <tbody id="tableBodyEgy"></tbody>
-            </table>
-          </div>
-
-          <div class="conclusion-card" id="conclusionCardEgy">
-            <div class="conclusion-badge">¡Conversión Finalizada!</div>
-            <div class="conclusion-note" id="conclusionDescEgy"></div>
-          </div>
+        <div class="conclusion-card" id="conclusionCardEgy">
+          <div class="conclusion-badge">¡Conversión Finalizada!</div>
+          <div class="conclusion-note" id="conclusionDescEgy"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SECCIÓN V: SISTEMA MAYA -->
-    <div id="tabMayan" class="section-container">
-      <div class="main-layout">
-        <div class="card">
-          <div class="card-title">📌 Símbolos Originales</div>
-          <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-muted);">
-            El sistema es <strong>posicional (base 20)</strong> y se lee de abajo hacia arriba. Los símbolos son:<br><br>
-            <span style="display:inline-block; width:12px; height:12px; background:var(--accent-gold); border-radius:50%; margin:0 5px;"></span> = <strong>1</strong> (Punto)<br><br>
-            <span style="display:inline-block; width:30px; height:8px; background:var(--accent-gold); border-radius:4px; margin:0 5px;"></span> = <strong>5</strong> (Barra)<br><br>
-            <span style="display:inline-block; width:25px; height:12px; border:2px solid var(--accent-gold); border-radius:50%; margin:0 5px; position:relative;"><span style="position:absolute; width:15px; height:3px; border-top:1px solid var(--accent-gold); border-radius:50%; top:2px; left:3px;"></span></span> = <strong>0</strong> (Concha)
-          </p>
-          <div class="exercise-list">
-             <button class="exercise-btn active" id="btnMayCat0" onclick="selectMayCategory(0)">Maya a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-             <button class="exercise-btn" id="btnMayCat1" onclick="selectMayCategory(1)">Decimal a Maya<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-          </div>
+  <!-- SECCIÓN V: SISTEMA MAYA -->
+  <div id="tabMayan" class="section-container">
+    <div class="main-layout">
+      <div class="card">
+        <div class="card-title">📌 Símbolos Originales</div>
+        <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-muted);">
+          El sistema es <strong>posicional (base 20)</strong> y se lee de abajo hacia arriba. Los símbolos son:<br><br>
+          <span style="display:inline-block; width:12px; height:12px; background:var(--accent-gold); border-radius:50%; margin:0 5px;"></span> = <strong>1</strong> (Punto)<br><br>
+          <span style="display:inline-block; width:30px; height:8px; background:var(--accent-gold); border-radius:4px; margin:0 5px;"></span> = <strong>5</strong> (Barra)<br><br>
+          <span style="display:inline-block; width:25px; height:12px; border:2px solid var(--accent-gold); border-radius:50%; margin:0 5px; position:relative;"><span style="position:absolute; width:15px; height:3px; border-top:1px solid var(--accent-gold); border-radius:50%; top:2px; left:3px;"></span></span> = <strong>0</strong> (Concha)
+        </p>
+        <div class="exercise-list">
+           <button class="exercise-btn active" id="btnMayCat0" onclick="selectMayCategory(0)">Maya a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+           <button class="exercise-btn" id="btnMayCat1" onclick="selectMayCategory(1)">Decimal a Maya<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ex-navigator">
+          <button class="btn btn-secondary" id="btnPrevMay" onclick="changeMayanExercise(-1)">⬅️ Anterior</button>
+          <span id="mayNavIndicator">Ejercicio 1 de 10</span>
+          <button class="btn btn-secondary" id="btnNextMay" onclick="changeMayanExercise(1)">Siguiente ➡️</button>
+        </div>
+        
+        <div class="card-title" id="mayTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+        
+        <div style="text-align: center; margin: 20px 0; padding: 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+           <div id="mayanDisplay" style="display: flex; flex-direction: column; align-items: center; gap: 5px;"></div>
         </div>
 
-        <div class="card">
-          <div class="ex-navigator">
-            <button class="btn btn-secondary" id="btnPrevMay" onclick="changeMayanExercise(-1)">⬅️ Anterior</button>
-            <span id="mayNavIndicator">Ejercicio 1 de 10</span>
-            <button class="btn btn-secondary" id="btnNextMay" onclick="changeMayanExercise(1)">Siguiente ➡️</button>
-          </div>
-          
-          <div class="card-title" id="mayTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
-          
-          <div style="text-align: center; margin: 20px 0; padding: 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
-             <div id="mayanDisplay" style="display: flex; flex-direction: column; align-items: center; gap: 5px;"></div>
-          </div>
+        <div class="controls-panel">
+          <button class="btn" id="btnNextStepMay" onclick="nextStepMay()">⏩ Siguiente Paso</button>
+          <button class="btn btn-secondary" onclick="revealAllMay()">👁️ Mostrar Todo</button>
+          <button class="btn btn-secondary" onclick="resetStepsMay()">🔄 Reiniciar</button>
+          <span class="step-indicator" id="stepCounterMay">Paso 0</span>
+        </div>
 
-          <div class="controls-panel">
-            <button class="btn" id="btnNextStepMay" onclick="nextStepMay()">⏩ Siguiente Paso</button>
-            <button class="btn btn-secondary" onclick="revealAllMay()">👁️ Mostrar Todo</button>
-            <button class="btn btn-secondary" onclick="resetStepsMay()">🔄 Reiniciar</button>
-            <span class="step-indicator" id="stepCounterMay">Paso 0</span>
-          </div>
+        <div class="step-box" id="stepBoxMay">
+          <h4 id="stepBoxTitleMay">Paso Inicial</h4>
+          <p id="stepBoxDescMay">Descripción del paso actual.</p>
+        </div>
 
-          <div class="step-box" id="stepBoxMay">
-            <h4 id="stepBoxTitleMay">Paso Inicial</h4>
-            <p id="stepBoxDescMay">Descripción del paso actual.</p>
-          </div>
+        <div class="table-container">
+          <table id="dataTableMay">
+            <thead><tr id="tableHeaderMay"></tr></thead>
+            <tbody id="tableBodyMay"></tbody>
+          </table>
+        </div>
 
-          <div class="table-container">
-            <table id="dataTableMay">
-              <thead><tr id="tableHeaderMay"></tr></thead>
-              <tbody id="tableBodyMay"></tbody>
-            </table>
-          </div>
-
-          <div class="conclusion-card" id="conclusionCardMay">
-            <div class="conclusion-badge">¡Conversión Finalizada!</div>
-            <div class="conclusion-note" id="conclusionDescMay"></div>
-          </div>
+        <div class="conclusion-card" id="conclusionCardMay">
+          <div class="conclusion-badge">¡Conversión Finalizada!</div>
+          <div class="conclusion-note" id="conclusionDescMay"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- SECCIÓN VI: SISTEMA ROMANO -->
-    <div id="tabRoman" class="section-container">
-      <div class="main-layout">
-        <div class="card">
-          <div class="card-title">📌 Símbolos y Reglas</div>
-          <div class="rom-legend">
-            <p><strong>Símbolos Principales:</strong></p>
-            <span class="rom-badge">I = 1</span> <span class="rom-badge">V = 5</span> <span class="rom-badge">X = 10</span> <span class="rom-badge">L = 50</span><br>
-            <span class="rom-badge">C = 100</span> <span class="rom-badge">D = 500</span> <span class="rom-badge">M = 1,000</span><br><br>
-            <p><strong>Reglas de Combinación:</strong></p>
-            • <strong>Aditiva:</strong> Símbolos iguales o menores a la derecha se suman (ej. VI = 6).<br>
-            • <strong>Sustractiva:</strong> Símbolo menor a la izquierda de uno mayor se resta (ej. IV = 4, IX = 9, XL = 40, XC = 90, CD = 400, CM = 900).
-          </div>
-          <div class="exercise-list">
-             <button class="exercise-btn active" id="btnRomCat0" onclick="selectRomCategory(0)">Romano a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-             <button class="exercise-btn" id="btnRomCat1" onclick="selectRomCategory(1)">Decimal a Romano<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
-          </div>
+  <!-- SECCIÓN VI: SISTEMA ROMANO -->
+  <div id="tabRoman" class="section-container">
+    <div class="main-layout">
+      <div class="card">
+        <div class="card-title">📌 Símbolos y Reglas</div>
+        <div class="rom-legend">
+          <p><strong>Símbolos Principales:</strong></p>
+          <span class="rom-badge">I = 1</span> <span class="rom-badge">V = 5</span> <span class="rom-badge">X = 10</span> <span class="rom-badge">L = 50</span><br>
+          <span class="rom-badge">C = 100</span> <span class="rom-badge">D = 500</span> <span class="rom-badge">M = 1,000</span><br><br>
+          <p><strong>Reglas de Combinación:</strong></p>
+          • <strong>Aditiva:</strong> Símbolos iguales o menores a la derecha se suman (ej. VI = 6).<br>
+          • <strong>Sustractiva:</strong> Símbolo menor a la izquierda de uno mayor se resta (ej. IV = 4, IX = 9, XL = 40, XC = 90, CD = 400, CM = 900).
+        </div>
+        <div class="exercise-list">
+           <button class="exercise-btn active" id="btnRomCat0" onclick="selectRomCategory(0)">Romano a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+           <button class="exercise-btn" id="btnRomCat1" onclick="selectRomCategory(1)">Decimal a Romano<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ex-navigator">
+          <button class="btn btn-secondary" id="btnPrevRom" onclick="changeRomExercise(-1)">⬅️ Anterior</button>
+          <span id="romNavIndicator">Ejercicio 1 de 10</span>
+          <button class="btn btn-secondary" id="btnNextRom" onclick="changeRomExercise(1)">Siguiente ➡️</button>
+        </div>
+        
+        <div class="card-title" id="romTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+        
+        <div style="text-align: center; margin: 20px 0; padding: 20px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+           <div id="romanDisplay" class="rom-display"></div>
         </div>
 
-        <div class="card">
-          <div class="ex-navigator">
-            <button class="btn btn-secondary" id="btnPrevRom" onclick="changeRomExercise(-1)">⬅️ Anterior</button>
-            <span id="romNavIndicator">Ejercicio 1 de 10</span>
-            <button class="btn btn-secondary" id="btnNextRom" onclick="changeRomExercise(1)">Siguiente ➡️</button>
-          </div>
-          
-          <div class="card-title" id="romTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
-          
-          <div style="text-align: center; margin: 20px 0; padding: 20px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
-             <div id="romanDisplay" class="rom-display"></div>
-          </div>
+        <div class="controls-panel">
+          <button class="btn" id="btnNextStepRom" onclick="nextStepRom()">⏩ Siguiente Paso</button>
+          <button class="btn btn-secondary" onclick="revealAllRom()">👁️ Mostrar Todo</button>
+          <button class="btn btn-secondary" onclick="resetStepsRom()">🔄 Reiniciar</button>
+          <span class="step-indicator" id="stepCounterRom">Paso 0</span>
+        </div>
 
-          <div class="controls-panel">
-            <button class="btn" id="btnNextStepRom" onclick="nextStepRom()">⏩ Siguiente Paso</button>
-            <button class="btn btn-secondary" onclick="revealAllRom()">👁️ Mostrar Todo</button>
-            <button class="btn btn-secondary" onclick="resetStepsRom()">🔄 Reiniciar</button>
-            <span class="step-indicator" id="stepCounterRom">Paso 0</span>
-          </div>
+        <div class="step-box" id="stepBoxRom">
+          <h4 id="stepBoxTitleRom">Paso Inicial</h4>
+          <p id="stepBoxDescRom">Descripción del paso actual.</p>
+        </div>
 
-          <div class="step-box" id="stepBoxRom">
-            <h4 id="stepBoxTitleRom">Paso Inicial</h4>
-            <p id="stepBoxDescRom">Descripción del paso actual.</p>
-          </div>
+        <div class="table-container">
+          <table id="dataTableRom">
+            <thead><tr id="tableHeaderRom"></tr></thead>
+            <tbody id="tableBodyRom"></tbody>
+          </table>
+        </div>
 
-          <div class="table-container">
-            <table id="dataTableRom">
-              <thead><tr id="tableHeaderRom"></tr></thead>
-              <tbody id="tableBodyRom"></tbody>
-            </table>
-          </div>
-
-          <div class="conclusion-card" id="conclusionCardRom">
-            <div class="conclusion-badge">¡Conversión Finalizada!</div>
-            <div class="conclusion-note" id="conclusionDescRom"></div>
-          </div>
+        <div class="conclusion-card" id="conclusionCardRom">
+          <div class="conclusion-badge">¡Conversión Finalizada!</div>
+          <div class="conclusion-note" id="conclusionDescRom"></div>
         </div>
       </div>
     </div>
-
-  </div> <!-- FIN DE UNIDAD 2 -->
+  </div>
 
   <script>
-    // CAMBIO DE UNIDADES PRINCIPALES
-    function switchUnit(unitId, evt) {
-      document.querySelectorAll('.unit-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.unit-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(unitId).classList.add('active');
-      evt.target.classList.add('active');
-    }
-
     // TEMA Y PESTAÑAS
     function toggleTheme() {
       document.body.classList.toggle('light-mode');
@@ -657,8 +580,8 @@
     }
 
     function switchTab(tabId, evt) {
-      document.querySelectorAll('#unit2 .section-container').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('#unit2 .tab-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.section-container').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       evt.target.classList.add('active');
     }
@@ -1158,6 +1081,7 @@
         let nextVal = nextSymbol ? romValueMap[nextSymbol] : 0;
 
         if (nextVal > currentVal) {
+          // Regla Sustractiva
           let subPair = currentSymbol + nextSymbol;
           let subVal = nextVal - currentVal;
           total += subVal;
@@ -1171,6 +1095,7 @@
           stepDesc.push(`Encontramos el par sustractivo <strong>${subPair}</strong>: como el símbolo menor (${currentSymbol}) está antes de uno mayor (${nextSymbol}), restamos sus valores obteniendo <strong>${subVal}</strong>.`);
           i += 2;
         } else {
+          // Regla Aditiva
           total += currentVal;
           sumParts.push(currentVal);
           rows.push([
