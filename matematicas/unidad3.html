@@ -46,16 +46,23 @@
 </head>
 <body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
 
-    <!-- Encabezado Dinámico (Compatible con Modo Claro / Oscuro) -->
+    <!-- Encabezado Dinámico -->
     <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto space-y-6">
+        <div class="max-w-7xl mx-auto space-y-4">
             
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="../index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ←← Volver al Temario Principal
+                </a>
+            </div>
+
             <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
                 
-                <!-- Logo Izquierdo: CECyTEM -->
+                <!-- Logo Izquierdo: CECyTEM (Aumentado de tamaño) -->
                 <div class="flex-shrink-0">
-                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-16 w-auto rounded-lg bg-white p-1 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
                 </div>
 
                 <!-- Bloque Central: Titulación y Conmutador de Modo -->
@@ -70,23 +77,23 @@
                         CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
                     </p>
 
-                    <!-- Botón Modo Claro/Oscuro Centrado -->
-                    <div class="pt-2 flex justify-center">
+                    <!-- Botón Modo Claro/Oscuro con ícono dinámico Sol/Luna -->
+                    <div class="pt-3 flex justify-center">
                         <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
-                            <span>💥</span>
-                            <span>Cambiar Modo Claro / Oscuro</span>
+                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
+                            <span id="theme-text">Modo Claro</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Logo Derecho: Profe Campos -->
+                <!-- Logo Derecho: Profe Campos (Aumentado de tamaño) -->
                 <div class="flex-shrink-0">
-                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-16 w-16 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
                 </div>
             </div>
 
             <!-- Divisor Horizontal -->
-            <hr class="border-slate-300 dark:border-slate-800/80">
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
 
             <!-- Fila Inferior: Botones de Pestañas/Navegación -->
             <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
@@ -377,7 +384,7 @@
                     { text: "Irracional Trascendente", correct: false },
                     { text: "Número Imaginario", correct: false }
                 ],
-                explanation: "-18 es un número entero sin parte decimal con valor strictly menor a cero."
+                explanation: "-18 es un número entero sin parte decimal con valor menor a cero."
             },
             {
                 number: "3",
@@ -485,7 +492,7 @@
                     { text: "$\\frac{22}{7}$", correct: false },
                     { text: "$4$", correct: false }
                 ],
-                explanation: "$\\sqrt{5} \\approx 2.2360...$ posee decimales infinitos no periódicos, por lo que es **Irracional**. Los demás pueden escribirse como fracción de enteros."
+                explanation: "$\\sqrt{5} \\approx 2.2360...$ posee decimales infinitos no periódicos, por lo que es **Irracional**."
             },
             {
                 number: "12",
@@ -509,7 +516,7 @@
                     { text: "$3.1416$", correct: false },
                     { text: "$\\frac{5}{2}$", correct: false }
                 ],
-                explanation: "$\\sqrt{7}$ no es exacto (irracional). En cambio $\\sqrt{9} = 3$ (entero), $3.1416$ es decimal finito (racional) y $\\frac{5}{2}$ es fracción (racional)."
+                explanation: "$\\sqrt{7}$ no es exacto (irracional). En cambio $\\sqrt{9} = 3$ (entero), $3.1416$ es decimal finito y $\\frac{5}{2}$ es fracción."
             },
             {
                 number: "14",
@@ -521,7 +528,7 @@
                     { text: "Número Irracional", correct: false },
                     { text: "Número Imaginario", correct: false }
                 ],
-                explanation: "Al realizar la división $-15 \\div 3 = -5$, el resultado es un número entero negativo ($\\mathbb{Z}^-$), aunque inicialmente se presente escrito como una fracción."
+                explanation: "Al realizar la división $-15 \\div 3 = -5$, el resultado es un número entero negativo ($\\mathbb{Z}^-$)."
             },
             {
                 number: "15",
@@ -533,7 +540,7 @@
                     { text: "Número Entero", correct: false },
                     { text: "Número Irracional", correct: false }
                 ],
-                explanation: "Es una fracción propia porque el numerador (2) es menor que el denominador (9), de modo que su valor absoluto es menor a 1 ($0.222...$)."
+                explanation: "Es una fracción propia porque el numerador (2) es menor que el denominador (9)."
             },
             {
                 number: "16",
@@ -545,7 +552,7 @@
                     { text: "Solo si el número es positivo", correct: false },
                     { text: "Solo si es un número entero", correct: false }
                 ],
-                explanation: "¡Correcto! Los reales son un subconjunto de los complejos con $b = 0$ ($a + 0i$). Por tanto, todo número real es también complejo."
+                explanation: "¡Correcto! Los reales son un subconjunto de los complejos con $b = 0$ ($a + 0i$)."
             },
             {
                 number: "17",
@@ -557,7 +564,7 @@
                     { text: "Irracional Algebraico", correct: false },
                     { text: "No existe solución matemática", correct: false }
                 ],
-                explanation: "¡Cuidado con la trampa! Las raíces de índice **impar** de números negativos **SÍ existen en los Reales**: $(-2)^3 = -8$, por lo que $\\sqrt[3]{-8} = -2$ (entero negativo)."
+                explanation: "Las raíces de índice **impar** de números negativos **SÍ existen en los Reales**: $(-2)^3 = -8$, por lo que $\\sqrt[3]{-8} = -2$."
             },
             {
                 number: "18",
@@ -593,18 +600,26 @@
                     { text: "Se trata siempre de un entero negativo", correct: false },
                     { text: "Es un número Imaginario Puro", correct: false }
                 ],
-                explanation: "Esa es precisamente la definición de los números **Irracionales**: no pueden convertirse en fracción de enteros."
+                explanation: "Esa es la definición fundamental de los números **Irracionales**."
             }
         ];
 
         let score = 0;
 
+        // Función de alternancia de Modo Claro / Oscuro con intercambio de Ícono
         function toggleTheme() {
             const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
             } else {
                 html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
             }
         }
 
