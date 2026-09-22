@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistemas de Numeración - Guía Interactiva Completa</title>
+  
+  <!-- FAVICON (Remplaza "favicon.png" por la ruta de tu imagen de icono) -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --card-bg: #161f30;
+      --card-inner: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --cecyte-cyan: #00979d;
+      --cecyte-dark: #00686b;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --th-bg: rgba(0, 151, 157, 0.15);
+      --btn-sec-bg: rgba(255, 255, 255, 0.08);
+    }
+
+    body.light-mode {
+      --bg-main: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-inner: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --cecyte-cyan: #008388;
+      --cecyte-dark: #005658;
+      --accent-gold: #d97706;
+      --accent-green: #059669;
+      --accent-red: #dc2626;
+      --th-bg: rgba(0, 131, 136, 0.15);
+      --btn-sec-bg: rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      padding: 20px 15px;
+      line-height: 1.5;
+    }
+
+    /* REGLAS PARA IMÁGENES Y LOGOS SIN DISTORSIÓN */
+    img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .header-logos {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .logo-img {
+      max-height: 60px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* NAVEGACIÓN SUPERIOR DE UNIDADES */
+    .units-nav {
+      max-width: 1150px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .unit-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .unit-btn.active {
+      background-color: var(--cecyte-cyan);
+      color: #fff;
+      border-color: var(--cecyte-cyan);
+    }
+
+    /* CONTENEDORES PRINCIPALES DE UNIDAD */
+    .unit-content {
+      display: none;
+    }
+
+    .unit-content.active {
+      display: block;
+    }
+
+    /* ESTILOS DEL HEADER */
+    header {
+      max-width: 1150px;
+      margin: 0 auto 20px auto;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .header-title h1 {
+      color: var(--cecyte-cyan);
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .theme-toggle-btn {
+      background-color: var(--btn-sec-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 9px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn:hover { border-color: var(--cecyte-cyan); }
+
+    .nav-tabs {
+      max-width: 1150px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background-color: var(--cecyte-cyan);
+      color: #fff;
+    }
+
+    .section-container {
+      display: none;
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    .section-container.active { display: block; }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cecyte-cyan);
+      margin-bottom: 14px;
+    }
+
+    /* CUESTIONARIO */
+    .paec-fixed-header {
+      background-color: var(--card-inner); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 14px; margin-bottom: 16px;
+    }
+    .paec-instructions {
+      background-color: rgba(0, 151, 157, 0.1); border-left: 4px solid var(--cecyte-cyan);
+      padding: 10px 12px; border-radius: 0 6px 6px 0; font-size: 0.9rem;
+    }
+    .paec-scroll-container { max-height: 520px; overflow-y: auto; padding-right: 8px; }
+    .paec-scroll-container::-webkit-scrollbar { width: 6px; }
+    .paec-scroll-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .paec-item { background-color: var(--card-inner); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 14px; }
+    .paec-item p { font-size: 0.95rem; margin-bottom: 12px; font-weight: 600; }
+    .paec-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+    .paec-opt-btn {
+      background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main);
+      padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; text-align: left;
+    }
+    .paec-opt-btn:hover { border-color: var(--cecyte-cyan); }
+    .paec-opt-btn.correct { background-color: var(--accent-green) !important; color: #ffffff !important; border-color: var(--accent-green) !important; }
+    .paec-opt-btn.incorrect { background-color: var(--accent-red) !important; color: #ffffff !important; border-color: var(--accent-red) !important; }
+    .paec-feedback { font-size: 0.88rem; font-weight: 600; margin-top: 10px; padding: 10px 12px; border-radius: 6px; background-color: rgba(255,255,255,0.03); border: 1px solid var(--border-color); display: none; }
+
+    /* LAYOUT EJERCICIOS */
+    .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+    @media (max-width: 880px) { .main-layout { grid-template-columns: 1fr; } }
+
+    .exercise-list { display: flex; flex-direction: column; gap: 8px; }
+    .exercise-btn {
+      background-color: var(--card-inner); border: 1px solid var(--border-color);
+      color: var(--text-main); padding: 14px 12px; border-radius: 8px; text-align: left;
+      cursor: pointer; font-size: 0.95rem; font-weight: 700;
+    }
+    .exercise-btn:hover { border-color: var(--cecyte-cyan); }
+    .exercise-btn.active { background: linear-gradient(135deg, var(--cecyte-cyan), var(--cecyte-dark)); border-color: var(--cecyte-cyan); color: #fff; }
+
+    .ex-navigator {
+      display: flex; justify-content: space-between; align-items: center; background-color: var(--card-inner);
+      border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;
+    }
+    .ex-navigator span { font-weight: 800; color: var(--cecyte-cyan); font-size: 1.05rem; }
+
+    .controls-panel {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; background-color: var(--card-inner); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color);
+    }
+    .btn { background-color: var(--cecyte-cyan); color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .btn:hover { opacity: 0.9; }
+    .btn-secondary { background-color: var(--btn-sec-bg); color: var(--text-main); border: 1px solid var(--border-color); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .step-indicator { font-size: 0.85rem; color: var(--accent-gold); font-weight: 700; }
+    .step-box { background-color: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent-gold); padding: 12px 14px; border-radius: 0 8px 8px 0; margin-bottom: 16px; font-size: 0.95rem; }
+    .step-box h4 { color: var(--accent-gold); margin-bottom: 4px; }
+
+    .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--card-inner); }
+    table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1rem; }
+    th, td { padding: 12px; border: 1px solid var(--border-color); white-space: nowrap; }
+    th { background-color: var(--th-bg); color: var(--cecyte-cyan); font-weight: 700; }
+    td.val-v { color: var(--text-main); font-weight: 600; }
+    td.val-hidden { opacity: 0.1; user-select: none; }
+
+    .conclusion-card { margin-top: 18px; padding: 16px; border-radius: 8px; text-align: center; display: none; background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); }
+    .conclusion-badge { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
+
+    /* ESTILOS BABILÓNICO */
+    .bab-10, .bab-1 { display: inline-block; color: var(--accent-gold); margin: 0 2px; filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5)); }
+    .bab-10 { font-size: 1.2rem; transform: scaleY(1.4); }
+    .bab-1 { font-size: 1.2rem; transform: scaleX(0.7) scaleY(1.4); }
+    .bab-casilla { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px; min-width: 60px;}
+    .bab-casilla-sym { display: flex; flex-wrap: wrap; justify-content: center; max-width: 140px; gap: 3px; }
+    .bab-casilla-lbl { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; border-top: 1px solid var(--border-color); padding-top: 5px; width: 100%; text-align: center;}
+    .bab-sep { display: flex; align-items: center; color: var(--border-color); font-size: 2.5rem; font-weight: 300;}
+
+    /* ESTILOS EGIPCIO */
+    .egy-sym { font-family: "Segoe UI Historic", "Noto Sans Egyptian Hieroglyphs", sans-serif; font-size: 2.2rem; color: var(--accent-gold); margin: 0 4px; display: inline-block; line-height: 1; }
+    .egy-legend { font-size: 0.88rem; margin-bottom: 15px; color: var(--text-muted); line-height: 1.8; }
+    .egy-legend span { display: inline-block; width: 35px; text-align: center; font-size: 1.4rem; color: var(--accent-gold); font-family: "Segoe UI Historic", sans-serif;}
+    .egy-group { display: flex; align-items: center; gap: 4px; margin-bottom: 5px; justify-content: center; flex-wrap: wrap;}
+
+    /* ESTILOS MAYA */
+    .maya-level { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; padding: 10px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; min-width: 120px; }
+    .maya-level-lbl { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; width: 100%; text-align: center; }
+    .maya-sym-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 40px; justify-content: flex-end; margin-top: 5px; }
+    .maya-dot { width: 12px; height: 12px; background-color: var(--accent-gold); border-radius: 50%; display: inline-block; margin: 0 3px; }
+    .maya-bar { width: 50px; height: 10px; background-color: var(--accent-gold); border-radius: 5px; margin: 2px 0; }
+    .maya-shell { width: 40px; height: 20px; border: 2px solid var(--accent-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+    .maya-shell::after { content: ''; position: absolute; width: 25px; height: 6px; border-top: 2px solid var(--accent-gold); border-radius: 50%; top: 4px; }
+    .maya-shell::before { content: ''; position: absolute; width: 15px; height: 4px; border-bottom: 2px solid var(--accent-gold); border-radius: 50%; bottom: 4px; }
+    .maya-dots-row { display: flex; justify-content: center; margin-bottom: 2px; }
+
+    /* ESTILOS ROMANO */
+    .rom-display { font-family: 'Times New Roman', Georgia, serif; font-size: 2.8rem; font-weight: bold; letter-spacing: 4px; color: var(--accent-gold); }
+    .rom-legend { font-size: 0.88rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 15px; }
+    .rom-badge { font-family: 'Times New Roman', Georgia, serif; display: inline-block; background: rgba(245, 158, 11, 0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE SELECCIÓN DE UNIDADES -->
+  <div class="units-nav">
+    <button class="unit-btn" onclick="switchUnit('unit1', event)">Unidad 1</button>
+    <button class="unit-btn active" onclick="switchUnit('unit2', event)">Unidad 2: Sistemas de Numeración</button>
+  </div>
+
+  <!-- CONTENIDO DE UNIDAD 1 (SECCIÓN VACÍA / OTROS TEMAS) -->
+  <div id="unit1" class="unit-content">
+    <div class="card" style="max-width: 1150px; margin: 0 auto;">
+      <div class="card-title">📘 Unidad 1</div>
+      <p style="color: var(--text-muted);">Aquí se desplegará el contenido correspondiente a la Unidad 1.</p>
+    </div>
+  </div>
+
+  <!-- CONTENIDO DE UNIDAD 2 (MÓDULO COMPLETO DE NUMERACIÓN) -->
+  <div id="unit2" class="unit-content active">
+
+    <header>
+      <!-- CONTENEDOR DE LOGOS INSTITUCIONALES -->
+      <div class="header-logos">
+        <img src="logo-cecyte.png" alt="Logo CECyTE" class="logo-img">
+        <img src="logo-institucion.png" alt="Logo Institucional" class="logo-img">
+      </div>
+
+      <div class="header-title">
+        <h1>Sistemas de Numeración: Guía de Conversión</h1>
+        <p>Aprende paso a paso a convertir cifras entre diferentes bases matemáticas y civilizaciones antiguas.</p>
+      </div>
+
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span id="themeIcon">☀️</span> Modo Claro / Oscuro
+      </button>
+    </header>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tabQuiz', event)">Sección I: Cuestionario</button>
+      <button class="tab-btn" onclick="switchTab('tabInteractive', event)">Sección II: Cambios de Base</button>
+      <button class="tab-btn" onclick="switchTab('tabBabylonian', event)">Sección III: Babilónico</button>
+      <button class="tab-btn" onclick="switchTab('tabEgyptian', event)">Sección IV: Egipcio</button>
+      <button class="tab-btn" onclick="switchTab('tabMayan', event)">Sección V: Maya</button>
+      <button class="tab-btn" onclick="switchTab('tabRoman', event)">Sección VI: Romano</button>
+    </div>
+
+    <!-- SECCIÓN I: CUESTIONARIO -->
+    <div id="tabQuiz" class="section-container active">
+      <div class="card">
+        <div class="card-title">🧠 Cuestionario de Evaluación</div>
+        <div class="paec-fixed-header">
+          <div class="paec-instructions">
+            <strong>📋 Instrucciones:</strong> Selecciona la opción correcta. Si aciertas, se iluminará en <strong style="color:var(--accent-green);">VERDE</strong>; si fallas, en <strong style="color:var(--accent-red);">ROJO</strong>.
+          </div>
+        </div>
+        <div class="paec-scroll-container" id="quizExercises"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN II: PASO A PASO (BASES b) -->
+    <div id="tabInteractive" class="section-container">
+      <div class="main-layout">
+        <div class="card">
+          <div class="card-title">📌 Selecciona Categoría</div>
+          <div class="exercise-list">
+            <button class="exercise-btn active" id="btnCat0" onclick="selectCategory(0)">Base <em>b</em> a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+            <button class="exercise-btn" id="btnCat1" onclick="selectCategory(1)">Decimal a Base <em>b</em><br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ex-navigator">
+            <button class="btn btn-secondary" id="btnPrevEx" onclick="changeExercise(-1)">⬅️ Anterior</button>
+            <span id="exNavIndicator">Ejercicio 1 de 10</span>
+            <button class="btn btn-secondary" id="btnNextEx" onclick="changeExercise(1)">Siguiente ➡️</button>
+          </div>
+          <div class="card-title" id="currentTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+          
+          <div class="controls-panel" style="margin-top: 15px;">
+            <button class="btn" id="btnNextStep" onclick="nextStep()">⏩ Siguiente Paso</button>
+            <button class="btn btn-secondary" onclick="revealAll()">👁️ Mostrar Todo</button>
+            <button class="btn btn-secondary" onclick="resetSteps()">🔄 Reiniciar</button>
+            <span class="step-indicator" id="stepCounter">Paso 0</span>
+          </div>
+
+          <div class="step-box" id="stepBox">
+            <h4 id="stepBoxTitle">Paso Inicial</h4>
+            <p id="stepBoxDesc">Descripción del paso actual.</p>
+          </div>
+
+          <div class="table-container">
+            <table id="dataTable">
+              <thead><tr id="tableHeader"></tr></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="conclusion-card" id="conclusionCard">
+            <div class="conclusion-badge" id="conclusionBadge">¡Conversión Finalizada!</div>
+            <div class="conclusion-note" id="conclusionDesc"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN III: SISTEMA BABILÓNICO -->
+    <div id="tabBabylonian" class="section-container">
+      <div class="main-layout">
+        <div class="card">
+          <div class="card-title">📌 Símbolos Originales</div>
+          <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-muted);">
+            El sistema es posicional (base 60). Los símbolos se suman dentro de cada casilla:<br><br>
+            <span class="bab-10">◀</span> = <strong>10</strong> (Cuña lateral)<br><br>
+            <span class="bab-1">▼</span> = <strong>1</strong> (Cuña vertical)
+          </p>
+          <div class="exercise-list">
+             <button class="exercise-btn active" id="btnBabCat0" onclick="selectBabCategory(0)">Babilónico a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+             <button class="exercise-btn" id="btnBabCat1" onclick="selectBabCategory(1)">Decimal a Babilónico<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ex-navigator">
+            <button class="btn btn-secondary" id="btnPrevBab" onclick="changeBabExercise(-1)">⬅️ Anterior</button>
+            <span id="babNavIndicator">Ejercicio 1 de 10</span>
+            <button class="btn btn-secondary" id="btnNextBab" onclick="changeBabExercise(1)">Siguiente ➡️</button>
+          </div>
+          
+          <div class="card-title" id="babTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+          
+          <div style="text-align: center; margin: 20px 0; padding: 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+             <div id="babylonianDisplay" style="display: flex; justify-content: center; gap: 10px; font-size: 1.5rem; flex-wrap: wrap;"></div>
+          </div>
+
+          <div class="controls-panel">
+            <button class="btn" id="btnNextStepBab" onclick="nextStepBab()">⏩ Siguiente Paso</button>
+            <button class="btn btn-secondary" onclick="revealAllBab()">👁️ Mostrar Todo</button>
+            <button class="btn btn-secondary" onclick="resetStepsBab()">🔄 Reiniciar</button>
+            <span class="step-indicator" id="stepCounterBab">Paso 0</span>
+          </div>
+
+          <div class="step-box" id="stepBoxBab">
+            <h4 id="stepBoxTitleBab">Paso Inicial</h4>
+            <p id="stepBoxDescBab">Descripción del paso actual.</p>
+          </div>
+
+          <div class="table-container">
+            <table id="dataTableBab">
+              <thead><tr id="tableHeaderBab"></tr></thead>
+              <tbody id="tableBodyBab"></tbody>
+            </table>
+          </div>
+
+          <div class="conclusion-card" id="conclusionCardBab">
+            <div class="conclusion-badge">¡Conversión Finalizada!</div>
+            <div class="conclusion-note" id="conclusionDescBab"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN IV: SISTEMA EGIPCIO -->
+    <div id="tabEgyptian" class="section-container">
+      <div class="main-layout">
+        <div class="card">
+          <div class="card-title">📌 Símbolos Originales</div>
+          <p class="egy-legend">
+            El sistema egipcio es <strong>aditivo</strong> (base 10). Se suman los valores de todos los jeroglíficos:<br>
+            <span>𓁨</span> = 1,000,000 (Dios / Asombrado)<br>
+            <span>𓆐</span> = 100,000 (Rana / Renacuajo)<br>
+            <span>𓂭</span> = 10,000 (Dedo)<br>
+            <span>𓆼</span> = 1,000 (Flor de loto)<br>
+            <span>𓍢</span> = 100 (Cuerda enrollada)<br>
+            <span>𓎆</span> = 10 (Herradura / Grillete)<br>
+            <span>𓏤</span> = 1 (Bastón / Trazo)
+          </p>
+          <div class="exercise-list">
+             <button class="exercise-btn active" id="btnEgyCat0" onclick="selectEgyCategory(0)">Egipcio a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+             <button class="exercise-btn" id="btnEgyCat1" onclick="selectEgyCategory(1)">Decimal a Egipcio<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ex-navigator">
+            <button class="btn btn-secondary" id="btnPrevEgy" onclick="changeEgyExercise(-1)">⬅️ Anterior</button>
+            <span id="egyNavIndicator">Ejercicio 1 de 10</span>
+            <button class="btn btn-secondary" id="btnNextEgy" onclick="changeEgyExercise(1)">Siguiente ➡️</button>
+          </div>
+          
+          <div class="card-title" id="egyTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+          
+          <div style="text-align: center; margin: 20px 0; padding: 25px 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+             <div id="egyptianDisplay" style="display: flex; flex-direction: column; align-items: center; gap: 10px;"></div>
+          </div>
+
+          <div class="controls-panel">
+            <button class="btn" id="btnNextStepEgy" onclick="nextStepEgy()">⏩ Siguiente Paso</button>
+            <button class="btn btn-secondary" onclick="revealAllEgy()">👁️ Mostrar Todo</button>
+            <button class="btn btn-secondary" onclick="resetStepsEgy()">🔄 Reiniciar</button>
+            <span class="step-indicator" id="stepCounterEgy">Paso 0</span>
+          </div>
+
+          <div class="step-box" id="stepBoxEgy">
+            <h4 id="stepBoxTitleEgy">Paso Inicial</h4>
+            <p id="stepBoxDescEgy">Descripción del paso actual.</p>
+          </div>
+
+          <div class="table-container">
+            <table id="dataTableEgy">
+              <thead><tr id="tableHeaderEgy"></tr></thead>
+              <tbody id="tableBodyEgy"></tbody>
+            </table>
+          </div>
+
+          <div class="conclusion-card" id="conclusionCardEgy">
+            <div class="conclusion-badge">¡Conversión Finalizada!</div>
+            <div class="conclusion-note" id="conclusionDescEgy"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN V: SISTEMA MAYA -->
+    <div id="tabMayan" class="section-container">
+      <div class="main-layout">
+        <div class="card">
+          <div class="card-title">📌 Símbolos Originales</div>
+          <p style="font-size: 0.95rem; margin-bottom: 15px; color: var(--text-muted);">
+            El sistema es <strong>posicional (base 20)</strong> y se lee de abajo hacia arriba. Los símbolos son:<br><br>
+            <span style="display:inline-block; width:12px; height:12px; background:var(--accent-gold); border-radius:50%; margin:0 5px;"></span> = <strong>1</strong> (Punto)<br><br>
+            <span style="display:inline-block; width:30px; height:8px; background:var(--accent-gold); border-radius:4px; margin:0 5px;"></span> = <strong>5</strong> (Barra)<br><br>
+            <span style="display:inline-block; width:25px; height:12px; border:2px solid var(--accent-gold); border-radius:50%; margin:0 5px; position:relative;"><span style="position:absolute; width:15px; height:3px; border-top:1px solid var(--accent-gold); border-radius:50%; top:2px; left:3px;"></span></span> = <strong>0</strong> (Concha)
+          </p>
+          <div class="exercise-list">
+             <button class="exercise-btn active" id="btnMayCat0" onclick="selectMayCategory(0)">Maya a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+             <button class="exercise-btn" id="btnMayCat1" onclick="selectMayCategory(1)">Decimal a Maya<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ex-navigator">
+            <button class="btn btn-secondary" id="btnPrevMay" onclick="changeMayanExercise(-1)">⬅️ Anterior</button>
+            <span id="mayNavIndicator">Ejercicio 1 de 10</span>
+            <button class="btn btn-secondary" id="btnNextMay" onclick="changeMayanExercise(1)">Siguiente ➡️</button>
+          </div>
+          
+          <div class="card-title" id="mayTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+          
+          <div style="text-align: center; margin: 20px 0; padding: 15px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+             <div id="mayanDisplay" style="display: flex; flex-direction: column; align-items: center; gap: 5px;"></div>
+          </div>
+
+          <div class="controls-panel">
+            <button class="btn" id="btnNextStepMay" onclick="nextStepMay()">⏩ Siguiente Paso</button>
+            <button class="btn btn-secondary" onclick="revealAllMay()">👁️ Mostrar Todo</button>
+            <button class="btn btn-secondary" onclick="resetStepsMay()">🔄 Reiniciar</button>
+            <span class="step-indicator" id="stepCounterMay">Paso 0</span>
+          </div>
+
+          <div class="step-box" id="stepBoxMay">
+            <h4 id="stepBoxTitleMay">Paso Inicial</h4>
+            <p id="stepBoxDescMay">Descripción del paso actual.</p>
+          </div>
+
+          <div class="table-container">
+            <table id="dataTableMay">
+              <thead><tr id="tableHeaderMay"></tr></thead>
+              <tbody id="tableBodyMay"></tbody>
+            </table>
+          </div>
+
+          <div class="conclusion-card" id="conclusionCardMay">
+            <div class="conclusion-badge">¡Conversión Finalizada!</div>
+            <div class="conclusion-note" id="conclusionDescMay"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN VI: SISTEMA ROMANO -->
+    <div id="tabRoman" class="section-container">
+      <div class="main-layout">
+        <div class="card">
+          <div class="card-title">📌 Símbolos y Reglas</div>
+          <div class="rom-legend">
+            <p><strong>Símbolos Principales:</strong></p>
+            <span class="rom-badge">I = 1</span> <span class="rom-badge">V = 5</span> <span class="rom-badge">X = 10</span> <span class="rom-badge">L = 50</span><br>
+            <span class="rom-badge">C = 100</span> <span class="rom-badge">D = 500</span> <span class="rom-badge">M = 1,000</span><br><br>
+            <p><strong>Reglas de Combinación:</strong></p>
+            • <strong>Aditiva:</strong> Símbolos iguales o menores a la derecha se suman (ej. VI = 6).<br>
+            • <strong>Sustractiva:</strong> Símbolo menor a la izquierda de uno mayor se resta (ej. IV = 4, IX = 9, XL = 40, XC = 90, CD = 400, CM = 900).
+          </div>
+          <div class="exercise-list">
+             <button class="exercise-btn active" id="btnRomCat0" onclick="selectRomCategory(0)">Romano a Decimal<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+             <button class="exercise-btn" id="btnRomCat1" onclick="selectRomCategory(1)">Decimal a Romano<br><small style="font-weight:normal">(10 Ejercicios)</small></button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="ex-navigator">
+            <button class="btn btn-secondary" id="btnPrevRom" onclick="changeRomExercise(-1)">⬅️ Anterior</button>
+            <span id="romNavIndicator">Ejercicio 1 de 10</span>
+            <button class="btn btn-secondary" id="btnNextRom" onclick="changeRomExercise(1)">Siguiente ➡️</button>
+          </div>
+          
+          <div class="card-title" id="romTitle" style="color: var(--text-main); font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Instrucción del ejercicio</div>
+          
+          <div style="text-align: center; margin: 20px 0; padding: 20px; background: var(--card-inner); border-radius: 8px; border: 1px solid var(--border-color);">
+             <div id="romanDisplay" class="rom-display"></div>
+          </div>
+
+          <div class="controls-panel">
+            <button class="btn" id="btnNextStepRom" onclick="nextStepRom()">⏩ Siguiente Paso</button>
+            <button class="btn btn-secondary" onclick="revealAllRom()">👁️ Mostrar Todo</button>
+            <button class="btn btn-secondary" onclick="resetStepsRom()">🔄 Reiniciar</button>
+            <span class="step-indicator" id="stepCounterRom">Paso 0</span>
+          </div>
+
+          <div class="step-box" id="stepBoxRom">
+            <h4 id="stepBoxTitleRom">Paso Inicial</h4>
+            <p id="stepBoxDescRom">Descripción del paso actual.</p>
+          </div>
+
+          <div class="table-container">
+            <table id="dataTableRom">
+              <thead><tr id="tableHeaderRom"></tr></thead>
+              <tbody id="tableBodyRom"></tbody>
+            </table>
+          </div>
+
+          <div class="conclusion-card" id="conclusionCardRom">
+            <div class="conclusion-badge">¡Conversión Finalizada!</div>
+            <div class="conclusion-note" id="conclusionDescRom"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- FIN DE UNIDAD 2 -->
+
+  <script>
+    // CAMBIO DE UNIDADES PRINCIPALES
+    function switchUnit(unitId, evt) {
+      document.querySelectorAll('.unit-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.unit-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(unitId).classList.add('active');
+      evt.target.classList.add('active');
+    }
+
+    // TEMA Y PESTAÑAS
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      document.getElementById('themeIcon').innerText = document.body.classList.contains('light-mode') ? '🌙' : '☀️';
+    }
+
+    function switchTab(tabId, evt) {
+      document.querySelectorAll('#unit2 .section-container').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('#unit2 .tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      evt.target.classList.add('active');
+    }
+
+    // --- SECCIÓN I: CUESTIONARIO ---
+    const quizData = [
+      { id: 1, text: "1. ¿Cuál es el método que se debe utilizar para convertir un número del sistema decimal a otra base?", options: ["Expresar el número en su forma polinómica.", "Utilizar el método de divisiones sucesivas.", "Sumar los valores absolutos de sus símbolos."], correct: 1, hints: ["Incorrecto. Este método es para pasar de otra base a decimal.", "¡Correcto! Se divide el número decimal entre la nueva base.", "Incorrecto. Ese es el principio aditivo de sistemas como el egipcio."] },
+      { id: 2, text: "2. En el sistema babilónico, ¿qué base se utiliza y cómo se agrupan los valores?", options: ["Base 20 (vigesimal) de abajo hacia arriba.", "Base 60 (sexagesimal) en casillas posicionales.", "Base 10 (decimal) sin importar la posición."], correct: 1, hints: ["Incorrecto. Esa descripción corresponde al sistema maya.", "¡Excelente! Cada casilla representa una potencia de 60.", "Incorrecto. El sistema babilónico es de base 60."] },
+      { id: 3, text: "3. Según el sistema maya, ¿cuál es el valor multiplicador del Nivel 3 (de abajo hacia arriba)?", options: ["20 (20¹)", "400 (20²)", "8,000 (20³)"], correct: 1, hints: ["Incorrecto. Este es el multiplicador del Nivel 2.", "¡Muy bien! En el nivel 3, se multiplica por 400.", "Incorrecto. Este corresponde al multiplicador del Nivel 4."] },
+      { id: 4, text: "4. En los números romanos, ¿cuál describe correctamente la regla sustractiva?", options: ["Una barra horizontal sobre una letra resta 1,000 a su valor.", "Un símbolo colocado a la derecha de uno mayor se resta.", "Un símbolo de menor valor escrito a la izquierda de uno mayor se resta."], correct: 2, hints: ["Incorrecto. La barra horizontal multiplica por 1,000.", "Incorrecto. Si está a la derecha, se suma.", "¡Correcto! Por ejemplo, IX = 9 o IV = 4."] }
+    ];
+
+    function renderQuiz() {
+      const container = document.getElementById("quizExercises");
+      container.innerHTML = "";
+      quizData.forEach((item) => {
+        const div = document.createElement("div"); div.className = "paec-item";
+        let optsHtml = item.options.map((opt, oIdx) => `<button class="paec-opt-btn" onclick="checkQuiz(${item.id}, ${oIdx})">${String.fromCharCode(65 + oIdx)}) ${opt}</button>`).join("");
+        div.innerHTML = `<p>${item.text}</p><div class="paec-options" id="quiz-opts-${item.id}">${optsHtml}</div><div class="paec-feedback" id="quiz-fb-${item.id}"></div>`;
+        container.appendChild(div);
+      });
+    }
+
+    function checkQuiz(itemId, selectedIdx) {
+      const item = quizData.find(x => x.id === itemId);
+      const fb = document.getElementById(`quiz-fb-${itemId}`);
+      const buttons = document.getElementById(`quiz-opts-${itemId}`).querySelectorAll('.paec-opt-btn');
+      buttons.forEach((btn, idx) => {
+        btn.classList.remove('correct', 'incorrect');
+        if (idx === selectedIdx) btn.classList.add(selectedIdx === item.correct ? 'correct' : 'incorrect');
+      });
+      fb.style.display = "block";
+      fb.style.color = selectedIdx === item.correct ? "var(--accent-green)" : "var(--accent-red)";
+      fb.style.borderColor = selectedIdx === item.correct ? "var(--accent-green)" : "var(--accent-red)";
+      fb.innerText = item.hints[selectedIdx];
+    }
+
+    // --- SECCIÓN II: PASO A PASO (BASES b) ---
+    const dataCat0 = [{n: "420", b: 5}, {n: "3152", b: 7}, {n: "34052", b: 6}, {n: "110010110", b: 2}, {n: "10323", b: 4}, {n: "10245", b: 8}, {n: "212", b: 3}, {n: "1011", b: 2}, {n: "543", b: 8}, {n: "120", b: 4}];
+    const dataCat1 = [{n: 50, b: 4}, {n: 947, b: 3}, {n: 1124, b: 5}, {n: 1425, b: 7}, {n: 874, b: 6}, {n: 249, b: 2}, {n: 100, b: 8}, {n: 45, b: 2}, {n: 300, b: 5}, {n: 85, b: 3}];
+
+    function generateBaseToDecimal(numStr, base) {
+       let rows = []; let stepDesc = []; let total = 0; let digits = numStr.split('').reverse(); let sumParts = [];
+       digits.forEach((d, i) => {
+           let val = parseInt(d, 10); let mult = Math.pow(base, i); let prod = val * mult;
+           total += prod; sumParts.push(prod);
+           rows.push([d, `${base}<sup>${i}</sup>`, mult.toString(), `${d} &times; ${mult} = <strong>${prod}</strong>`]);
+           stepDesc.push(`Multiplicamos la cifra <strong>${d}</strong> por la base ${base} elevada a la potencia ${i} (${mult}).`);
+       });
+       return { instruction: `Expresar el número <strong>${numStr}<sub>${base}</sub></strong> en el sistema decimal.`, headers: ["Cifra", "Potencia", "Multiplicador", "Producto"], rows: rows, stepDesc: stepDesc, conclusion: `Suma total: ${sumParts.reverse().join(' + ')} = <strong style="font-size:1.2rem;">${total}<sub>10</sub></strong>` };
+    }
+
+    function generateDecimalToBase(num, base) {
+       let rows = []; let stepDesc = []; let remainders = []; let current = num; let lastQuotient = 0;
+       if (current < base) {
+           rows.push([`${current} &divide; ${base}`, `<strong>${current}</strong>`, "<strong>0</strong>"]); stepDesc.push(`El número ${current} ya es menor que la base ${base}.`);
+           return { instruction: `Convertir el número <strong>${num}<sub>10</sub></strong> al sistema de base <strong>${base}</strong>.`, headers: ["División", "Cociente", "Residuo"], rows: rows, stepDesc: stepDesc, conclusion: `Resultado: <strong style="font-size:1.2rem;">${current}<sub>${base}</sub></strong>` }
+       }
+       while (current >= base) {
+           let q = Math.floor(current / base); let r = current % base; remainders.push(r);
+           if (q < base) {
+               rows.push([`${current} &divide; ${base}`, `<strong>${q}</strong>`, `<strong>${r}</strong>`]);
+               stepDesc.push(`Dividimos ${current} &divide; ${base}. El cociente es <strong>${q}</strong> (ya es menor que la base) y sobra <strong>${r}</strong>. Terminamos.`);
+               lastQuotient = q; break;
+           } else {
+               rows.push([`${current} &divide; ${base}`, q.toString(), `<strong>${r}</strong>`]);
+               stepDesc.push(`Dividimos ${current} &divide; ${base}. El cociente es ${q} y el residuo es <strong>${r}</strong>.`);
+           }
+           current = q;
+       }
+       let finalStr = lastQuotient.toString() + remainders.reverse().join('');
+       return { instruction: `Convertir el número <strong>${num}<sub>10</sub></strong> al sistema de base <strong>${base}</strong>.`, headers: ["División", "Cociente", "Residuo"], rows: rows, stepDesc: stepDesc, conclusion: `Orden de lectura (último cociente y residuos hacia arriba): <strong style="font-size:1.2rem;">${finalStr}<sub>${base}</sub></strong>` };
+    }
+
+    let currentCategory = 0; let currentExIndex = 0; let currentStep = 0; let currentExData = null;
+
+    function selectCategory(catIndex) {
+      currentCategory = catIndex; currentExIndex = 0;
+      document.getElementById('btnCat0').classList.toggle('active', catIndex === 0);
+      document.getElementById('btnCat1').classList.toggle('active', catIndex === 1);
+      loadExercise();
+    }
+    function changeExercise(dir) { currentExIndex += dir; if (currentExIndex < 0) currentExIndex = 0; if (currentExIndex > 9) currentExIndex = 9; loadExercise(); }
+    
+    function loadExercise() {
+      currentStep = 0; document.getElementById("conclusionCard").style.display = "none";
+      document.getElementById('exNavIndicator').innerText = `Ejercicio ${currentExIndex + 1} de 10`;
+      document.getElementById('btnPrevEx').disabled = (currentExIndex === 0); document.getElementById('btnNextEx').disabled = (currentExIndex === 9);
+      if (currentCategory === 0) currentExData = generateBaseToDecimal(dataCat0[currentExIndex].n, dataCat0[currentExIndex].b);
+      else currentExData = generateDecimalToBase(dataCat1[currentExIndex].n, dataCat1[currentExIndex].b);
+      renderTable(); updateStepUI();
+    }
+    function renderTable() {
+      const thead = document.getElementById("tableHeader"); const tbody = document.getElementById("tableBody");
+      thead.innerHTML = ""; currentExData.headers.forEach(h => { const th = document.createElement("th"); th.innerText = h; thead.appendChild(th); });
+      tbody.innerHTML = ""; currentExData.rows.forEach((row, rIdx) => {
+        const tr = document.createElement("tr");
+        row.forEach(val => { const td = document.createElement("td"); if (rIdx < currentStep) { td.innerHTML = val; td.className = "val-v"; } else { td.innerText = "•"; td.className = "val-hidden"; } tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+    }
+    function updateStepUI() {
+      const totalSteps = currentExData.rows.length;
+      document.getElementById("currentTitle").innerHTML = currentExData.instruction;
+      document.getElementById("stepCounter").innerText = `Fila ${currentStep} de ${totalSteps}`;
+      const btnNext = document.getElementById("btnNextStep"); btnNext.disabled = currentStep >= totalSteps; btnNext.style.opacity = currentStep >= totalSteps ? "0.5" : "1";
+      if (currentStep === 0) { document.getElementById("stepBoxTitle").innerText = "Inicio"; document.getElementById("stepBoxDesc").innerText = "Presiona 'Siguiente Paso' para revelar el desarrollo."; } 
+      else { document.getElementById("stepBoxTitle").innerText = `Paso ${currentStep}`; document.getElementById("stepBoxDesc").innerHTML = currentExData.stepDesc[currentStep - 1]; }
+      if (currentStep === totalSteps) { document.getElementById("conclusionDesc").innerHTML = currentExData.conclusion; document.getElementById("conclusionCard").style.display = "block"; }
+    }
+    function nextStep() { if (currentStep < currentExData.rows.length) { currentStep++; renderTable(); updateStepUI(); } }
+    function revealAll() { currentStep = currentExData.rows.length; renderTable(); updateStepUI(); }
+    function resetSteps() { currentStep = 0; renderTable(); updateStepUI(); }
+
+    // --- SECCIÓN III: SISTEMA BABILÓNICO ---
+    const dataBabylonianCat0 = [[10, 4], [11, 24], [20, 13, 22], [2, 23, 32, 1], [15, 12], [30, 20, 15], [1, 40], [10, 10, 10], [5, 50, 2], [12, 34, 56]];
+    const dataBabylonianCat1 = [604, 684, 72802, 518001, 912, 109215, 100, 36610, 21002, 45296];
+
+    let currentBabCategory = 0; let currentBabIndex = 0; let currentBabStep = 0; let currentBabData = null;
+
+    function renderBabylonianSymbol(val) {
+        if(val === 0) return '';
+        let tens = Math.floor(val / 10); let ones = val % 10; let html = '';
+        for(let i=0; i<tens; i++) html += '<span class="bab-10">◀</span>';
+        for(let i=0; i<ones; i++) html += '<span class="bab-1">▼</span>';
+        return html;
+    }
+
+    function generateBabylonianEx(casillas) {
+       let rows = []; let stepDesc = []; let total = 0; let len = casillas.length; let sumParts = [];
+       let displayHtml = casillas.map((val, i) => {
+           let power = len - 1 - i;
+           return `<div class="bab-casilla"><div class="bab-casilla-sym">${renderBabylonianSymbol(val)}</div><div class="bab-casilla-lbl">Casilla ${power} (60<sup>${power}</sup>)</div></div>`;
+       }).join('<div class="bab-sep">|</div>');
+
+       for(let i=0; i<len; i++) {
+           let val = casillas[i]; let power = len - 1 - i; let mult = Math.pow(60, power); let prod = val * mult;
+           total += prod; sumParts.push(prod);
+           rows.push([`Casilla ${power}`, `[ ${renderBabylonianSymbol(val)} ] = <strong>${val}</strong>`, `60<sup>${power}</sup> = ${mult}`, `${val} &times; ${mult} = <strong>${prod}</strong>`]);
+           stepDesc.push(`En la <strong>Casilla ${power}</strong>, las cuñas suman <strong>${val}</strong>. Se multiplica por la potencia 60<sup>${power}</sup> (${mult}).`);
+       }
+       return { instruction: `Determinar el valor en sistema decimal de la siguiente cifra babilónica:`, display: displayHtml, headers: ["Posición", "Símbolos / Valor", "Potencia Base 60", "Producto"], rows: rows, stepDesc: stepDesc, conclusion: `Suma total: ${sumParts.join(' + ')} = <strong style="font-size:1.2rem;">${total}<sub>10</sub></strong>` };
+    }
+
+    function generateDecimalToBabylonian(num) {
+       let casillas = []; let temp = num;
+       if (temp === 0) casillas = [0];
+       while (temp > 0) { casillas.unshift(temp % 60); temp = Math.floor(temp / 60); }
+       let len = casillas.length;
+
+       let displayHtml = casillas.map((val, i) => {
+           let power = len - 1 - i;
+           return `<div class="bab-casilla"><div class="bab-casilla-sym">${renderBabylonianSymbol(val)}</div><div class="bab-casilla-lbl">Casilla ${power} (60<sup>${power}</sup>)</div></div>`;
+       }).join('<div class="bab-sep">|</div>');
+
+       let rows = []; let stepDesc = []; let rem = num;
+       casillas.forEach((val, i) => {
+           let power = len - 1 - i;
+           let mult = Math.pow(60, power);
+           let syms = renderBabylonianSymbol(val) || '(vacío)';
+           rows.push([
+               `Casilla ${power} (60<sup>${power}</sup> = ${mult})`,
+               `${rem} &divide; ${mult} = <strong>${val}</strong>`,
+               `<strong>${val}</strong>`,
+               `<div style="display:inline-block">${syms}</div>`
+           ]);
+           stepDesc.push(`Para la <strong>Casilla ${power}</strong> (multiplicador ${mult}), dividimos el remanente ${rem} entre ${mult}. Obtenemos el valor <strong>${val}</strong>, representado con cuñas babilónicas.`);
+           rem %= mult;
+       });
+
+       return {
+           instruction: `Convertir el número decimal <strong>${num}<sub>10</sub></strong> al sistema babilónico (base 60):`,
+           display: displayHtml,
+           headers: ["Casilla (Potencia)", "Cálculo", "Valor Obtenido", "Símbolos"],
+           rows: rows,
+           stepDesc: stepDesc,
+           conclusion: `El número <strong>${num}<sub>10</sub></strong> expresado en sistema babilónico es la secuencia mostrada arriba.`
+       };
+    }
+
+    function selectBabCategory(catIndex) {
+      currentBabCategory = catIndex; currentBabIndex = 0;
+      document.getElementById('btnBabCat0').classList.toggle('active', catIndex === 0);
+      document.getElementById('btnBabCat1').classList.toggle('active', catIndex === 1);
+      loadBabExercise();
+    }
+
+    function changeBabExercise(dir) { currentBabIndex += dir; if (currentBabIndex < 0) currentBabIndex = 0; if (currentBabIndex > 9) currentBabIndex = 9; loadBabExercise(); }
+    
+    function loadBabExercise() {
+      currentBabStep = 0; document.getElementById("conclusionCardBab").style.display = "none";
+      document.getElementById('babNavIndicator').innerText = `Ejercicio ${currentBabIndex + 1} de 10`;
+      document.getElementById('btnPrevBab').disabled = (currentBabIndex === 0); document.getElementById('btnNextBab').disabled = (currentBabIndex === 9);
+      if (currentBabCategory === 0) currentBabData = generateBabylonianEx(dataBabylonianCat0[currentBabIndex]);
+      else currentBabData = generateDecimalToBabylonian(dataBabylonianCat1[currentBabIndex]);
+      document.getElementById("babylonianDisplay").innerHTML = currentBabData.display; document.getElementById("babTitle").innerHTML = currentBabData.instruction;
+      renderBabTable(); updateBabStepUI();
+    }
+    function renderBabTable() {
+      const thead = document.getElementById("tableHeaderBab"); const tbody = document.getElementById("tableBodyBab");
+      thead.innerHTML = ""; currentBabData.headers.forEach(h => { const th = document.createElement("th"); th.innerText = h; thead.appendChild(th); });
+      tbody.innerHTML = ""; currentBabData.rows.forEach((row, rIdx) => {
+        const tr = document.createElement("tr");
+        row.forEach(val => { const td = document.createElement("td"); if (rIdx < currentBabStep) { td.innerHTML = val; td.className = "val-v"; } else { td.innerText = "•"; td.className = "val-hidden"; } tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+    }
+    function updateBabStepUI() {
+      const totalSteps = currentBabData.rows.length; document.getElementById("stepCounterBab").innerText = `Fila ${currentBabStep} de ${totalSteps}`;
+      const btnNext = document.getElementById("btnNextStepBab"); btnNext.disabled = currentBabStep >= totalSteps; btnNext.style.opacity = currentBabStep >= totalSteps ? "0.5" : "1";
+      if (currentBabStep === 0) { document.getElementById("stepBoxTitleBab").innerText = "Inicio"; document.getElementById("stepBoxDescBab").innerText = "Presiona 'Siguiente Paso' para revelar el cálculo paso a paso."; } 
+      else { document.getElementById("stepBoxTitleBab").innerText = `Análisis de Casilla`; document.getElementById("stepBoxDescBab").innerHTML = currentBabData.stepDesc[currentBabStep - 1]; }
+      if (currentBabStep === totalSteps) { document.getElementById("conclusionDescBab").innerHTML = currentBabData.conclusion; document.getElementById("conclusionCardBab").style.display = "block"; }
+    }
+    function nextStepBab() { if (currentBabStep < currentBabData.rows.length) { currentBabStep++; renderBabTable(); updateBabStepUI(); } }
+    function revealAllBab() { currentBabStep = currentBabData.rows.length; renderBabTable(); updateBabStepUI(); }
+    function resetStepsBab() { currentBabStep = 0; renderBabTable(); updateBabStepUI(); }
+
+    // --- SECCIÓN IV: SISTEMA EGIPCIO ---
+    const dataEgyptianCat0 = [234, 15, 302, 1240, 2132, 10500, 4321, 100200, 2024, 1234567];
+    const dataEgyptianCat1 = [234, 15, 302, 1240, 2132, 10500, 4321, 100200, 2024, 1234567];
+
+    const egyMap = [
+      { val: 1000000, sym: '𓁨', name: 'Hombre asombrado' },
+      { val: 100000, sym: '𓆐', name: 'Rana / Renacuajo' },
+      { val: 10000, sym: '𓂭', name: 'Dedo' },
+      { val: 1000, sym: '𓆼', name: 'Flor de loto' },
+      { val: 100, sym: '𓍢', name: 'Cuerda enrollada' },
+      { val: 10, sym: '𓎆', name: 'Herradura' },
+      { val: 1, sym: '𓏤', name: 'Bastón' }
+    ];
+
+    let currentEgyCategory = 0; let currentEgyIndex = 0; let currentEgyStep = 0; let currentEgyData = null;
+
+    function generateEgyptianEx(num) {
+       let rows = []; let stepDesc = []; let total = 0; let sumParts = [];
+       let displayGroupsHtml = ''; let tempNum = num;
+
+       egyMap.forEach(item => {
+           let count = Math.floor(tempNum / item.val);
+           tempNum %= item.val;
+           
+           if (count > 0) {
+               let symsHtml = '';
+               for(let i=0; i<count; i++) { symsHtml += `<span class="egy-sym">${item.sym}</span>`; }
+               displayGroupsHtml += `<div class="egy-group">${symsHtml}</div>`;
+               let prod = count * item.val; total += prod; sumParts.push(prod);
+               rows.push([
+                  `<div class="egy-group" style="margin:0">${symsHtml}</div>`, 
+                  `<strong>${item.val.toLocaleString()}</strong>`, 
+                  `<strong>${count}</strong>`, 
+                  `${count} &times; ${item.val.toLocaleString()} = <strong>${prod.toLocaleString()}</strong>`
+               ]);
+               stepDesc.push(`Encontramos <strong>${count}</strong> símbolo(s) de <strong>${item.name}</strong> (${item.sym}). Como cada uno vale ${item.val.toLocaleString()}, suman <strong>${prod.toLocaleString()}</strong>.`);
+           }
+       });
+
+       return { 
+           instruction: `Determinar el valor en sistema decimal de los siguientes jeroglíficos egipcios:`, 
+           display: displayGroupsHtml, 
+           headers: ["Símbolos", "Valor Unitario", "Cantidad", "Subtotal"], 
+           rows: rows, stepDesc: stepDesc, 
+           conclusion: `Suma total: ${sumParts.join(' + ')} = <strong style="font-size:1.2rem;">${total.toLocaleString()}<sub>10</sub></strong>` 
+       };
+    }
+
+    function generateDecimalToEgyptian(num) {
+       let rows = []; let stepDesc = []; let displayGroupsHtml = ''; let tempNum = num;
+
+       egyMap.forEach(item => {
+           let count = Math.floor(tempNum / item.val);
+           if (count > 0) {
+               let symsHtml = '';
+               for(let i=0; i<count; i++) { symsHtml += `<span class="egy-sym">${item.sym}</span>`; }
+               displayGroupsHtml += `<div class="egy-group">${symsHtml}</div>`;
+               let subtotal = count * item.val;
+
+               rows.push([
+                   `Posición de <strong>${item.val.toLocaleString()}</strong>`,
+                   `<strong>${item.name}</strong> (${item.sym})`,
+                   `<strong>${count}</strong>`,
+                   `<div class="egy-group" style="margin:0">${symsHtml}</div>`
+               ]);
+
+               stepDesc.push(`Para la posición de ${item.val.toLocaleString()}, se requieren <strong>${count}</strong> símbolo(s) de <strong>${item.name}</strong> (${item.sym}) para representar ${subtotal.toLocaleString()}. Restante por descomponer: ${(tempNum - subtotal).toLocaleString()}.`);
+               tempNum %= item.val;
+           }
+       });
+
+       return {
+           instruction: `Convertir el número decimal <strong>${num.toLocaleString()}<sub>10</sub></strong> al sistema de jeroglíficos egipcios:`,
+           display: displayGroupsHtml,
+           headers: ["Valor Posicional", "Símbolo Egipcio", "Cantidad Requerida", "Jeroglíficos"],
+           rows: rows, stepDesc: stepDesc,
+           conclusion: `El número decimal <strong>${num.toLocaleString()}<sub>10</sub></strong> representado en jeroglíficos egipcios es la combinación mostrada arriba.`
+       };
+    }
+
+    function selectEgyCategory(catIndex) {
+      currentEgyCategory = catIndex; currentEgyIndex = 0;
+      document.getElementById('btnEgyCat0').classList.toggle('active', catIndex === 0);
+      document.getElementById('btnEgyCat1').classList.toggle('active', catIndex === 1);
+      loadEgyExercise();
+    }
+
+    function changeEgyExercise(dir) { currentEgyIndex += dir; if (currentEgyIndex < 0) currentEgyIndex = 0; if (currentEgyIndex > 9) currentEgyIndex = 9; loadEgyExercise(); }
+    
+    function loadEgyExercise() {
+      currentEgyStep = 0; document.getElementById("conclusionCardEgy").style.display = "none";
+      document.getElementById('egyNavIndicator').innerText = `Ejercicio ${currentEgyIndex + 1} de 10`;
+      document.getElementById('btnPrevEgy').disabled = (currentEgyIndex === 0); document.getElementById('btnNextEgy').disabled = (currentEgyIndex === 9);
+      if (currentEgyCategory === 0) currentEgyData = generateEgyptianEx(dataEgyptianCat0[currentEgyIndex]);
+      else currentEgyData = generateDecimalToEgyptian(dataEgyptianCat1[currentEgyIndex]);
+
+      document.getElementById("egyptianDisplay").innerHTML = currentEgyData.display; 
+      document.getElementById("egyTitle").innerHTML = currentEgyData.instruction;
+      renderEgyTable(); updateEgyStepUI();
+    }
+    
+    function renderEgyTable() {
+      const thead = document.getElementById("tableHeaderEgy"); const tbody = document.getElementById("tableBodyEgy");
+      thead.innerHTML = ""; currentEgyData.headers.forEach(h => { const th = document.createElement("th"); th.innerText = h; thead.appendChild(th); });
+      tbody.innerHTML = ""; currentEgyData.rows.forEach((row, rIdx) => {
+        const tr = document.createElement("tr");
+        row.forEach(val => { const td = document.createElement("td"); if (rIdx < currentEgyStep) { td.innerHTML = val; td.className = "val-v"; } else { td.innerText = "•"; td.className = "val-hidden"; } tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+    }
+    
+    function updateEgyStepUI() {
+      const totalSteps = currentEgyData.rows.length; 
+      document.getElementById("stepCounterEgy").innerText = `Fila ${currentEgyStep} de ${totalSteps}`;
+      const btnNext = document.getElementById("btnNextStepEgy"); btnNext.disabled = currentEgyStep >= totalSteps; btnNext.style.opacity = currentEgyStep >= totalSteps ? "0.5" : "1";
+      if (currentEgyStep === 0) { 
+        document.getElementById("stepBoxTitleEgy").innerText = "Inicio"; 
+        document.getElementById("stepBoxDescEgy").innerText = "Presiona 'Siguiente Paso' para revelar el procedimiento paso a paso."; 
+      } else { 
+        document.getElementById("stepBoxTitleEgy").innerText = `Desglose ${currentEgyStep}`; 
+        document.getElementById("stepBoxDescEgy").innerHTML = currentEgyData.stepDesc[currentEgyStep - 1]; 
+      }
+      if (currentEgyStep === totalSteps) { 
+        document.getElementById("conclusionDescEgy").innerHTML = currentEgyData.conclusion; 
+        document.getElementById("conclusionCardEgy").style.display = "block"; 
+      }
+    }
+    
+    function nextStepEgy() { if (currentEgyStep < currentEgyData.rows.length) { currentEgyStep++; renderEgyTable(); updateEgyStepUI(); } }
+    function revealAllEgy() { currentEgyStep = currentEgyData.rows.length; renderEgyTable(); updateEgyStepUI(); }
+    function resetStepsEgy() { currentEgyStep = 0; renderEgyTable(); updateEgyStepUI(); }
+
+    // --- SECCIÓN V: SISTEMA MAYA ---
+    const dataMayanCat0 = [[0, 5], [1, 0], [2, 7], [1, 2, 3], [5, 10, 0], [1, 0, 15], [3, 0, 0], [14, 2], [4, 5, 19], [1, 0, 0, 0]];
+    const dataMayanCat1 = [5, 20, 47, 443, 2200, 415, 1200, 282, 1719, 8000];
+
+    let currentMayCategory = 0; let currentMayIndex = 0; let currentMayStep = 0; let currentMayData = null;
+
+    function renderMayanSymbol(val) {
+        if(val === 0) return '<div class="maya-shell"></div>';
+        let bars = Math.floor(val / 5); let dots = val % 5; 
+        let html = '<div class="maya-sym-box">';
+        if (dots > 0) {
+            html += '<div class="maya-dots-row">';
+            for(let i=0; i<dots; i++) html += '<span class="maya-dot"></span>';
+            html += '</div>';
+        }
+        for(let i=0; i<bars; i++) html += '<div class="maya-bar"></div>';
+        html += '</div>';
+        return html;
+    }
+
+    function generateMayanEx(niveles) {
+       let rows = []; let stepDesc = []; let total = 0; let len = niveles.length; let sumParts = [];
+       let displayHtml = niveles.map((val, i) => {
+           let power = len - 1 - i; let levelNumber = power + 1;
+           return `<div class="maya-level"><div class="maya-level-lbl">Nivel ${levelNumber}<br>(20<sup>${power}</sup>)</div>${renderMayanSymbol(val)}</div>`;
+       }).join('');
+
+       let reversedNiveles = [...niveles].reverse();
+       for(let power=0; power<reversedNiveles.length; power++) {
+           let val = reversedNiveles[power]; let levelNumber = power + 1; let mult = Math.pow(20, power); let prod = val * mult;
+           total += prod; sumParts.push(prod);
+           rows.push([
+              `Nivel ${levelNumber}`, `[ ${renderMayanSymbol(val)} ] = <strong>${val}</strong>`, `20<sup>${power}</sup> = ${mult}`, `${val} &times; ${mult} = <strong>${prod}</strong>`
+           ]);
+           stepDesc.push(`En el <strong>Nivel ${levelNumber}</strong> (de abajo hacia arriba), los símbolos suman <strong>${val}</strong>. Se multiplica por la potencia 20<sup>${power}</sup> (${mult}).`);
+       }
+       
+       return { 
+           instruction: `Determinar el valor en sistema decimal de la siguiente cifra maya (leída de abajo hacia arriba):`, 
+           display: displayHtml, headers: ["Nivel", "Símbolos / Valor", "Multiplicador (Base 20)", "Producto"], 
+           rows: rows, stepDesc: stepDesc, conclusion: `Suma total: ${sumParts.join(' + ')} = <strong style="font-size:1.2rem;">${total}<sub>10</sub></strong>` 
+       };
+    }
+
+    function generateDecimalToMayan(num) {
+       let niveles = []; let temp = num;
+       if (temp === 0) niveles = [0];
+       while (temp > 0) { niveles.unshift(temp % 20); temp = Math.floor(temp / 20); }
+       let len = niveles.length;
+
+       let displayHtml = niveles.map((val, i) => {
+           let power = len - 1 - i; let levelNumber = power + 1;
+           return `<div class="maya-level"><div class="maya-level-lbl">Nivel ${levelNumber}<br>(20<sup>${power}</sup>)</div>${renderMayanSymbol(val)}</div>`;
+       }).join('');
+
+       let reversedNiveles = [...niveles].reverse();
+       let rows = []; let stepDesc = [];
+
+       for (let power = 0; power < reversedNiveles.length; power++) {
+           let val = reversedNiveles[power]; let levelNumber = power + 1; let mult = Math.pow(20, power);
+           rows.push([
+               `Nivel ${levelNumber} (20<sup>${power}</sup> = ${mult})`, `División por base 20`, `Valor del nivel: <strong>${val}</strong>`, `<div style="display:inline-block">${renderMayanSymbol(val)}</div>`
+           ]);
+           stepDesc.push(`En el <strong>Nivel ${levelNumber}</strong> (multiplicador ${mult}), se asigna el valor <strong>${val}</strong> (entre 0 y 19), representado visualmente con sus símbolos correspondientes.`);
+       }
+
+       return {
+           instruction: `Convertir el número decimal <strong>${num}<sub>10</sub></strong> al sistema maya (base 20):`,
+           display: displayHtml, headers: ["Nivel (Potencia)", "Procedimiento", "Valor del Nivel", "Símbolos Mayas"],
+           rows: rows, stepDesc: stepDesc, conclusion: `El número decimal <strong>${num}<sub>10</sub></strong> expresado en sistema maya se lee de abajo hacia arriba en los niveles mostrados.`
+       };
+    }
+
+    function selectMayCategory(catIndex) {
+      currentMayCategory = catIndex; currentMayIndex = 0;
+      document.getElementById('btnMayCat0').classList.toggle('active', catIndex === 0);
+      document.getElementById('btnMayCat1').classList.toggle('active', catIndex === 1);
+      loadMayExercise();
+    }
+
+    function changeMayanExercise(dir) { currentMayIndex += dir; if (currentMayIndex < 0) currentMayIndex = 0; if (currentMayIndex > 9) currentMayIndex = 9; loadMayExercise(); }
+    
+    function loadMayExercise() {
+      currentMayStep = 0; document.getElementById("conclusionCardMay").style.display = "none";
+      document.getElementById('mayNavIndicator').innerText = `Ejercicio ${currentMayIndex + 1} de 10`;
+      document.getElementById('btnPrevMay').disabled = (currentMayIndex === 0); document.getElementById('btnNextMay').disabled = (currentMayIndex === 9);
+      if (currentMayCategory === 0) currentMayData = generateMayanEx(dataMayanCat0[currentMayIndex]);
+      else currentMayData = generateDecimalToMayan(dataMayanCat1[currentMayIndex]);
+
+      document.getElementById("mayanDisplay").innerHTML = currentMayData.display; 
+      document.getElementById("mayTitle").innerHTML = currentMayData.instruction;
+      renderMayTable(); updateMayStepUI();
+    }
+    
+    function renderMayTable() {
+      const thead = document.getElementById("tableHeaderMay"); const tbody = document.getElementById("tableBodyMay");
+      thead.innerHTML = ""; currentMayData.headers.forEach(h => { const th = document.createElement("th"); th.innerText = h; thead.appendChild(th); });
+      tbody.innerHTML = ""; currentMayData.rows.forEach((row, rIdx) => {
+        const tr = document.createElement("tr");
+        row.forEach((val) => { const td = document.createElement("td"); if (rIdx < currentMayStep) { td.innerHTML = val; td.className = "val-v"; } else { td.innerText = "•"; td.className = "val-hidden"; } tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+    }
+    
+    function updateMayStepUI() {
+      const totalSteps = currentMayData.rows.length; 
+      document.getElementById("stepCounterMay").innerText = `Fila ${currentMayStep} de ${totalSteps}`;
+      const btnNext = document.getElementById("btnNextStepMay"); btnNext.disabled = currentMayStep >= totalSteps; btnNext.style.opacity = currentMayStep >= totalSteps ? "0.5" : "1";
+      if (currentMayStep === 0) { 
+        document.getElementById("stepBoxTitleMay").innerText = "Inicio"; 
+        document.getElementById("stepBoxDescMay").innerText = "Presiona 'Siguiente Paso' para analizar la cifra desde el nivel inferior (Nivel 1) hacia arriba."; 
+      } else { 
+        document.getElementById("stepBoxTitleMay").innerText = `Análisis del Nivel ${currentMayStep}`; 
+        document.getElementById("stepBoxDescMay").innerHTML = currentMayData.stepDesc[currentMayStep - 1]; 
+      }
+      if (currentMayStep === totalSteps) { 
+        document.getElementById("conclusionDescMay").innerHTML = currentMayData.conclusion; 
+        document.getElementById("conclusionCardMay").style.display = "block"; 
+      }
+    }
+    
+    function nextStepMay() { if (currentMayStep < currentMayData.rows.length) { currentMayStep++; renderMayTable(); updateMayStepUI(); } }
+    function revealAllMay() { currentMayStep = currentMayData.rows.length; renderMayTable(); updateMayStepUI(); }
+    function resetStepsMay() { currentMayStep = 0; renderMayTable(); updateMayStepUI(); }
+
+    // --- SECCIÓN VI: SISTEMA ROMANO ---
+    const dataRomanCat0 = ["XIV", "XLIX", "CXXVIII", "CDXCIV", "DCCCLXXXVIII", "MCMXCIX", "MMXXIV", "MMMCDLVI", "CMIX", "MMMCMXCIX"];
+    const dataRomanCat1 = [14, 49, 128, 494, 888, 1999, 2024, 3456, 909, 3999];
+
+    const romValueMap = { 'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000 };
+    const romMapList = [
+      { val: 1000, sym: 'M' }, { val: 900, sym: 'CM' }, { val: 500, sym: 'D' }, { val: 400, sym: 'CD' },
+      { val: 100, sym: 'C' },  { val: 90, sym: 'XC' },  { val: 50, sym: 'L' },  { val: 40, sym: 'XL' },
+      { val: 10, sym: 'X' },   { val: 9, sym: 'IX' },   { val: 5, sym: 'V' },   { val: 4, sym: 'IV' },
+      { val: 1, sym: 'I' }
+    ];
+
+    let currentRomCategory = 0; let currentRomIndex = 0; let currentRomStep = 0; let currentRomData = null;
+
+    function generateRomanToDecimal(romStr) {
+      let rows = []; let stepDesc = []; let total = 0; let sumParts = [];
+      let i = 0;
+      while (i < romStr.length) {
+        let currentSymbol = romStr[i];
+        let currentVal = romValueMap[currentSymbol];
+        let nextSymbol = romStr[i + 1];
+        let nextVal = nextSymbol ? romValueMap[nextSymbol] : 0;
+
+        if (nextVal > currentVal) {
+          let subPair = currentSymbol + nextSymbol;
+          let subVal = nextVal - currentVal;
+          total += subVal;
+          sumParts.push(subVal);
+          rows.push([
+            `<strong style="color:var(--accent-gold); font-size:1.2rem;">${subPair}</strong>`,
+            "Sustractiva",
+            `${nextSymbol} (${nextVal}) - ${currentSymbol} (${currentVal})`,
+            `<strong>+${subVal}</strong>`
+          ]);
+          stepDesc.push(`Encontramos el par sustractivo <strong>${subPair}</strong>: como el símbolo menor (${currentSymbol}) está antes de uno mayor (${nextSymbol}), restamos sus valores obteniendo <strong>${subVal}</strong>.`);
+          i += 2;
+        } else {
+          total += currentVal;
+          sumParts.push(currentVal);
+          rows.push([
+            `<strong style="color:var(--accent-gold); font-size:1.2rem;">${currentSymbol}</strong>`,
+            "Aditiva",
+            `Símbolo estándar = ${currentVal}`,
+            `<strong>+${currentVal}</strong>`
+          ]);
+          stepDesc.push(`Procesamos el símbolo <strong>${currentSymbol}</strong> cuyo valor es <strong>${currentVal}</strong>.`);
+          i += 1;
+        }
+      }
+
+      return {
+        instruction: `Convertir la cifra romana <strong style="font-size:1.2rem; color:var(--accent-gold);">${romStr}</strong> al sistema decimal:`,
+        display: romStr,
+        headers: ["Símbolo / Par", "Regla Aplicada", "Operación", "Valor Parcial"],
+        rows: rows,
+        stepDesc: stepDesc,
+        conclusion: `Suma final: ${sumParts.join(' + ')} = <strong style="font-size:1.2rem;">${total}<sub>10</sub></strong>`
+      };
+    }
+
+    function generateDecimalToRoman(num) {
+      let rows = []; let stepDesc = []; let tempNum = num; let romResult = "";
+
+      romMapList.forEach(item => {
+        let count = Math.floor(tempNum / item.val);
+        if (count > 0) {
+          let chunkRom = item.sym.repeat(count);
+          romResult += chunkRom;
+          let chunkVal = count * item.val;
+
+          rows.push([
+            `Múltiplo de <strong>${item.val}</strong>`,
+            `<strong style="color:var(--accent-gold); font-size:1.1rem;">${item.sym}</strong>`,
+            `<strong>${count}</strong> vez/veces (${chunkVal})`,
+            `<strong style="color:var(--accent-gold); font-size:1.1rem;">${chunkRom}</strong>`
+          ]);
+
+          stepDesc.push(`En la cifra restan <strong>${tempNum}</strong> unidades. Restamos ${chunkVal} usando <strong>${count}</strong> representación(es) de <strong>${item.sym}</strong>.`);
+          tempNum %= item.val;
+        }
+      });
+
+      return {
+        instruction: `Convertir el número decimal <strong>${num}<sub>10</sub></strong> al sistema romano:`,
+        display: romResult,
+        headers: ["Valor / Bloque", "Símbolo Romano", "Veces Utilizado", "Acumulado"],
+        rows: rows,
+        stepDesc: stepDesc,
+        conclusion: `El número decimal <strong>${num}<sub>10</sub></strong> en número romano es: <strong style="font-size:1.4rem; color:var(--accent-gold);">${romResult}</strong>`
+      };
+    }
+
+    function selectRomCategory(catIndex) {
+      currentRomCategory = catIndex; currentRomIndex = 0;
+      document.getElementById('btnRomCat0').classList.toggle('active', catIndex === 0);
+      document.getElementById('btnRomCat1').classList.toggle('active', catIndex === 1);
+      loadRomExercise();
+    }
+
+    function changeRomExercise(dir) { currentRomIndex += dir; if (currentRomIndex < 0) currentRomIndex = 0; if (currentRomIndex > 9) currentRomIndex = 9; loadRomExercise(); }
+    
+    function loadRomExercise() {
+      currentRomStep = 0; document.getElementById("conclusionCardRom").style.display = "none";
+      document.getElementById('romNavIndicator').innerText = `Ejercicio ${currentRomIndex + 1} de 10`;
+      document.getElementById('btnPrevRom').disabled = (currentRomIndex === 0); document.getElementById('btnNextRom').disabled = (currentRomIndex === 9);
+
+      if (currentRomCategory === 0) currentRomData = generateRomanToDecimal(dataRomanCat0[currentRomIndex]);
+      else currentRomData = generateDecimalToRoman(dataRomanCat1[currentRomIndex]);
+
+      document.getElementById("romanDisplay").innerText = currentRomData.display; 
+      document.getElementById("romTitle").innerHTML = currentRomData.instruction;
+      renderRomTable(); updateRomStepUI();
+    }
+    
+    function renderRomTable() {
+      const thead = document.getElementById("tableHeaderRom"); const tbody = document.getElementById("tableBodyRom");
+      thead.innerHTML = ""; currentRomData.headers.forEach(h => { const th = document.createElement("th"); th.innerText = h; thead.appendChild(th); });
+      tbody.innerHTML = ""; currentRomData.rows.forEach((row, rIdx) => {
+        const tr = document.createElement("tr");
+        row.forEach(val => { const td = document.createElement("td"); if (rIdx < currentRomStep) { td.innerHTML = val; td.className = "val-v"; } else { td.innerText = "•"; td.className = "val-hidden"; } tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+    }
+    
+    function updateRomStepUI() {
+      const totalSteps = currentRomData.rows.length; 
+      document.getElementById("stepCounterRom").innerText = `Fila ${currentRomStep} de ${totalSteps}`;
+      const btnNext = document.getElementById("btnNextStepRom"); btnNext.disabled = currentRomStep >= totalSteps; btnNext.style.opacity = currentRomStep >= totalSteps ? "0.5" : "1";
+      if (currentRomStep === 0) { 
+        document.getElementById("stepBoxTitleRom").innerText = "Inicio"; 
+        document.getElementById("stepBoxDescRom").innerText = "Presiona 'Siguiente Paso' para analizar la estructura del número romano."; 
+      } else { 
+        document.getElementById("stepBoxTitleRom").innerText = `Análisis de Bloque ${currentRomStep}`; 
+        document.getElementById("stepBoxDescRom").innerHTML = currentRomData.stepDesc[currentRomStep - 1]; 
+      }
+      if (currentRomStep === totalSteps) { 
+        document.getElementById("conclusionDescRom").innerHTML = currentRomData.conclusion; 
+        document.getElementById("conclusionCardRom").style.display = "block"; 
+      }
+    }
+    
+    function nextStepRom() { if (currentRomStep < currentRomData.rows.length) { currentRomStep++; renderRomTable(); updateRomStepUI(); } }
+    function revealAllRom() { currentRomStep = currentRomData.rows.length; renderRomTable(); updateRomStepUI(); }
+    function resetStepsRom() { currentRomStep = 0; renderRomTable(); updateRomStepUI(); }
+
+    window.onload = () => { 
+      renderQuiz(); 
+      loadExercise(); 
+      loadBabExercise(); 
+      loadEgyExercise(); 
+      loadMayExercise();
+      loadRomExercise();
+    };
+  </script>
+</body>
+  </html>
