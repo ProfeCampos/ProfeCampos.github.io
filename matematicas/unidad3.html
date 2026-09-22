@@ -44,43 +44,60 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
 
-    <!-- Header Navigation con Logos e Identidad Institucional -->
-    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 shadow-sm transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row items-center justify-between gap-4">
+    <!-- Encabezado Estilo Unidad 1 -->
+    <header class="bg-[#0b1329] border-b border-slate-800 text-white py-6 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto space-y-6">
             
-            <!-- Identidad CECyTEM / Profe Campos -->
-            <div class="flex items-center space-x-3">
-                <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-10 w-auto object-contain">
-                <div class="h-8 w-px bg-slate-300 dark:bg-slate-700 hidden sm:block"></div>
-                <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700 object-cover">
-                <div>
-                    <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">Unidad 3: Clasificación de los Números</h1>
-                    <p class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Academia de Matemáticas | CECyTEM</p>
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                
+                <!-- Logo Izquierdo: CECyTEM -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-16 w-auto rounded-lg bg-white p-1 shadow-md object-contain">
+                </div>
+
+                <!-- Bloque Central: Titulación y Conmutador de Modo -->
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-400 tracking-tight">
+                        Unidad 3: Clasificación de los Números
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-white">
+                        Guía Interactiva de Examen Paso a Paso
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <!-- Botón Modo Claro/Oscuro Centrado -->
+                    <div class="pt-2 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-[#1e293b] hover:bg-slate-700 text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-700 shadow-sm flex items-center gap-2">
+                            <span>💥</span>
+                            <span>Cambiar Modo Claro / Oscuro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logo Derecho: Profe Campos -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-16 w-16 rounded-xl object-cover border border-slate-700 shadow-md">
                 </div>
             </div>
 
-            <!-- Controls: Tabs + Dark/Light Theme Toggle -->
-            <div class="flex items-center space-x-2 sm:space-x-3">
-                <nav class="flex space-x-1 sm:space-x-2">
-                    <button id="btn-tab-lesson" onclick="switchTab('lesson')" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-sm flex items-center space-x-1.5">
-                        <i class="fa-solid fa-book-open"></i>
-                        <span class="hidden sm:inline">Mapa y Lección</span>
-                    </button>
-                    <button id="btn-tab-quiz" onclick="switchTab('quiz')" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center space-x-1.5">
-                        <i class="fa-solid fa-list-check"></i>
-                        <span class="hidden sm:inline">Ejercicios (20)</span>
-                    </button>
-                </nav>
+            <!-- Divisor Horizontal -->
+            <hr class="border-slate-800/80">
 
-                <div class="h-6 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
-
-                <!-- Botón de Conmutación de Tema -->
-                <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-amber-400 hover:bg-slate-300 dark:hover:bg-slate-600 transition-all flex items-center justify-center" title="Cambiar a Modo Claro / Oscuro">
-                    <i id="theme-icon" class="fa-solid fa-moon text-base"></i>
+            <!-- Fila Inferior: Botones de Pestañas/Navegación -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-lesson" onclick="switchTab('lesson')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Mapa Conceptual y Lección
                 </button>
-            </div>
+                <button id="btn-tab-quiz" onclick="switchTab('quiz')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-300 hover:text-white hover:bg-slate-800/60">
+                    Ejercicios y Evaluación (20)
+                </button>
+            </nav>
+
         </div>
     </header>
 
@@ -91,7 +108,7 @@
         <section id="tab-lesson" class="space-y-6">
             <div class="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl p-5 shadow-sm transition-colors">
                 <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-diagram-project text-indigo-500"></i>
+                    <i class="fa-solid fa-diagram-project text-teal-400"></i>
                     Esquema Jerárquico de Conjuntos Numéricos
                 </h2>
                 <p class="text-slate-600 dark:text-slate-300 text-sm">
@@ -172,7 +189,7 @@
                 <!-- Detail Panel -->
                 <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-md flex flex-col transition-colors">
                     <div id="detail-header" class="border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
-                        <span id="detail-tag" class="text-xs uppercase font-bold tracking-wider px-2 py-1 rounded bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300">
+                        <span id="detail-tag" class="text-xs uppercase font-bold tracking-wider px-2 py-1 rounded bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300">
                             Cargando...
                         </span>
                         <h3 id="detail-title" class="text-2xl font-bold text-slate-900 dark:text-white mt-2">Selecciona un conjunto</h3>
@@ -196,7 +213,7 @@
                 </div>
                 <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
                     <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Puntuación:</span>
-                    <span id="score-display" class="text-xl font-extrabold text-indigo-600 dark:text-indigo-400">0 / 0</span>
+                    <span id="score-display" class="text-xl font-extrabold text-teal-600 dark:text-teal-400">0 / 0</span>
                 </div>
             </div>
 
@@ -204,7 +221,7 @@
             <div id="quiz-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start"></div>
 
             <div class="flex justify-end pt-2">
-                <button onclick="resetQuiz()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow">
+                <button onclick="resetQuiz()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow">
                     <i class="fa-solid fa-rotate-right"></i> Reiniciar Ejercicios
                 </button>
             </div>
@@ -213,7 +230,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500">
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500">
         Unidad 3: Clasificación de los Números &copy; CECyTEM - Profe Campos
     </footer>
 
@@ -360,7 +377,7 @@
                     { text: "Irracional Trascendente", correct: false },
                     { text: "Número Imaginario", correct: false }
                 ],
-                explanation: "-18 es un número entero sin parte decimal con valor strictly menor a cero."
+                explanation: "-18 es un número entero sin parte decimal con valor estrictamente menor a cero."
             },
             {
                 number: "3",
@@ -584,13 +601,10 @@
 
         function toggleTheme() {
             const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.className = "fa-solid fa-sun text-base text-amber-500";
             } else {
                 html.classList.add('dark');
-                icon.className = "fa-solid fa-moon text-base text-amber-400";
             }
         }
 
@@ -613,13 +627,15 @@
             if (tab === 'lesson') {
                 lessonTab.classList.remove('hidden');
                 quizTab.classList.add('hidden');
-                btnLesson.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-sm flex items-center space-x-1.5";
-                btnQuiz.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center space-x-1.5";
+                
+                btnLesson.className = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+                btnQuiz.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-300 hover:text-white hover:bg-slate-800/60";
             } else {
                 lessonTab.classList.add('hidden');
                 quizTab.classList.remove('hidden');
-                btnQuiz.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-sm flex items-center space-x-1.5";
-                btnLesson.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center space-x-1.5";
+                
+                btnQuiz.className = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+                btnLesson.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-300 hover:text-white hover:bg-slate-800/60";
             }
             safeTypeset();
         }
@@ -659,7 +675,7 @@
                 card.innerHTML = `
                     <div>
                         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3">
-                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Pregunta ${q.number} de ${questions.length}</span>
+                            <span class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">Pregunta ${q.number} de ${questions.length}</span>
                             <span class="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400">$${q.expression}$</span>
                         </div>
                         <p class="text-sm text-slate-700 dark:text-slate-300 font-medium mb-3">${q.questionText}</p>
