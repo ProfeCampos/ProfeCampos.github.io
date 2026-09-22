@@ -280,7 +280,7 @@
 <body>
 
   <!-- ENCABEZADO CON LOGOS Y TITULO HOMOGÉNEO -->
-  <header>
+ /* <header>
       <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
     <div class="header-center">
       <div class="header-title">
@@ -293,8 +293,26 @@
       </button>
     </div>
       <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
-  </header>
+  </header> */
 
+<header>
+<div class="header-container">
+<img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
+<div class="header-titles">
+<h1>Unidad 2: Lógica Matemática y Razonamiento</h1>
+<h2>Guía Interactiva de Examen Paso a Paso</h2>
+<p>CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</p>
+</div>
+<img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
+</div>
+<div class="header-actions">
+<button class="theme-toggle-btn" onclick="toggleTheme()">
+<span id="themeIcon">☀️</span> Cambiar Modo Claro / Oscuro
+</button>
+</div>
+</header>
+
+  
   <div class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('tabQuiz', event)">Sección I: Cuestionario</button>
     <button class="tab-btn" onclick="switchTab('tabInteractive', event)">Sección II: Cambios de Base</button>
