@@ -64,6 +64,35 @@
       line-height: 1.5;
     }
 
+    /* ESTILO PARA NAVEGACIÓN DE REGRESO */
+    nav {
+      max-width: 1150px;
+      margin: 0 auto 15px auto;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--card-bg);
+      color: var(--cecyte-cyan);
+      border: 1px solid var(--cecyte-cyan);
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      background-color: var(--cecyte-cyan);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 151, 157, 0.3);
+    }
+
     /* ENCABEZADO HOMOGÉNEO */
     header {
       max-width: 1150px;
@@ -494,10 +523,11 @@
   </style>
 </head>
 <body>
-<!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
+  <!-- BARRA DE NAVEGACIÓN PRINCIPAL CON BOTÓN DESTACADO -->
   <nav>
-    <a href="index.html">← Volver al Temario Principal</a>
+    <a href="index.html" class="btn-back">⬅️ Volver al Temario Principal</a>
   </nav>
+
   <!-- ENCABEZADO CON LOGOS Y TITULO HOMOGÉNEO -->
   <header>
     <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="header-logo">
