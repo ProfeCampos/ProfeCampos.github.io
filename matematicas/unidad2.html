@@ -24,6 +24,10 @@
       --accent-red: #ef4444;
       --th-bg: rgba(0, 151, 157, 0.15);
       --btn-sec-bg: rgba(255, 255, 255, 0.08);
+      
+      /* Nuevas variables para los colores de la Sección II */
+      --highlight-bg: rgba(245, 158, 11, 0.12);
+      --prompt-bg: rgba(0, 151, 157, 0.12);
     }
 
     body.light-mode {
@@ -40,6 +44,9 @@
       --accent-red: #dc2626;
       --th-bg: rgba(0, 131, 136, 0.15);
       --btn-sec-bg: rgba(0, 0, 0, 0.05);
+      
+      --highlight-bg: rgba(217, 119, 6, 0.12);
+      --prompt-bg: rgba(0, 131, 136, 0.12);
     }
 
     * {
@@ -230,9 +237,219 @@
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .step-indicator { font-size: 0.85rem; color: var(--accent-gold); font-weight: 700; }
-    .step-box { background-color: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent-gold); padding: 12px 14px; border-radius: 0 8px 8px 0; margin-bottom: 16px; font-size: 0.95rem; }
+    
+    /* MODIFICACIONES PARA SECCIÓN II: ESTILOS DE LA OTRA PÁGINA */
+    .step-box { 
+      background-color: var(--highlight-bg); 
+      border-left: 4px solid var(--accent-gold); 
+      padding: 12px 14px; 
+      border-radius: 0 8px 8px 0; 
+      margin-bottom: 16px; 
+      font-size: 0.95rem; 
+    }
+    .step-box.prompt-mode {
+      border-left-color: var(--cecyte-cyan);
+      background-color: var(--prompt-bg);
+    }
     .step-box h4 { color: var(--accent-gold); margin-bottom: 4px; }
+    .step-box.prompt-mode h4 { color: var(--cecyte-cyan); }
 
+    /* ESTILOS PARA BASE B A DECIMAL (PROCEDIMIENTO LINEAL) */
+    .procedure-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background-color: var(--card-inner);
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      min-height: 220px;
+    }
+    .step-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background-color: rgba(255,255,255,0.02);
+      border-left: 3px solid transparent;
+      font-size: 0.98rem;
+    }
+    .step-line.active-line {
+      border-left-color: var(--accent-gold);
+      background-color: var(--btn-sec-bg);
+    }
+    .step-tag {
+      font-weight: 800;
+      color: var(--cecyte-cyan);
+      min-width: 32px;
+    }
+    .math-eq {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .math-eq sup {
+      color: var(--accent-gold);
+      font-weight: 800;
+      font-size: 0.82rem;
+    }
+
+    /* ESTILOS PARA DECIMAL A BASE B (DIVISIONES) */
+    .divisions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .casita-card {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+    .casita-card.prompt-state {
+      border: 2px dashed var(--cecyte-cyan);
+      background-color: rgba(0, 151, 157, 0.05);
+    }
+    .casita-card.revealed-state {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+    }
+    .casita-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .casita-step-num { color: var(--cecyte-cyan); }
+    .casita-op { color: var(--text-muted); }
+    .casita-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 6px 0;
+    }
+    .casita-calc {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .casita-quotient {
+      color: var(--cecyte-cyan);
+      padding-right: 6px;
+      font-weight: 800;
+    }
+    .casita-quotient.unknown {
+      color: var(--accent-gold);
+      font-size: 1.3rem;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.1); }
+    }
+    .casita-division {
+      display: flex;
+      align-items: center;
+    }
+    .divisor {
+      padding-right: 6px;
+      color: var(--text-muted);
+    }
+    .dividend {
+      border-top: 2px solid var(--text-main);
+      border-left: 2px solid var(--text-main);
+      padding: 2px 8px;
+      border-top-left-radius: 4px;
+      color: var(--text-main);
+    }
+    .remainder-badge {
+      border: 2px solid var(--accent-gold);
+      background-color: rgba(245, 158, 11, 0.18);
+      color: var(--accent-gold);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+      display: inline-block;
+    }
+    .remainder-badge.unknown {
+      border-style: dashed;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+    .last-quotient-badge {
+      border: 2px solid var(--cecyte-cyan);
+      background-color: rgba(0, 151, 157, 0.18);
+      color: var(--cecyte-cyan);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 0 8px rgba(0, 151, 157, 0.25);
+      display: inline-block;
+    }
+    .assembly-card {
+      background-color: var(--card-inner);
+      border: 1px dashed var(--cecyte-cyan);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 14px;
+      text-align: center;
+    }
+    .assembly-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--cecyte-cyan);
+      margin-bottom: 10px;
+    }
+    .assembly-digits {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .digit-box {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+    .digit-box.last-q {
+      background-color: rgba(0, 151, 157, 0.2);
+      border: 2px solid var(--cecyte-cyan);
+      color: var(--cecyte-cyan);
+    }
+    .digit-box.rem {
+      background-color: rgba(245, 158, 11, 0.2);
+      border: 2px solid var(--accent-gold);
+      color: var(--accent-gold);
+    }
+    .arrow-icon {
+      color: var(--text-muted);
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    .assembly-note { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ESTILOS PARA LAS TABLAS DE LOS OTROS SISTEMAS */
     .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--card-inner); }
     table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1rem; }
     th, td { padding: 12px; border: 1px solid var(--border-color); white-space: nowrap; }
@@ -241,7 +458,8 @@
     td.val-hidden { opacity: 0.1; user-select: none; }
 
     .conclusion-card { margin-top: 18px; padding: 16px; border-radius: 8px; text-align: center; display: none; background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); }
-    .conclusion-badge { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
+    .conclusion-badge { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; font-family: 'Courier New', Courier, monospace; }
+    .conclusion-note { font-size: 0.9rem; opacity: 0.95; }
 
     /* ESTILOS BABILÓNICO */
     .bab-10, .bab-1 { display: inline-block; color: var(--accent-gold); margin: 0 2px; filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5)); }
@@ -349,12 +567,13 @@
           <p id="stepBoxDesc">Descripción del paso actual.</p>
         </div>
 
-        <div class="table-container">
-          <table id="dataTable">
-            <thead><tr id="tableHeader"></tr></thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-        </div>
+        <!-- CONTENEDORES PARA EL NUEVO ESTILO DE SOLUCIÓN -->
+        <!-- Para Base n a Decimal (Procedimiento Lineal) -->
+        <div class="procedure-container" id="procedureTab1" style="display: none;"></div>
+
+        <!-- Para Decimal a Base n (Divisiones Sucesivas) -->
+        <div class="divisions-grid" id="divisionsTab2" style="display: none;"></div>
+        <div id="assemblyAreaTab2" style="display: none;"></div>
 
         <div class="conclusion-card" id="conclusionCard">
           <div class="conclusion-badge" id="conclusionBadge">¡Conversión Finalizada!</div>
@@ -644,41 +863,86 @@
       fb.innerText = item.hints[selectedIdx];
     }
 
-    // --- SECCIÓN II: PASO A PASO (BASES b) ---
+    // --- SECCIÓN II: PASO A PASO (BASES b) NUEVO ESTILO ---
+    // Ejercicios intactos originales
     const dataCat0 = [{n: "420", b: 5}, {n: "3152", b: 7}, {n: "34052", b: 6}, {n: "110010110", b: 2}, {n: "10323", b: 4}, {n: "10245", b: 8}, {n: "212", b: 3}, {n: "1011", b: 2}, {n: "543", b: 8}, {n: "120", b: 4}];
     const dataCat1 = [{n: 50, b: 4}, {n: 947, b: 3}, {n: 1124, b: 5}, {n: 1425, b: 7}, {n: 874, b: 6}, {n: 249, b: 2}, {n: 100, b: 8}, {n: 45, b: 2}, {n: 300, b: 5}, {n: 85, b: 3}];
 
+    // Generador para Base n a Decimal (Procedimiento Lineal)
     function generateBaseToDecimal(numStr, base) {
-       let rows = []; let stepDesc = []; let total = 0; let digits = numStr.split('').reverse(); let sumParts = [];
-       digits.forEach((d, i) => {
-           let val = parseInt(d, 10); let mult = Math.pow(base, i); let prod = val * mult;
-           total += prod; sumParts.push(prod);
-           rows.push([d, `${base}<sup>${i}</sup>`, mult.toString(), `${d} &times; ${mult} = <strong>${prod}</strong>`]);
-           stepDesc.push(`Multiplicamos la cifra <strong>${d}</strong> por la base ${base} elevada a la potencia ${i} (${mult}).`);
-       });
-       return { instruction: `Expresar el número <strong>${numStr}<sub>${base}</sub></strong> en el sistema decimal.`, headers: ["Cifra", "Potencia", "Multiplicador", "Producto"], rows: rows, stepDesc: stepDesc, conclusion: `Suma total: ${sumParts.reverse().join(' + ')} = <strong style="font-size:1.2rem;">${total}<sub>10</sub></strong>` };
+       let steps = [];
+       let total = 0;
+       let digits = numStr.split('');
+       
+       let step1Parts = digits.map(d => `( ${d} )`);
+       steps.push({ tag: "1:-", html: `= ${step1Parts.join(' + ')}`, title: "Paso 1: Separar los Dígitos", desc: "Escribimos cada dígito del número entre paréntesis separados por signos de suma (+)." });
+       
+       let step2Parts = digits.map(d => `( ${d} &times; ${base} )`);
+       steps.push({ tag: "2:-", html: `= ${step2Parts.join(' + ')}`, title: `Paso 2: Incluir la Multiplicación por la Base ${base}`, desc: `Dentro de cada paréntesis, multiplicamos por la base original (${base}).` });
+       
+       let step3Parts = digits.map((d, i) => `( ${d} &times; ${base}<sup>${digits.length - 1 - i}</sup> )`);
+       steps.push({ tag: "3:-", html: `= ${step3Parts.join(' + ')}`, title: "Paso 3: Colocar Exponentes de Derecha a Izquierda", desc: `Asignamos exponentes a la base comenzando en 0 desde la derecha hasta ${digits.length - 1}.` });
+       
+       let powers = digits.map((d, i) => Math.pow(base, digits.length - 1 - i));
+       let step4Parts = digits.map((d, i) => `( ${d} &times; ${powers[i]} )`);
+       steps.push({ tag: "4:-", html: `= ${step4Parts.join(' + ')}`, title: "Paso 4: Desarrollar las Potencias", desc: "Calculamos el valor de cada potencia." });
+       
+       let products = digits.map((d, i) => parseInt(d, 10) * powers[i]);
+       let step5Parts = products.map(p => p.toString());
+       steps.push({ tag: "5:-", html: `= ${step5Parts.join(' + ')}`, title: "Paso 5: Efectuar las Multiplicaciones", desc: "Multiplicamos los dígitos por el valor de sus potencias." });
+       
+       total = products.reduce((a, b) => a + b, 0);
+       steps.push({ tag: "6:-", html: `= ${total}<sub>10</sub>`, title: "Paso 6: Suma Final y Resultado", desc: "Sumamos todos los términos para obtener la equivalencia decimal.", finalRes: `${total}<sub>10</sub>` });
+       
+       return { 
+           instruction: `Expresar el número <strong>${numStr}<sub>${base}</sub></strong> en el sistema decimal (Base 10).`, 
+           steps: steps, 
+           type: 'linear'
+       };
     }
 
+    // Generador para Decimal a Base n (Divisiones Sucesivas)
     function generateDecimalToBase(num, base) {
-       let rows = []; let stepDesc = []; let remainders = []; let current = num; let lastQuotient = 0;
+       let divisions = [];
+       let digitsAssembly = [];
+       let current = num;
+       let stepCounter = 1;
+       
        if (current < base) {
-           rows.push([`${current} &divide; ${base}`, `<strong>${current}</strong>`, "<strong>0</strong>"]); stepDesc.push(`El número ${current} ya es menor que la base ${base}.`);
-           return { instruction: `Convertir el número <strong>${num}<sub>10</sub></strong> al sistema de base <strong>${base}</strong>.`, headers: ["División", "Cociente", "Residuo"], rows: rows, stepDesc: stepDesc, conclusion: `Resultado: <strong style="font-size:1.2rem;">${current}<sub>${base}</sub></strong>` }
+           digitsAssembly.push({ val: current.toString(), type: "last-q", label: "Último Cociente" });
+           return {
+               instruction: `Convertir el número <strong>${num}<sub>10</sub></strong> al sistema de base <strong>${base}</strong>.`,
+               divisions: [],
+               digitsAssembly: digitsAssembly,
+               finalRes: `${current}<sub>${base}</sub>`,
+               type: 'divisions'
+           };
        }
+
        while (current >= base) {
-           let q = Math.floor(current / base); let r = current % base; remainders.push(r);
-           if (q < base) {
-               rows.push([`${current} &divide; ${base}`, `<strong>${q}</strong>`, `<strong>${r}</strong>`]);
-               stepDesc.push(`Dividimos ${current} &divide; ${base}. El cociente es <strong>${q}</strong> (ya es menor que la base) y sobra <strong>${r}</strong>. Terminamos.`);
-               lastQuotient = q; break;
-           } else {
-               rows.push([`${current} &divide; ${base}`, q.toString(), `<strong>${r}</strong>`]);
-               stepDesc.push(`Dividimos ${current} &divide; ${base}. El cociente es ${q} y el residuo es <strong>${r}</strong>.`);
+           let q = Math.floor(current / base);
+           let r = current % base;
+           let isLast = q < base;
+           
+           divisions.push({ stepNum: `División ${stepCounter}`, dividend: current, divisor: base, quotient: q, remainder: r, isLast: isLast });
+           digitsAssembly.unshift({ val: r.toString(), type: "rem", label: `Residuo Div ${stepCounter}` });
+           
+           if (isLast) {
+               digitsAssembly.unshift({ val: q.toString(), type: "last-q", label: "Último Cociente" });
            }
            current = q;
+           stepCounter++;
        }
-       let finalStr = lastQuotient.toString() + remainders.reverse().join('');
-       return { instruction: `Convertir el número <strong>${num}<sub>10</sub></strong> al sistema de base <strong>${base}</strong>.`, headers: ["División", "Cociente", "Residuo"], rows: rows, stepDesc: stepDesc, conclusion: `Orden de lectura (último cociente y residuos hacia arriba): <strong style="font-size:1.2rem;">${finalStr}<sub>${base}</sub></strong>` };
+       
+       let finalResStr = digitsAssembly.map(d => d.val).join('');
+       
+       return { 
+           instruction: `Convertir el número <strong>${num}<sub>10</sub></strong> al sistema de base <strong>${base}</strong>.`, 
+           divisions: divisions, 
+           digitsAssembly: digitsAssembly,
+           finalRes: `${finalResStr}<sub>${base}</sub>`,
+           type: 'divisions' 
+       };
     }
 
     let currentCategory = 0; let currentExIndex = 0; let currentStep = 0; let currentExData = null;
@@ -687,39 +951,174 @@
       currentCategory = catIndex; currentExIndex = 0;
       document.getElementById('btnCat0').classList.toggle('active', catIndex === 0);
       document.getElementById('btnCat1').classList.toggle('active', catIndex === 1);
+      
+      // Mostrar/Ocultar contenedores correctos
+      document.getElementById('procedureTab1').style.display = catIndex === 0 ? 'flex' : 'none';
+      document.getElementById('divisionsTab2').style.display = catIndex === 1 ? 'grid' : 'none';
+      document.getElementById('assemblyAreaTab2').style.display = catIndex === 1 ? 'block' : 'none';
+      
       loadExercise();
     }
     function changeExercise(dir) { currentExIndex += dir; if (currentExIndex < 0) currentExIndex = 0; if (currentExIndex > 9) currentExIndex = 9; loadExercise(); }
     
     function loadExercise() {
-      currentStep = 0; document.getElementById("conclusionCard").style.display = "none";
+      currentStep = 0; 
+      document.getElementById("conclusionCard").style.display = "none";
       document.getElementById('exNavIndicator').innerText = `Ejercicio ${currentExIndex + 1} de 10`;
-      document.getElementById('btnPrevEx').disabled = (currentExIndex === 0); document.getElementById('btnNextEx').disabled = (currentExIndex === 9);
+      document.getElementById('btnPrevEx').disabled = (currentExIndex === 0); 
+      document.getElementById('btnNextEx').disabled = (currentExIndex === 9);
+      
       if (currentCategory === 0) currentExData = generateBaseToDecimal(dataCat0[currentExIndex].n, dataCat0[currentExIndex].b);
       else currentExData = generateDecimalToBase(dataCat1[currentExIndex].n, dataCat1[currentExIndex].b);
-      renderTable(); updateStepUI();
-    }
-    function renderTable() {
-      const thead = document.getElementById("tableHeader"); const tbody = document.getElementById("tableBody");
-      thead.innerHTML = ""; currentExData.headers.forEach(h => { const th = document.createElement("th"); th.innerText = h; thead.appendChild(th); });
-      tbody.innerHTML = ""; currentExData.rows.forEach((row, rIdx) => {
-        const tr = document.createElement("tr");
-        row.forEach(val => { const td = document.createElement("td"); if (rIdx < currentStep) { td.innerHTML = val; td.className = "val-v"; } else { td.innerText = "•"; td.className = "val-hidden"; } tr.appendChild(td); });
-        tbody.appendChild(tr);
-      });
-    }
-    function updateStepUI() {
-      const totalSteps = currentExData.rows.length;
+      
       document.getElementById("currentTitle").innerHTML = currentExData.instruction;
-      document.getElementById("stepCounter").innerText = `Fila ${currentStep} de ${totalSteps}`;
-      const btnNext = document.getElementById("btnNextStep"); btnNext.disabled = currentStep >= totalSteps; btnNext.style.opacity = currentStep >= totalSteps ? "0.5" : "1";
-      if (currentStep === 0) { document.getElementById("stepBoxTitle").innerText = "Inicio"; document.getElementById("stepBoxDesc").innerText = "Presiona 'Siguiente Paso' para revelar el desarrollo."; } 
-      else { document.getElementById("stepBoxTitle").innerText = `Paso ${currentStep}`; document.getElementById("stepBoxDesc").innerHTML = currentExData.stepDesc[currentStep - 1]; }
-      if (currentStep === totalSteps) { document.getElementById("conclusionDesc").innerHTML = currentExData.conclusion; document.getElementById("conclusionCard").style.display = "block"; }
+      updateStepUI();
     }
-    function nextStep() { if (currentStep < currentExData.rows.length) { currentStep++; renderTable(); updateStepUI(); } }
-    function revealAll() { currentStep = currentExData.rows.length; renderTable(); updateStepUI(); }
-    function resetSteps() { currentStep = 0; renderTable(); updateStepUI(); }
+    
+    function getTotalSteps() {
+        if (currentExData.type === 'linear') return currentExData.steps.length;
+        if (currentExData.type === 'divisions') {
+            if (currentExData.divisions.length === 0) return 1;
+            return (currentExData.divisions.length * 2) + 1;
+        }
+        return 0;
+    }
+
+    function updateStepUI() {
+      const totalSteps = getTotalSteps();
+      
+      document.getElementById("stepCounter").innerText = `Paso ${currentStep} de ${totalSteps}`;
+      const btnNext = document.getElementById("btnNextStep"); 
+      btnNext.disabled = currentStep >= totalSteps; 
+      btnNext.style.opacity = currentStep >= totalSteps ? "0.5" : "1";
+      
+      const stepBox = document.getElementById("stepBox");
+      const boxTitle = document.getElementById("stepBoxTitle");
+      const boxDesc = document.getElementById("stepBoxDesc");
+
+      if (currentExData.type === 'linear') {
+          stepBox.className = "step-box";
+          if (currentStep === 0) { 
+              boxTitle.innerText = "Paso 0: Planteamiento del Ejercicio"; 
+              boxDesc.innerText = "Presiona 'Siguiente Paso' para descomponer la cifra mediante expansión polinómica."; 
+          } else { 
+              const cur = currentExData.steps[currentStep - 1];
+              boxTitle.innerText = cur.title; 
+              boxDesc.innerHTML = cur.desc; 
+          }
+
+          // Renderizar Procedimiento Lineal
+          const procContainer = document.getElementById("procedureTab1");
+          procContainer.innerHTML = "";
+          for (let s = 0; s < currentStep; s++) {
+            const st = currentExData.steps[s];
+            const div = document.createElement("div");
+            div.className = `step-line ${s === currentStep - 1 ? "active-line" : ""}`;
+            div.innerHTML = `<span class="step-tag">${st.tag}</span><span class="math-eq">${st.html}</span>`;
+            procContainer.appendChild(div);
+          }
+
+          if (currentStep === totalSteps) { 
+              document.getElementById("conclusionBadge").innerHTML = `= ${currentExData.steps[totalSteps - 1].finalRes}`;
+              document.getElementById("conclusionDesc").innerText = "Resultado expresado correctamente en el sistema decimal (base 10).";
+              document.getElementById("conclusionCard").style.display = "block"; 
+          } else {
+              document.getElementById("conclusionCard").style.display = "none";
+          }
+      } 
+      else if (currentExData.type === 'divisions') {
+          const numDivs = currentExData.divisions.length;
+          
+          if (currentStep === 0) {
+            stepBox.className = "step-box prompt-mode";
+            boxTitle.innerHTML = "🎯 Paso 0: Inicio del Ejercicio";
+            boxDesc.innerHTML = numDivs > 0 ? `Vamos a convertir mediante divisiones sucesivas. Presiona <i>"Siguiente Paso"</i> para ver el primer planteamiento.` : `El número ya es menor que la base. No se requieren divisiones.`;
+          } else if (currentStep <= numDivs * 2) {
+            const divIndex = Math.floor((currentStep - 1) / 2);
+            const isRevealStep = (currentStep % 2 === 0);
+            const d = currentExData.divisions[divIndex];
+
+            if (!isRevealStep) {
+              stepBox.className = "step-box prompt-mode";
+              boxTitle.innerHTML = `✍️ ${d.stepNum}: ¡A calcular en tu cuaderno!`;
+              boxDesc.innerHTML = `Realiza la división: <strong style="font-size:1.05rem; color:var(--cecyte-cyan);">${d.dividend} ÷ ${d.divisor}</strong>.<br>Escribe en tu cuaderno el <strong>cociente entero</strong> y el <strong>residuo</strong>.<br><i>Haz clic en "Siguiente Paso" para verificar tus resultados.</i>`;
+            } else {
+              stepBox.className = "step-box";
+              boxTitle.innerHTML = `✅ Comprobación: ${d.stepNum}`;
+              if (d.isLast) {
+                boxDesc.innerHTML = `<strong>Resultado:</strong> ${d.dividend} ÷ ${d.divisor} = <strong style="color:var(--cecyte-cyan);">${d.quotient}</strong> con residuo <strong style="color:var(--accent-gold);">${d.remainder}</strong>.<br>¡El cociente (${d.quotient}) ya es menor que la base! Guardamos el último cociente y el residuo.`;
+              } else {
+                boxDesc.innerHTML = `<strong>Resultado:</strong> ${d.dividend} ÷ ${d.divisor} = <strong style="color:var(--cecyte-cyan);">${d.quotient}</strong> con residuo <strong style="color:var(--accent-gold);">${d.remainder}</strong>.<br>Guardamos el residuo <strong>${d.remainder}</strong> (recuadro dorado) y continuaremos dividiendo el cociente <strong>${d.quotient}</strong> entre ${d.divisor}.`;
+              }
+            }
+          } else {
+            stepBox.className = "step-box";
+            boxTitle.innerHTML = "📌 Paso Final: Lectura del Resultado";
+            boxDesc.innerHTML = `Tomamos el <strong>ÚLTIMO COCIENTE</strong> (recuadro cian) seguido de todos los <strong>RESIDUOS</strong> de abajo hacia arriba (recuadros dorados) para formar el número final.`;
+          }
+
+          // Renderizar Grid de Divisiones
+          const divGrid = document.getElementById("divisionsTab2");
+          divGrid.innerHTML = "";
+          const activeDivCount = Math.ceil(currentStep / 2);
+          
+          for (let i = 0; i < activeDivCount && i < numDivs; i++) {
+            const d = currentExData.divisions[i];
+            const isCurrentDiv = (i === activeDivCount - 1);
+            const isRevealed = (i < activeDivCount - 1) || (isCurrentDiv && currentStep % 2 === 0) || (currentStep > numDivs * 2);
+
+            const card = document.createElement("div");
+            card.className = `casita-card ${isRevealed ? "revealed-state" : "prompt-state"}`;
+
+            const quotientHtml = isRevealed ? `<span class="casita-quotient">${d.quotient}</span>` : `<span class="casita-quotient unknown">?</span>`;
+            const remainderHtml = isRevealed ? `<span class="remainder-badge">${d.remainder}</span>` : `<span class="remainder-badge unknown">?</span>`;
+            const lastQBadgeHtml = (isRevealed && d.isLast) ? `<div><small style="color:var(--text-muted);">Último Cociente:</small> <span class="last-quotient-badge">${d.quotient}</span></div>` : '';
+
+            card.innerHTML = `
+              <div class="casita-header"><span class="casita-step-num">${d.stepNum}</span><span class="casita-op">${d.dividend} ÷ ${d.divisor}</span></div>
+              <div class="casita-body">
+                <div class="casita-calc">
+                  <div>${quotientHtml}</div>
+                  <div class="casita-division"><span class="divisor">${d.divisor}</span><span class="dividend">${d.dividend}</span></div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start;">
+                  <div><small style="color:var(--text-muted);">Residuo:</small> ${remainderHtml}</div>
+                  ${lastQBadgeHtml}
+                </div>
+              </div>
+            `;
+            divGrid.appendChild(card);
+          }
+
+          // Área de Ensamblaje
+          const assemblyEl = document.getElementById("assemblyAreaTab2");
+          assemblyEl.innerHTML = "";
+          
+          if (currentStep === totalSteps) {
+            const asmCard = document.createElement("div");
+            asmCard.className = "assembly-card";
+            let digitsHtml = currentExData.digitsAssembly.map((item, idx) => {
+              let boxClass = item.type === "last-q" ? "digit-box last-q" : "digit-box rem";
+              let arrow = idx < currentExData.digitsAssembly.length - 1 ? `<span class="arrow-icon">➔</span>` : '';
+              return `<div style="display:inline-flex; align-items:center; gap:6px;"><div class="${boxClass}" title="${item.label}">${item.val}</div>${arrow}</div>`;
+            }).join("");
+
+            asmCard.innerHTML = `<div class="assembly-title">⬆️ Lectura del Resultado (Último Cociente + Residuos de abajo hacia arriba):</div><div class="assembly-digits">${digitsHtml}</div>`;
+            assemblyEl.appendChild(asmCard);
+            
+            document.getElementById("conclusionBadge").innerHTML = `= ${currentExData.finalRes}`;
+            document.getElementById("conclusionDesc").innerText = "Resultado expresado en la nueva base.";
+            document.getElementById("conclusionCard").style.display = "block";
+          } else {
+            document.getElementById("conclusionCard").style.display = "none";
+          }
+      }
+    }
+    
+    function nextStep() { if (currentStep < getTotalSteps()) { currentStep++; updateStepUI(); } }
+    function revealAll() { currentStep = getTotalSteps(); updateStepUI(); }
+    function resetSteps() { currentStep = 0; updateStepUI(); }
+
 
     // --- SECCIÓN III: SISTEMA BABILÓNICO ---
     const dataBabylonianCat0 = [[10, 4], [11, 24], [20, 13, 22], [2, 23, 32, 1], [15, 12], [30, 20, 15], [1, 40], [10, 10, 10], [5, 50, 2], [12, 34, 56]];
@@ -1231,7 +1630,9 @@
 
     window.onload = () => { 
       renderQuiz(); 
+      // Se inicializan todas las secciones, pero se mostrará solo la que por defecto tiene "active"
       loadExercise(); 
+      selectCategory(0); // Forzar inicialización correcta de los contenedores de Sección II
       loadBabExercise(); 
       loadEgyExercise(); 
       loadMayExercise();
