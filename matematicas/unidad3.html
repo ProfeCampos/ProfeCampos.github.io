@@ -8,6 +8,9 @@
     <!-- Ícono para la pestaña del navegador -->
     <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
 
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Configuración para habilitar MathJax -->
     <script>
         window.MathJax = {
@@ -19,13 +22,38 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
+        /* MODO CLARO POR DEFECTO */
         :root {
             --primary: #0056b3;
             --primary-dark: #004085;
             --bg: #f8f9fa;
             --card-bg: #ffffff;
+            --card-sub-bg: #f1f3f5;
+            --card-sub-hover: #e9ecef;
             --text: #333333;
-            --accent: #28a745;
+            --text-muted: #666666;
+            --nav-bg: #0f2a4a;
+            --header-bg: #0056b3;
+            --info-bg: #e3f2fd;
+            --info-border: #1976d2;
+            --border-color: #e9ecef;
+        }
+
+        /* MODO OSCURO */
+        body.dark-theme {
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --bg: #080d1a;
+            --card-bg: #1e293b;
+            --card-sub-bg: #0f172a;
+            --card-sub-hover: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --nav-bg: #030712;
+            --header-bg: #0f172a;
+            --info-bg: #0f172a;
+            --info-border: #38bdf8;
+            --border-color: #334155;
         }
 
         body {
@@ -35,13 +63,15 @@
             padding: 0;
             background-color: var(--bg);
             color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* Barra de navegación superior */
         nav {
-            background-color: #0f2a4a;
+            background-color: var(--nav-bg);
             padding: 10px 20px;
             text-align: left;
+            transition: background-color 0.3s;
         }
 
         nav a {
@@ -54,12 +84,13 @@
             gap: 6px;
         }
 
-        /* Cabecera */
+        /* Cabecera Adaptable */
         header {
-            background: var(--primary);
+            background: var(--header-bg);
             color: white;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 25px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: background-color 0.3s;
         }
 
         .header-container {
@@ -68,7 +99,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
@@ -81,32 +112,72 @@
         .header-titles h1 {
             margin: 0;
             font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
         }
 
         .header-titles h2 {
-            margin: 5px 0 0;
-            font-weight: 400;
-            font-size: 1.3rem;
-            opacity: 0.95;
-            letter-spacing: 0.5px;
+            margin: 4px 0 0;
+            font-weight: 800;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            color: #e0f2fe;
         }
 
         .header-titles p {
-            margin: 5px 0 0;
+            margin: 8px 0 0;
             font-size: 0.95rem;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         .logo {
-            max-height: 80px;
+            max-height: 115px;
             width: auto;
             object-fit: contain;
-            border-radius: 6px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.03);
+        }
+
+        .header-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-control {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-control:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-1px);
         }
 
         main {
             max-width: 1100px;
-            margin: 20px auto;
+            margin: 25px auto;
             padding: 0 15px;
         }
 
@@ -114,38 +185,44 @@
             background: var(--card-bg);
             padding: 20px;
             margin-bottom: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            transition: background-color 0.3s;
         }
 
         h2 {
             color: var(--primary);
             margin-top: 0;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 8px;
         }
 
         .info-box {
-            background-color: #e3f2fd;
-            border-left: 5px solid #1976d2;
+            background-color: var(--info-bg);
+            border-left: 5px solid var(--info-border);
             padding: 15px 20px;
             border-radius: 6px;
+        }
+
+        .info-box h3 {
+            margin-top: 0;
+            color: var(--primary);
         }
 
         /* Tarjetas de Temas */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 15px;
         }
 
         .card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
+            background: var(--card-sub-bg);
+            border: 1px solid var(--border-color);
             border-left: 5px solid var(--primary);
-            padding: 20px;
-            border-radius: 6px;
+            padding: 18px;
+            border-radius: 8px;
             text-decoration: none;
             color: var(--text);
             transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
@@ -155,38 +232,46 @@
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            background: #f8f9fa;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-            border-left-color: var(--accent);
+            transform: translateY(-3px);
+            background: var(--card-sub-hover);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
         }
 
         .card h3 {
-            margin: 0 0 10px;
+            margin: 0 0 8px;
             color: var(--primary);
-            font-size: 1.2rem;
+            font-size: 1.15rem;
         }
 
         .card p {
             margin: 0 0 15px;
-            font-size: 0.92rem;
-            color: #555;
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
         .btn-enter {
             align-self: flex-start;
             background-color: var(--primary);
-            color: white;
+            color: #ffffff !important;
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 0.85rem;
             font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover .btn-enter {
+            background-color: var(--primary-dark);
+            transform: translateX(3px);
         }
 
         footer {
             text-align: center;
             padding: 20px;
-            color: #6c757d;
+            color: var(--text-muted);
             font-size: 0.9rem;
             margin-top: 30px;
         }
@@ -196,31 +281,54 @@
                 flex-direction: column;
                 text-align: center;
             }
+
             .logo {
-                max-height: 65px;
+                max-height: 85px;
             }
+
             .header-titles h1 {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
+            }
+
+            .header-titles h2 {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Cargar tema guardado si existe (Por defecto abre en MODO CLARO) -->
+    <script>
+        if (localStorage.getItem('theme-pm1') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    </script>
+
     <!-- Navegación para regresar al índice general -->
     <nav>
-        <a href="index.html">← Volver al Programa General de Matemáticas</a>
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Volver al Programa General de Matemáticas</a>
     </nav>
 
     <!-- Encabezado -->
     <header>
         <div class="header-container">
             <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
+            
             <div class="header-titles">
                 <h1>Unidad 3: Números y Operaciones Básicas</h1>
                 <h2>Pensamiento Matemático 1</h2>
                 <p>CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</p>
+
+                <!-- Botón de Modo Claro/Oscuro -->
+                <div class="header-controls">
+                    <button id="theme-toggle-btn" onclick="toggleTheme()" class="btn-control" aria-label="Cambiar tema de color">
+                        <i id="theme-icon" class="fa-solid fa-moon"></i>
+                        <span id="theme-text">Modo Oscuro</span>
+                    </button>
+                </div>
             </div>
+
             <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
         </div>
     </header>
@@ -230,7 +338,7 @@
         <!-- Propósito de la Unidad -->
         <section>
             <div class="info-box">
-                <h3 style="margin-top:0; color:#1565c0;">🎯 Propósito General de la Unidad</h3>
+                <h3>🎯 Propósito General de la Unidad</h3>
                 <p style="margin:0;">Analiza situaciones de conteo y realiza operaciones básicas con números naturales y enteros para resolver problemas del entorno.</p>
             </div>
         </section>
@@ -238,7 +346,7 @@
         <!-- Selección de Temas -->
         <section>
             <h2>Temas de la Unidad 3</h2>
-            <p>Selecciona el tema que deseas estudiar:</p>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Selecciona el tema que deseas estudiar:</p>
 
             <div class="grid">
                 
@@ -248,7 +356,7 @@
                         <h3>3.1 Clasificación de los Números</h3>
                         <p>Estudio de los conjuntos numéricos: Naturales ($\mathbb{N}$), Enteros ($\mathbb{Z}$), Racionales ($\mathbb{Q}$) e Irracionales ($\mathbb{I}$).</p>
                     </div>
-                    <span class="btn-enter">Ver Lección →</span>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
                 </a>
 
                 <!-- Tema 3.3.1 -->
@@ -257,7 +365,7 @@
                         <h3>3.3.1 Suma y Resta de Enteros</h3>
                         <p>Reglas de los signos para la adición y sustracción de números positivos y negativos.</p>
                     </div>
-                    <span class="btn-enter">Ver Lección →</span>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
                 </a>
 
                 <!-- Tema 3.3.2 -->
@@ -266,7 +374,7 @@
                         <h3>3.3.2 Multiplicación de Enteros y Signos de Agrupación</h3>
                         <p>Leyes de los signos para el producto y eliminación de paréntesis, corchetes y llaves.</p>
                     </div>
-                    <span class="btn-enter">Ver Lección →</span>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
                 </a>
 
                 <!-- Tema 3.3.3 -->
@@ -275,7 +383,7 @@
                         <h3>3.3.3 División de Enteros y Criterios de Divisibilidad</h3>
                         <p>Cociente de enteros y reglas de divisibilidad entre 2, 3, 5, 10, entre otros.</p>
                     </div>
-                    <span class="btn-enter">Ver Lección →</span>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
                 </a>
 
                 <!-- Tema 3.4 -->
@@ -284,7 +392,7 @@
                         <h3>3.4 Números Primos, MCD y mcm</h3>
                         <p>Descomposición en factores primos, Máximo Común Divisor y Mínimo Común Múltiplo.</p>
                     </div>
-                    <span class="btn-enter">Ver Lección →</span>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
                 </a>
 
             </div>
@@ -296,5 +404,27 @@
         <p>&copy; Pensamiento Matemático 1 — M.C. Edgar Campos Díaz | CECyTEM 05 Guacamayas</p>
     </footer>
 
+    <!-- JavaScript para Modo Oscuro -->
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            const isDark = body.classList.toggle('dark-theme');
+
+            icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            text.innerText = isDark ? 'Modo Claro' : 'Modo Oscuro';
+            localStorage.setItem('theme-pm1', isDark ? 'dark' : 'light');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sincronizar el botón si el usuario tenía activado el modo oscuro previamente
+            if (document.body.classList.contains('dark-theme')) {
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+                document.getElementById('theme-text').innerText = 'Modo Claro';
+            }
+        });
+    </script>
 </body>
 </html>
