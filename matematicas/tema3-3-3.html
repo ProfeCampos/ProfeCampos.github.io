@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>División y Divisibilidad | Guía y Simulador de Examen</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: all 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin-top: 0;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 800px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.75rem;
+        }
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver al Temario Principal
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                
+                <!-- Logo Izquierdo: CECyTEM -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <!-- Bloque Central: Titulación y Conmutador de Modo -->
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: División de Enteros y Criterios de Divisibilidad
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva y Simulador de Examen
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <!-- Botón Modo Claro/Oscuro -->
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
+                            <span id="theme-text">Modo Claro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logo Derecho: Profe Campos -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <!-- Divisor Horizontal -->
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Fila Inferior: Botones de Pestañas / Secciones Sin Paréntesis -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-guia1" onclick="switchTab('guia1')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Guía Didáctica I: Divisiones
+                </button>
+                <button id="btn-tab-guia2" onclick="switchTab('guia2')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica II: Divisibilidad
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen
+                </button>
+            </nav>
+
+            <!-- Fila Inferior: Información Didáctica -->
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Repasa el algoritmo de la división entera, sus aplicaciones prácticas y los criterios de divisibilidad. Alterna entre las dos <strong>Guías Didácticas</strong> (desplegables paso a paso) y ponte a prueba en el <strong>Simulador de Examen Interactivo</strong>.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- SECCIÓN 1: GUÍA DIDÁCTICA I (DIVISIONES) -->
+        <section id="tab-guia1" class="space-y-6">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-teal-500/40">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-divide"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Guía Didáctica I: Algoritmo de la División y Problemas Aplicados
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Cálculo de cocientes, residuos y resolución de problemas de aplicación con unidades y repartos.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia1-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: GUÍA DIDÁCTICA II (DIVISIBILIDAD) -->
+        <section id="tab-guia2" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-teal-500/40">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-check-double"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Guía Didáctica II: Criterios de Divisibilidad
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Verificación paso a paso de reglas de divisibilidad entre 3, 4, 5, 6, 7, 8, 9, 11, 13 y 19.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia2-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: SIMULADOR DE EXAMEN INTERACTIVO -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Sección 3: Simulador de Examen Interactivo
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve minuciosamente en tu libreta, ingresa o selecciona tu respuesta y verifica la solución paso a paso.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - División y Divisibilidad &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DATA GUÍA DIDÁCTICA I: DIVISIONES Y PROBLEMAS DE APLICACIÓN
+        const exercisesGuia1 = [
+            {
+                id: 1,
+                title: "Ejemplo 1 (Algoritmo de la División con Cociente y Residuo)",
+                problem: "Efectuar la división $42,874 \\div 903$ mediante el algoritmo de la caja divisora.",
+                steps: [
+                    { 
+                        title: "Paso 1: Planteamiento en la caja divisora.", 
+                        content: "Se acomodan los números en la caja divisora.<p class=\"my-2 text-center\">$$903 \\overline{\\smash{)} 42874}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 2: Dividendo parcial y primer cociente.", 
+                        content: "Se elige el dividendo parcial ($4287$) y se efectúa la operación.<p class=\"my-2 text-center\">$$\\begin{array}{r} 4 \\\\ 903 \\overline{\\smash{)} 42874} \\\\ 675 \\end{array}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 3: Bajar la siguiente cifra del dividendo.", 
+                        content: "Al bajar la siguiente cifra ($4$), el nuevo dividendo parcial es $6754$.<p class=\"my-2 text-center\">$$\\begin{array}{r} 4 \\\\ 903 \\overline{\\smash{)} 42874} \\\\ 6754 \\end{array}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 4: Segundo cociente parcial y cálculo del residuo.", 
+                        content: "Se efectúa la división de $6754$ entre $903$ y se obtiene el resultado.<p class=\"my-2 text-center\">$$\\begin{array}{r} 47 \\\\ 903 \\overline{\\smash{)} 42874} \\\\ 6754 \\\\ 433 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "Por tanto, el cociente es $47$ y el residuo $433$, la división fue inexacta.<br><div class=\"mt-2\">$$\\text{Cociente } = 47 \\quad | \\quad \\text{Residuo } = 433$$</div>"
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2 (División de Gran Escala)",
+                problem: "Resolver la división $3,123,274 \\div 42,524$ determinando el cociente entero y su residuo.",
+                steps: [
+                    { 
+                        title: "Paso 1: Planteamiento en la caja divisora.", 
+                        content: "Se acomodan los números en la caja divisora.<p class=\"my-2 text-center\">$$42524 \\overline{\\smash{)} 3123274}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 2: Dividendo parcial y primer cociente.", 
+                        content: "Se elige el dividendo parcial ($312327$) y se efectúa la operación.<p class=\"my-2 text-center\">$$\\begin{array}{r} 7 \\\\ 42524 \\overline{\\smash{)} 3123274} \\\\ 14659 \\end{array}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 3: Bajar la siguiente cifra del dividendo.", 
+                        content: "Al bajar la siguiente cifra ($4$), el nuevo dividendo parcial es $146594$.<p class=\"my-2 text-center\">$$\\begin{array}{r} 7 \\\\ 42524 \\overline{\\smash{)} 3123274} \\\\ 146594 \\end{array}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 4: Segundo cociente parcial y cálculo del residuo.", 
+                        content: "Se efectúa la división de $146594$ entre $42524$ y se obtiene el resultado.<p class=\"my-2 text-center\">$$\\begin{array}{r} 73 \\\\ 42524 \\overline{\\smash{)} 3123274} \\\\ 146594 \\\\ 19022 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "Por tanto, el cociente es $73$ y el residuo $19,022$, la división fue inexacta.<br><div class=\"mt-2\">$$\\text{Cociente } = 73 \\quad | \\quad \\text{Residuo } = 19,022$$</div>"
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3 (Factor Desconocido en un Producto)",
+                problem: "El producto de dos números enteros es $137,196$. Si uno de los factores es $927$, ¿cuál es el valor del otro número?",
+                steps: [
+                    { 
+                        title: "Paso 1: Plantear la ecuación y acomodar en la caja divisora.", 
+                        content: "Despejamos $b = \\frac{137,196}{927}$ y acomodamos los números:<p class=\"my-2 text-center\">$$927 \\overline{\\smash{)} 137196}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 2: Ejecutar la división paso a paso.", 
+                        content: "<p>1) $1371 \\div 927 = 1$ (sobran $444$):</p><p class=\"my-2 text-center\">$$\\begin{array}{r} 1 \\\\ 927 \\overline{\\smash{)} 137196} \\\\ 444 \\end{array}$$</p><p>2) Bajamos $9$: $4449 \\div 927 = 4$ (sobran $741$):</p><p class=\"my-2 text-center\">$$\\begin{array}{r} 14 \\\\ 927 \\overline{\\smash{)} 137196} \\\\ 4449 \\\\ 741 \\end{array}$$</p><p>3) Bajamos $6$: $7416 \\div 927 = 8$ (residuo $0000$):</p><p class=\"my-2 text-center\">$$\\begin{array}{r} 148 \\\\ 927 \\overline{\\smash{)} 137196} \\\\ 4449 \\\\ 7416 \\\\ 0000 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$\\text{El otro número es } 148$$"
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4 (Conversión de Unidades de Tiempo)",
+                problem: "¿Cuántas horas completas hay en $3,360$ minutos, sabiendo que una hora equivale a $60$ minutos?",
+                steps: [
+                    { 
+                        title: "Paso 1: Planteamiento en la caja divisora.", 
+                        content: "Para convertir minutos a horas, acomodamos en la caja divisora: $3,360 \\div 60$.<p class=\"my-2 text-center\">$$60 \\overline{\\smash{)} 3360}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 2: Desarrollo paso a paso.", 
+                        content: "Tomamos $336 \\div 60 = 5$ (sobran $36$). Bajamos $0 \\rightarrow 360 \\div 60 = 6$ (sobran $00$):<p class=\"my-2 text-center\">$$\\begin{array}{r} 56 \\\\ 60 \\overline{\\smash{)} 3360} \\\\ 360 \\\\ 00 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$56 \\text{ horas}$$"
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5 (Reparto Escolar de Materiales)",
+                problem: "Se reparten $7,200$ libros de matemáticas equitativamente entre $4$ escuelas. Si cada escuela tiene $600$ alumnos, ¿cuántos libros le corresponden a cada estudiante?",
+                steps: [
+                    { 
+                        title: "Paso 1: Determinar la cantidad de libros por escuela.", 
+                        content: "Dividimos $7,200 \\div 4$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 1800 \\\\ 4 \\overline{\\smash{)} 7200} \\\\ 32 \\\\ 000 \\end{array}$$</p>Cada escuela recibe $1,800$ libros." 
+                    },
+                    { 
+                        title: "Paso 2: Dividir los libros de la escuela entre sus alumnos.", 
+                        content: "Dividimos $1,800 \\div 600$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 3 \\\\ 600 \\overline{\\smash{)} 1800} \\\\ 000 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$3 \\text{ libros por estudiante}$$"
+            },
+            {
+                id: 6,
+                title: "Ejemplo 6 (Planificación de Trabajo y Días)",
+                problem: "¿Cuántos días necesitará Fabián para capturar un libro de $224$ páginas, si captura $4$ páginas por hora y trabaja $8$ horas al día?",
+                steps: [
+                    { 
+                        title: "Paso 1: Calcular la producción diaria en páginas.", 
+                        content: "$$\\text{Páginas por día} = 4 \\text{ pág/h} \\times 8 \\text{ h/día} = 32 \\text{ páginas/día}$$" 
+                    },
+                    { 
+                        title: "Paso 2: Resolver la división en la caja divisora.", 
+                        content: "Dividimos $224 \\div 32$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 7 \\\\ 32 \\overline{\\smash{)} 224} \\\\ 00 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$7 \\text{ días completos}$$"
+            },
+            {
+                id: 7,
+                title: "Ejemplo 7 (Proporcionalidad y Desfase de Reloj)",
+                problem: "Un reloj se adelanta $3$ minutos cada $4$ horas. ¿Cuántos minutos se habrá adelantado al cabo de $20$ horas?",
+                steps: [
+                    { 
+                        title: "Paso 1: Determinar el número de bloques de 4 horas.", 
+                        content: "Dividimos $20 \\div 4$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 5 \\\\ 4 \\overline{\\smash{)} 20} \\\\ 0 \\end{array}$$</p>Obtenemos $5$ bloques completos." 
+                    },
+                    { 
+                        title: "Paso 2: Multiplicar los intervalos por los minutos de adelanto.", 
+                        content: "$$\\text{Adelanto total} = 5 \\times 3 \\text{ minutos} = 15 \\text{ minutos}$$" 
+                    }
+                ],
+                result: "$$15 \\text{ minutos de adelanto}$$"
+            },
+            {
+                id: 8,
+                title: "Ejemplo 8 (Caudal de Llenado por Minuto)",
+                problem: "Una fuente tiene capacidad para $2,700$ litros de agua. ¿Qué cantidad de este líquido debe verter por minuto una llave que la llena por completo en $5$ horas?",
+                steps: [
+                    { 
+                        title: "Paso 1: Convertir las horas a minutos.", 
+                        content: "$$\\text{Tiempo en min} = 5 \\text{ horas} \\times 60 \\text{ min/hora} = 300 \\text{ minutos}$$" 
+                    },
+                    { 
+                        title: "Paso 2: Resolver la división en la caja divisora.", 
+                        content: "Efectuamos $2,700 \\div 300$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 9 \\\\ 300 \\overline{\\smash{)} 2700} \\\\ 000 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$9 \\text{ litros por minuto}$$"
+            },
+            {
+                id: 9,
+                title: "Ejemplo 9 (Compra de Prendas Combinadas)",
+                problem: "En una tienda, Omar compra igual número de pantalones que de chamarras pagando en total \\$1,500. Si cada pantalón cuesta \\$200 y cada chamarra \\$550, ¿cuántas prendas de cada clase compró?",
+                steps: [
+                    { 
+                        title: "Paso 1: Obtener el costo combinado de un conjunto.", 
+                        content: "$$\\text{Costo del par (pantalón + chamarra)} = 200 + 550 = \\$750$$" 
+                    },
+                    { 
+                        title: "Paso 2: Resolver la división en la caja divisora.", 
+                        content: "Efectuamos $1,500 \\div 750$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 2 \\\\ 750 \\overline{\\smash{)} 1500} \\\\ 000 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$2 \\text{ pantalones y } 2 \\text{ chamarras}$$"
+            },
+            {
+                id: 10,
+                title: "Ejemplo 10 (Reparto Equitativo de Gastos Familiares)",
+                problem: "Tres integrantes de una familia reparten equitativamente los gastos del hogar: luz bimestral de \\$320, teléfono mensual de \\$240, televisión por cable de \\$260 mensual y predial anual de \\$3,600. ¿Cuánto debe aportar mensualmente cada integrante?",
+                steps: [
+                    { 
+                        title: "Paso 1: Convertir todos los gastos a cuotas mensuales.", 
+                        content: "<p>Luz mensual ($320 \\div 2$):</p><p class=\"my-1 text-center\">$$\\begin{array}{r} 160 \\\\ 2 \\overline{\\smash{)} 320} \\\\ 12 \\\\ 00 \\end{array}$$</p><p>Predial mensual ($3600 \\div 12$):</p><p class=\"my-1 text-center\">$$\\begin{array}{r} 300 \\\\ 12 \\overline{\\smash{)} 3600} \\\\ 000 \\end{array}$$</p>" 
+                    },
+                    { 
+                        title: "Paso 2: Sumar el gasto mensual total del hogar.", 
+                        content: "$$\\text{Gasto total/mes} = 160 + 240 + 260 + 300 = \\$960$$" 
+                    },
+                    { 
+                        title: "Paso 3: Dividir el gasto total entre los 3 integrantes.", 
+                        content: "Efectuamos $960 \\div 3$:<p class=\"my-2 text-center\">$$\\begin{array}{r} 320 \\\\ 3 \\overline{\\smash{)} 960} \\\\ 06 \\\\ 00 \\end{array}$$</p>" 
+                    }
+                ],
+                result: "$$\\$320 \\text{ mensuales por integrante}$$"
+            }
+        ];
+
+        // DATA GUÍA DIDÁCTICA II: CRITERIOS DE DIVISIBILIDAD
+        const exercisesGuia2 = [
+            {
+                id: 1,
+                title: "Ejemplo 1 (Criterio de Divisibilidad entre 3)",
+                problem: "De los números $105, 243, 73, 2,457, 3,589$, ¿cuáles son divisibles entre $3$?",
+                steps: [
+                    { title: "Paso 1: Recordar el criterio del 3.", content: "Un número es divisible entre 3 si la suma de sus dígitos es un múltiplo de 3." },
+                    { title: "Paso 2: Evaluar cada número sumando sus cifras.", content: "<p>$105: 1+0+5 = 6$ (Múltiplo de 3) $\\rightarrow$ **Sí**</p><p>$243: 2+4+3 = 9$ (Múltiplo de 3) $\\rightarrow$ **Sí**</p><p>$73: 7+3 = 10$ (No es múltiplo) $\\rightarrow$ **No**</p><p>$2,457: 2+4+5+7 = 18$ (Múltiplo de 3) $\\rightarrow$ **Sí**</p><p>$3,589: 3+5+8+9 = 25$ (No es múltiplo) $\\rightarrow$ **No**</p>" }
+                ],
+                result: "$$105, 243 \\text{ y } 2,457$$"
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2 (Criterio de Divisibilidad entre 4)",
+                problem: "De los números $800, 112, 324, 1,426, 13,564$, ¿cuáles son divisibles entre $4$?",
+                steps: [
+                    { title: "Paso 1: Recordar el criterio del 4.", content: "Un número es divisible entre 4 si sus últimos dos dígitos son $00$ o forman un múltiplo de 4." },
+                    { title: "Paso 2: Analizar los últimos dos dígitos de cada entero.", content: "<p>$800: \\text{Termina en } 00 \\rightarrow$ **Sí**</p><p>$112: 12 \\div 4 = 3 \\rightarrow$ **Sí**</p><p>$324: 24 \\div 4 = 6 \\rightarrow$ **Sí**</p><p>$1,426: 26 \\div 4 = 6.5 \\rightarrow$ **No**</p><p>$13,564: 64 \\div 4 = 16 \\rightarrow$ **Sí**</p>" }
+                ],
+                result: "$$800, 112, 324 \\text{ y } 13,564$$"
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3 (Criterio de Divisibilidad entre 5)",
+                problem: "De los números $105, 3,176, 8,910, 34,615, 217,583$, ¿cuáles son divisibles entre $5$?",
+                steps: [
+                    { title: "Paso 1: Criterio oficial del 5.", content: "Un entero es divisible entre 5 únicamente si su último dígito es $0$ o $5$." },
+                    { title: "Paso 2: Inspeccionar la terminación de cada número.", content: "<p>$105: \\text{Termina en } 5 \\rightarrow$ **Sí**</p><p>$3,176: \\text{Termina en } 6 \\rightarrow$ **No**</p><p>$8,910: \\text{Termina en } 0 \\rightarrow$ **Sí**</p><p>$34,615: \\text{Termina en } 5 \\rightarrow$ **Sí**</p><p>$217,583: \\text{Termina en } 3 \\rightarrow$ **No**</p>" }
+                ],
+                result: "$$105, 8,910 \\text{ y } 34,615$$"
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4 (Criterio de Divisibilidad entre 6)",
+                problem: "De los números $80, 78, 314, 768, 1,470$, ¿cuáles son divisibles entre $6$?",
+                steps: [
+                    { title: "Paso 1: Criterio simultáneo del 6.", content: "Un número es divisible entre 6 si es divisible entre $2$ (par) Y entre $3$ (suma de dígitos múltiplo de 3)." },
+                    { title: "Paso 2: Comprobar ambas condiciones.", content: "<p>$80: \\text{Es par, pero } 8+0=8 \\text{ (No } \\div 3) \\rightarrow$ **No**</p><p>$78: \\text{Es par y } 7+8=15 \\text{ (Sí } \\div 3) \\rightarrow$ **Sí**</p><p>$314: \\text{Es par, pero } 3+1+4=8 \\text{ (No } \\div 3) \\rightarrow$ **No**</p><p>$768: \\text{Es par y } 7+6+8=21 \\text{ (Sí } \\div 3) \\rightarrow$ **Sí**</p><p>$1,470: \\text{Es par y } 1+4+7+0=12 \\text{ (Sí } \\div 3) \\rightarrow$ **Sí**</p>" }
+                ],
+                result: "$$78, 768 \\text{ y } 1,470$$"
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5 (Criterio de Divisibilidad entre 7)",
+                problem: "De los números $175, 157, 576, 1,645, 3,528$, ¿cuáles son divisibles entre $7$?",
+                steps: [
+                    { title: "Paso 1: Aplicar el algoritmo del 7.", content: "Multiplicar el último dígito por 2 y restar el producto a las cifras restantes. Si la diferencia es $0$ o múltiplo de 7, es divisible." },
+                    { title: "Paso 2: Evaluar la regla en los casos de prueba.", content: "<p>$175: 17 - (5 \\times 2) = 17 - 10 = 7 \\rightarrow$ **Sí**</p><p>$157: 15 - (7 \\times 2) = 15 - 14 = 1 \\rightarrow$ **No**</p><p>$576: 57 - (6 \\times 2) = 57 - 12 = 45 \\rightarrow$ **No**</p><p>$1,645: 164 - (5 \\times 2) = 154 \\rightarrow 15 - (4 \\times 2) = 7 \\rightarrow$ **Sí**</p><p>$3,528: 352 - (8 \\times 2) = 336 \\rightarrow 33 - (6 \\times 2) = 21 \\rightarrow$ **Sí**</p>" }
+                ],
+                result: "$$175, 1,645 \\text{ y } 3,528$$"
+            },
+            {
+                id: 6,
+                title: "Ejemplo 6 (Criterio de Divisibilidad entre 8)",
+                problem: "De los números $700, 3,128, 5,024, 9,000, 10,018$, ¿cuáles son divisibles entre $8$?",
+                steps: [
+                    { title: "Paso 1: Criterio del 8.", content: "Un entero es divisible entre 8 si sus tres últimos dígitos de la derecha son $000$ o forman un múltiplo de 8." },
+                    { title: "Paso 2: Analizar las 3 últimas cifras.", content: "<p>$700: 700 \\div 8 = 87.5 \\rightarrow$ **No**</p><p>$3,128: 128 \\div 8 = 16 \\rightarrow$ **Sí**</p><p>$5,024: 024 \\div 8 = 3 \\rightarrow$ **Sí**</p><p>$9,000: \\text{Termina en } 000 \\rightarrow$ **Sí**</p><p>$10,018: 018 \\div 8 = 2.25 \\rightarrow$ **No**</p>" }
+                ],
+                result: "$$3,128, 5,024 \\text{ y } 9,000$$"
+            },
+            {
+                id: 7,
+                title: "Ejemplo 7 (Criterio de Divisibilidad entre 9)",
+                problem: "De los números $225, 349, 1,008, 2,925, 23,619$, ¿cuáles son divisibles entre $9$?",
+                steps: [
+                    { title: "Paso 1: Criterio del 9.", content: "Un entero es divisible entre 9 si la suma de todos sus dígitos resulta en un múltiplo de 9." },
+                    { title: "Paso 2: Sumar las cifras de cada opción.", content: "<p>$225: 2+2+5 = 9 \\rightarrow$ **Sí**</p><p>$349: 3+4+9 = 16 \\rightarrow$ **No**</p><p>$1,008: 1+0+0+8 = 9 \\rightarrow$ **Sí**</p><p>$2,925: 2+9+2+5 = 18 \\rightarrow$ **Sí**</p><p>$23,619: 2+3+6+1+9 = 21 \\rightarrow$ **No**</p>" }
+                ],
+                result: "$$225, 1,008 \\text{ y } 2,925$$"
+            },
+            {
+                id: 8,
+                title: "Ejemplo 8 (Criterio de Divisibilidad entre 11)",
+                problem: "De los números $66, 111, 253, 935, 540$, ¿cuáles son divisibles entre $11$?",
+                steps: [
+                    { title: "Paso 1: Criterio alternante del 11.", content: "Se calcula la diferencia entre la suma de dígitos en posición par y posición impar. Si el valor absoluto es $0$ o múltiplo de 11, es divisible." },
+                    { title: "Paso 2: Aplicar la prueba a cada caso.", content: "<p>$66: |6 - 6| = 0 \\rightarrow$ **Sí**</p><p>$111: |(1+1) - 1| = 1 \\rightarrow$ **No**</p><p>$253: |(2+3) - 5| = 0 \\rightarrow$ **Sí**</p><p>$935: |(9+5) - 3| = 11 \\rightarrow$ **Sí**</p><p>$540: |(5+0) - 4| = 1 \\rightarrow$ **No**</p>" }
+                ],
+                result: "$$66, 253 \\text{ y } 935$$"
+            },
+            {
+                id: 9,
+                title: "Ejemplo 9 (Criterio de Divisibilidad entre 13)",
+                problem: "De los números $195, 315, 540, 713, 1,105$, ¿cuáles son divisibles entre $13$?",
+                steps: [
+                    { title: "Paso 1: Algoritmo oficial del 13.", content: "Multiplicar el último dígito por 9 y restarlo al número formado por las cifras restantes. Si la diferencia es $0$ o múltiplo de 13, es divisible." },
+                    { title: "Paso 2: Ejecutar los cálculos.", content: "<p>$195: 19 - (5 \\times 9) = 19 - 45 = -26 \\quad (|-26| = 26) \\rightarrow$ **Sí**</p><p>$315: 31 - (5 \\times 9) = 31 - 45 = -14 \\rightarrow$ **No**</p><p>$540: 54 - (0 \\times 9) = 54 \\rightarrow$ **No**</p><p>$713: 71 - (3 \\times 9) = 71 - 27 = 44 \\rightarrow$ **No**</p><p>$1,105: 110 - (5 \\times 9) = 110 - 45 = 65 \\quad (65 \\div 13 = 5) \\rightarrow$ **Sí**</p>" }
+                ],
+                result: "$$195 \\text{ y } 1,105$$"
+            },
+            {
+                id: 10,
+                title: "Ejemplo 10 (Criterio de Divisibilidad entre 19)",
+                problem: "De los números $1,007, 1,062, 380, 719, 1,596$, ¿cuáles son divisibles entre $19$?",
+                steps: [
+                    { title: "Paso 1: Algoritmo oficial del 19.", content: "Multiplicar el último dígito por 17 y restarlo al número formado por las cifras restantes. Si la diferencia es $0$ o múltiplo de 19, es divisible." },
+                    { title: "Paso 2: Ejecutar los cálculos.", content: "<p>$1,007: 100 - (7 \\times 17) = 100 - 119 = -19 \\rightarrow$ **Sí**</p><p>$1,062: 106 - (2 \\times 17) = 106 - 34 = 72 \\rightarrow$ **No**</p><p>$380: 38 - (0 \\times 17) = 38 \\quad (38 \\div 19 = 2) \\rightarrow$ **Sí**</p><p>$719: 71 - (9 \\times 17) = 71 - 153 = -82 \\rightarrow$ **No**</p><p>$1,596: 159 - (6 \\times 17) = 159 - 102 = 57 \\quad (57 \\div 19 = 3) \\rightarrow$ **Sí**</p>" }
+                ],
+                result: "$$1,007, 380 \\text{ y } 1,596$$"
+            }
+        ];
+
+        // DATA SECCIÓN 3: SIMULADOR DE EXAMEN INTERACTIVO
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Algoritmo de División - Cociente)",
+                problem: "Calcula únicamente el cociente entero al dividir $42,874$ entre $903$.",
+                answer: 47,
+                steps: [
+                    { 
+                        title: "1.- Acomodo en la caja divisora.", 
+                        lines: [
+                            "Se acomodan los números en la caja divisora:",
+                            "$$903 \\overline{\\smash{)} 42874}$$"
+                        ] 
+                    },
+                    { 
+                        title: "2.- Dividendo parcial y primer cociente.", 
+                        lines: [
+                            "Se elige el dividendo parcial ($4287$) y se efectúa la operación:",
+                            "$$\\begin{array}{r} 4 \\\\ 903 \\overline{\\smash{)} 42874} \\\\ 675 \\end{array}$$"
+                        ] 
+                    },
+                    { 
+                        title: "3.- Bajar la siguiente cifra del dividendo.", 
+                        lines: [
+                            "Al bajar la siguiente cifra ($4$), el nuevo dividendo parcial es $6754$:",
+                            "$$\\begin{array}{r} 4 \\\\ 903 \\overline{\\smash{)} 42874} \\\\ 6754 \\end{array}$$"
+                        ] 
+                    },
+                    { 
+                        title: "4.- Cálculo del cociente final y residuo.", 
+                        lines: [
+                            "Se efectúa la división de $6754$ entre $903$ y se obtiene el resultado:",
+                            "$$\\begin{array}{r} 47 \\\\ 903 \\overline{\\smash{)} 42874} \\\\ 6754 \\\\ 433 \\end{array}$$",
+                            "Por tanto, el cociente es $47$ y el residuo $433$."
+                        ] 
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (Residuo de una División Escolar)",
+                problem: "Determina el residuo o sobrante exacto de dividir $120,973$ entre $12,503$.",
+                answer: 8446,
+                steps: [
+                    { 
+                        title: "1.- Acomodo en la caja divisora.", 
+                        lines: [
+                            "Se acomodan los números en la caja divisora:",
+                            "$$12503 \\overline{\\smash{)} 120973}$$"
+                        ] 
+                    },
+                    { 
+                        title: "2.- División y obtención del residuo.", 
+                        lines: [
+                            "Se elige el dividendo parcial ($120973$) y se efectúa la operación:",
+                            "$$\\begin{array}{r} 9 \\\\ 12503 \\overline{\\smash{)} 120973} \\\\ 8446 \\end{array}$$",
+                            "Por tanto, el cociente es $9$ y el residuo es $8,446$."
+                        ] 
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Factor Desconocido)",
+                problem: "El producto de dos números enteros es $137,196$. Si uno de los factores es $927$, ¿cuál es el valor del otro número?",
+                answer: 148,
+                steps: [
+                    { 
+                        title: "1.- Desarrollo paso a paso en caja divisora.", 
+                        lines: [
+                            "$$\\begin{array}{r} 148 \\\\ 927 \\overline{\\smash{)} 137196} \\\\ 4449 \\\\ 7416 \\\\ 0000 \\end{array}$$",
+                            "Resultado $= 148$"
+                        ] 
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Ahorro Estudiantil)",
+                problem: "Un grupo de $62$ estudiantes ahorró en total \\$186,000$ para su graduación. Si todos aportaron la misma cantidad, ¿cuántos pesos ahorró cada uno?",
+                answer: 3000,
+                steps: [
+                    { 
+                        title: "1.- División directa del monto entre el número de alumnos.", 
+                        lines: [
+                            "$$\\begin{array}{r} 3000 \\\\ 62 \\overline{\\smash{)} 186000} \\\\ 00000 \\end{array}$$",
+                            "Resultado $= 3,000$"
+                        ] 
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Captura de Páginas)",
+                problem: "Fabián debe capturar un libro de $224$ páginas. Si captura $4$ páginas por hora y labora $8$ horas al día, ¿cuántos días completos empleará?",
+                answer: 7,
+                steps: [
+                    { title: "1.- Páginas trabajadas por día.", lines: ["$4 \\text{ pág/h} \\times 8 \\text{ h/día} = 32 \\text{ páginas/día}$"] },
+                    { 
+                        title: "2.- Días requeridos (caja divisora).", 
+                        lines: [
+                            "$$\\begin{array}{r} 7 \\\\ 32 \\overline{\\smash{)} 224} \\\\ 00 \\end{array}$$",
+                            "Resultado $= 7 \\text{ días}$"
+                        ] 
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Reparto de Gastos)",
+                problem: "Tres integrantes de una familia comparten gastos: luz bimestral de \\$320, teléfono de \\$240/mes, cable de \\$260/mes y predial de \\$3,600/año. ¿Cuántos pesos aporta mensualmente cada integrante?",
+                answer: 320,
+                steps: [
+                    { title: "1.- Convertir a montos mensuales.", lines: ["Luz: $320 \\div 2 = \\$160$", "Predial: $3,600 \\div 12 = \\$300$", "Gastos mensuales $= 160 + 240 + 260 + 300 = \\$960$"] },
+                    { 
+                        title: "2.- División equitativa entre 3 personas en la caja divisora.", 
+                        lines: [
+                            "$$\\begin{array}{r} 320 \\\\ 3 \\overline{\\smash{)} 960} \\\\ 06 \\\\ 00 \\end{array}$$",
+                            "Aporte por persona $= \\$320$"
+                        ] 
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Criterio de Divisibilidad entre 3)",
+                problem: "Selecciona <strong>todos</strong> los números de la lista que sean divisibles entre 3:",
+                type: "checkbox",
+                options: ["105", "243", "73", "2,457", "3,589"],
+                answer: [0, 1, 3], // 105, 243, 2,457
+                steps: [
+                    { title: "1.- Suma de cifras para cada entero.", lines: ["$105 \\rightarrow 1+0+5=6$ (Sí)", "$243 \\rightarrow 2+4+3=9$ (Sí)", "$73 \\rightarrow 7+3=10$ (No)", "$2,457 \\rightarrow 2+4+5+7=18$ (Sí)", "$3,589 \\rightarrow 3+5+8+9=25$ (No)"] },
+                    { title: "2.- Opciones correctas.", lines: ["Los números divisibles entre $3$ son: $105$, $243$ y $2,457$."] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Criterio de Divisibilidad entre 11)",
+                problem: "Selecciona <strong>todos</strong> los números de la lista que sean divisibles entre 11:",
+                type: "checkbox",
+                options: ["66", "111", "253", "935", "540"],
+                answer: [0, 2, 3], // 66, 253, 935
+                steps: [
+                    { title: "1.- Aplicamos la prueba de posiciones pares/impares.", lines: ["$66 \\rightarrow |6-6|=0$ (Sí)", "$111 \\rightarrow |2-1|=1$ (No)", "$253 \\rightarrow |5-5|=0$ (Sí)", "$935 \\rightarrow |14-3|=11$ (Sí)", "$540 \\rightarrow |5-4|=1$ (No)"] },
+                    { title: "2.- Opciones correctas.", lines: ["Los números divisibles entre $11$ son: $66$, $253$ y $935$."] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Prueba Criterio del 13)",
+                problem: "Al evaluar $1,105$ con el criterio del $13$, se resta 9 veces el último dígito del resto del número: $110 - (5 \\times 9)$. ¿Qué valor numérico resulta?",
+                answer: 65,
+                steps: [
+                    { title: "1.- Identificar cifras y efectuar la multiplicación.", lines: ["Último dígito $= 5 \\rightarrow 5 \\times 9 = 45$", "Número restante $= 110$"] },
+                    { title: "2.- Resta resultante.", lines: ["$110 - 45 = 65$", "(Como $65 \\div 13 = 5$, se confirma la divisibilidad)"] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Prueba Criterio del 19)",
+                problem: "Al aplicar el criterio del $19$ al número $1,596$ mediante la expresión $159 - (6 \\times 17)$, ¿cuál es el resultado entero final?",
+                answer: 57,
+                steps: [
+                    { title: "1.- Multiplicación del último dígito por 17.", lines: ["Último dígito $= 6 \\rightarrow 6 \\times 17 = 102$"] },
+                    { title: "2.- Resta final.", lines: ["$159 - 102 = 57$", "(Como $57 \\div 19 = 3$, se confirma la divisibilidad)"] }
+                ]
+            }
+        ];
+
+        // ESTADOS DE LA APLICACIÓN
+        const currentStepStateGuia1 = {};
+        const currentStepStateGuia2 = {};
+        let examUserStates = {};
+
+        // CAMBIO DE PESTAÑAS (TABS)
+        function switchTab(tab) {
+            const guia1Tab = document.getElementById('tab-guia1');
+            const guia2Tab = document.getElementById('tab-guia2');
+            const examenTab = document.getElementById('tab-examen');
+
+            const btnGuia1 = document.getElementById('btn-tab-guia1');
+            const btnGuia2 = document.getElementById('btn-tab-guia2');
+            const btnExamen = document.getElementById('btn-tab-examen');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            guia1Tab.classList.add('hidden');
+            guia2Tab.classList.add('hidden');
+            examenTab.classList.add('hidden');
+
+            btnGuia1.className = inactiveClass;
+            btnGuia2.className = inactiveClass;
+            btnExamen.className = inactiveClass;
+
+            if (tab === 'guia1') {
+                guia1Tab.classList.remove('hidden');
+                btnGuia1.className = activeClass;
+            } else if (tab === 'guia2') {
+                guia2Tab.classList.remove('hidden');
+                btnGuia2.className = activeClass;
+            } else {
+                examenTab.classList.remove('hidden');
+                btnExamen.className = activeClass;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // ALTERNAR MODO CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        // MANEJO DE PASOS DE GUÍAS DIDÁCTICAS
+        function nextStepGuia(section, id) {
+            const exList = section === 1 ? exercisesGuia1 : exercisesGuia2;
+            const stateDict = section === 1 ? currentStepStateGuia1 : currentStepStateGuia2;
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            let current = stateDict[id] || 0;
+            
+            if (current < maxStage) {
+                current++;
+                stateDict[id] = current;
+                
+                const stepElem = document.getElementById(`step-g${section}-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetStepsGuia(section, id);
+                return;
+            }
+            
+            updateStepUIGuia(section, id, ex);
+        }
+
+        function showAllStepsGuia(section, id) {
+            const exList = section === 1 ? exercisesGuia1 : exercisesGuia2;
+            const stateDict = section === 1 ? currentStepStateGuia1 : currentStepStateGuia2;
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            stateDict[id] = maxStage;
+            
+            const container = document.getElementById(`steps-container-g${section}-${id}`);
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-g${section}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                }
+            }
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+            
+            updateStepUIGuia(section, id, ex);
+        }
+
+        function resetStepsGuia(section, id) {
+            const exList = section === 1 ? exercisesGuia1 : exercisesGuia2;
+            const stateDict = section === 1 ? currentStepStateGuia1 : currentStepStateGuia2;
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            stateDict[id] = 0;
+            
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-g${section}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.remove('visible');
+                }
+            }
+            
+            updateStepUIGuia(section, id, ex);
+        }
+
+        function updateStepUIGuia(section, id, ex) {
+            const stateDict = section === 1 ? currentStepStateGuia1 : currentStepStateGuia2;
+            const totalSteps = ex.steps.length;
+            const current = stateDict[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-g${section}-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-g${section}-${id}`);
+            const btnNext = document.getElementById(`btn-next-g${section}-${id}`);
+            const btnReset = document.getElementById(`btn-reset-g${section}-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else if (current === totalSteps) {
+                btnText.innerText = `Ver Resultado Final`;
+                btnIcon.className = "fa-solid fa-trophy";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            }
+        }
+
+        function renderGuia(section, exList, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            const stateDict = section === 1 ? currentStepStateGuia1 : currentStepStateGuia2;
+
+            exList.forEach(ex => {
+                stateDict[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    stepsHTML += `
+                        <div id="step-g${section}-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3.5 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> ${stepNum}.- ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const resultStepNum = totalSteps + 1;
+                stepsHTML += `
+                    <div id="step-g${section}-${ex.id}-${resultStepNum}" class="step-item bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 border-y border-r border-emerald-300 dark:border-emerald-800 p-4 rounded-r-lg text-center shadow-xs">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-1">
+                            <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> Solución Final
+                        </span>
+                        <div class="result-box-notebook text-lg text-emerald-900 dark:text-emerald-200 mt-1">
+                            ${ex.result}
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-3 mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 px-4 text-center">
+                        <span class="text-base sm:text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-g${section}-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-g${section}-${ex.id}" onclick="nextStepGuia(${section}, ${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-g${section}-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-g${section}-${ex.id}">Ver Paso 1 de ${totalSteps}</span>
+                        </button>
+
+                        <button id="btn-all-g${section}-${ex.id}" onclick="showAllStepsGuia(${section}, ${ex.id})" class="py-2.5 px-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Mostrar todos los pasos">
+                            <i class="fa-solid fa-eye"></i>
+                            <span class="hidden sm:inline">Ver Todo</span>
+                        </button>
+
+                        <button id="btn-reset-g${section}-${ex.id}" onclick="resetStepsGuia(${section}, ${ex.id})" class="hidden py-2.5 px-3 bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Ocultar y reiniciar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span class="hidden sm:inline">Reiniciar</span>
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // LÓGICA SECCIÓN 3: SIMULADOR DE EXAMEN
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            container.innerHTML = '';
+
+            examProblems.forEach((prob, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between hover:shadow-md";
+                card.id = `exam-card-${prob.id}`;
+
+                let inputControlHTML = '';
+                
+                if (prob.type === 'checkbox') {
+                    let optionsHTML = prob.options.map((opt, optIdx) => `
+                        <label class="flex items-center gap-2 bg-white dark:bg-slate-800 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 cursor-pointer hover:border-amber-500 font-bold text-slate-800 dark:text-slate-200 text-sm transition-all shadow-xs">
+                            <input type="checkbox" name="exam-check-${prob.id}" value="${optIdx}" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 border-slate-300">
+                            <span>$${opt}$</span>
+                        </label>
+                    `).join('');
+
+                    inputControlHTML = `
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3.5 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 space-y-3">
+                            <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 block">
+                                Selecciona una o más opciones correctas:
+                            </span>
+                            <div class="flex flex-wrap gap-2.5">
+                                ${optionsHTML}
+                            </div>
+                            <div class="pt-1">
+                                <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-check"></i> Verificar Respuesta
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    inputControlHTML = `
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 flex flex-wrap sm:flex-nowrap items-center gap-3">
+                            <label for="exam-input-${prob.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                                Tu respuesta =
+                            </label>
+                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa número" 
+                                class="w-full sm:w-36 px-3 py-1.5 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white"
+                                onkeydown="if(event.key==='Enter') checkExamAnswer(${prob.id})">
+                            <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Verificar
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3 flex justify-between items-center">
+                            <h3 class="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature"></i>
+                                ${prob.title}
+                            </h3>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                Problema ${index + 1} de 10
+                            </span>
+                        </div>
+                        
+                        <div class="py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-4 px-4 text-center">
+                            <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">${prob.problem}</span>
+                        </div>
+
+                        ${inputControlHTML}
+
+                        <!-- Cuadro de Retroalimentación -->
+                        <div id="exam-feedback-${prob.id}" class="hidden mt-3 p-4 rounded-lg text-xs sm:text-sm"></div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+        }
+
+        function checkExamAnswer(id) {
+            const problem = examProblems.find(p => p.id === id);
+            const feedbackEl = document.getElementById(`exam-feedback-${id}`);
+            let isCorrect = false;
+            let userDisplayVal = "";
+
+            if (problem.type === 'checkbox') {
+                const checkedBoxes = Array.from(document.querySelectorAll(`input[name="exam-check-${id}"]:checked`));
+                if (checkedBoxes.length === 0) {
+                    alert("Por favor selecciona al menos una opción antes de verificar.");
+                    return;
+                }
+                const selectedIndices = checkedBoxes.map(cb => parseInt(cb.value)).sort((a, b) => a - b);
+                const expectedIndices = [...problem.answer].sort((a, b) => a - b);
+
+                isCorrect = selectedIndices.length === expectedIndices.length &&
+                            selectedIndices.every((val, idx) => val === expectedIndices[idx]);
+
+                userDisplayVal = selectedIndices.map(i => problem.options[i]).join(", ");
+            } else {
+                const inputEl = document.getElementById(`exam-input-${id}`);
+                const val = parseFloat(inputEl.value.trim());
+
+                if (isNaN(val)) {
+                    alert("Por favor ingresa un resultado numérico antes de verificar.");
+                    return;
+                }
+
+                isCorrect = val === problem.answer;
+                userDisplayVal = val.toString();
+            }
+
+            examUserStates[id] = {
+                answered: true,
+                correct: isCorrect,
+                userVal: userDisplayVal
+            };
+
+            if (window.MathJax && window.MathJax.typesetClear) {
+                window.MathJax.typesetClear([feedbackEl]);
+            }
+
+            feedbackEl.classList.remove('hidden');
+
+            let stepsHTML = `<div class="space-y-3 mt-3">`;
+            problem.steps.forEach(step => {
+                stepsHTML += `
+                    <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg border-l-4 border-amber-500 shadow-xs">
+                        <p class="font-bold text-amber-700 dark:text-amber-400 text-xs sm:text-sm mb-1.5">${step.title}</p>
+                        <div class="space-y-1 font-mono text-xs sm:text-sm pl-2">
+                `;
+                step.lines.forEach((line, idx) => {
+                    const isLastLine = (step === problem.steps[problem.steps.length - 1]) && (idx === step.lines.length - 1);
+                    if (isLastLine) {
+                        stepsHTML += `<div class="text-sm sm:text-base font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/80 px-2.5 py-1 rounded inline-block border border-emerald-400 dark:border-emerald-700 mt-1">${line}</div>`;
+                    } else {
+                        stepsHTML += `<div class="text-slate-800 dark:text-slate-200">${line}</div>`;
+                    }
+                });
+                stepsHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            stepsHTML += `</div>`;
+
+            const expectedText = problem.type === 'checkbox' 
+                ? problem.answer.map(i => problem.options[i]).join(", ")
+                : problem.answer;
+
+            if (isCorrect) {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-emerald-500/10 dark:bg-emerald-950/40 border-emerald-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-check text-base"></i> ¡Respuesta Correcta! (+1 Punto)
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-emerald-500/20 pb-1 mb-2">
+                        Procedimiento ejecutado correctamente:
+                    </div>
+                    ${stepsHTML}
+                `;
+            } else {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-rose-500/10 dark:bg-rose-950/40 border-rose-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-rose-600 dark:text-rose-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-xmark text-base"></i> Respuesta Incorrecta (Seleccionaste: ${userDisplayVal})
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-rose-500/20 pb-1 mb-2">
+                        Procedimiento detallado paso a paso (Selección esperada = <strong>${expectedText}</strong>):
+                    </div>
+                    ${stepsHTML}
+                `;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
+            }
+
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            const total = examProblems.length;
+            const answeredKeys = Object.keys(examUserStates);
+            const answeredCount = answeredKeys.length;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            answeredKeys.forEach(k => {
+                if (examUserStates[k].correct) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = correctCount;
+            document.getElementById('score-incorrect').innerText = incorrectCount;
+        }
+
+        function resetExam() {
+            examUserStates = {};
+            renderExam();
+            updateScoreboard();
+        }
+
+        // INICIALIZACIÓN GENERAL DE LA PÁGINA
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGuia(1, exercisesGuia1, 'guia1-container');
+            renderGuia(2, exercisesGuia2, 'guia2-container');
+            renderExam();
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.startup) {
+                window.MathJax.startup.promise.then(() => {
+                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

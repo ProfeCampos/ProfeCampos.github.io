@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suma y Resta de Enteros | Guía y Simulador de Examen</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: all 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin-top: 0;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 800px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.75rem;
+        }
+        /* Recuadro de resultado estilo libreta */
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver al Temario Principal
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                
+                <!-- Logo Izquierdo: CECyTEM -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <!-- Bloque Central: Titulación y Conmutador de Modo -->
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: Suma y Resta de Enteros
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva y Simulador de Examen Nivel Medio-Alto
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <!-- Botón Modo Claro/Oscuro -->
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
+                            <span id="theme-text">Modo Claro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logo Derecho: Profe Campos -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <!-- Divisor Horizontal -->
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Fila Inferior: Botones de Pestañas / Secciones -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-guia" onclick="switchTab('guia')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Guía Didáctica (Ejercicios Resueltos)
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen (10 Problemas)
+                </button>
+            </nav>
+
+            <!-- Fila Inferior: Información Didáctica -->
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-palette text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Leyenda de colores didácticos:</strong>
+                    <span class="text-rose-600 dark:text-rose-400 font-bold">■ Paréntesis reducidos</span> | 
+                    <span class="text-amber-600 dark:text-amber-400 font-bold">■ Corchetes reducidos</span> | 
+                    <span class="text-sky-600 dark:text-sky-400 font-bold">■ Llaves reducidas</span> | 
+                    <span class="text-emerald-600 dark:text-emerald-400 font-bold">■ Resultado final enmarcado</span>
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- SECCIÓN 1: GUÍA DIDÁCTICA (PESTAÑA GUÍA) -->
+        <section id="tab-guia" class="space-y-6">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-teal-500/40">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Sección 1: Guía Didáctica (Ejercicios Resueltos Paso a Paso)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Analiza el procedimiento matemático en formato libreta con colores en los términos reducidos.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exercises-container">
+                <!-- Los ejercicios de la Guía Didáctica se inyectarán mediante JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: SIMULADOR DE EXAMEN (PESTAÑA EXAMEN) -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Sección 2: Simulador de Examen Interactivo (10 Problemas)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve cada problema en tu libreta, ingresa tu respuesta numérica y verifica tu puntaje con solución a colores.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container">
+                <!-- Los problemas del examen se inyectarán mediante JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Suma y Resta &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DATA DE SECCIÓN 1: GUÍA DIDÁCTICA CON SINTAXIS LATEX REVISADA Y RIGUROSA
+        const exercises = [
+            {
+                id: 1,
+                title: "Ejercicio 1 (Operaciones con Llaves y Corchetes)",
+                problem: "$$-8 + \\{6 - [5 - (2-9) + (-4-7)]\\}$$",
+                steps: [
+                    { title: "Resolvemos paréntesis internos", content: "$$= -8 + \\{6 - [5 - \\color{#e11d48}{\\mathbf{(-7)}} + \\color{#e11d48}{\\mathbf{(-11)}}]\\}$$" },
+                    { title: "Resolvemos el corchete", content: "$$= -8 + \\{6 - \\color{#d97706}{\\mathbf{[5 + 7 - 11]}}\\}$$<p class=\"mt-1\">$$= -8 + \\{6 - \\color{#d97706}{\\mathbf{[1]}}\\}$$</p>" },
+                    { title: "Resolvemos la llave y operación final", content: "$$= -8 + \\color{#0284c7}{\\mathbf{\\{6 - 1\\}}}$$<p class=\"mt-1\">$$= -8 + \\color{#0284c7}{\\mathbf{\\{5\\}}}$$</p><p class=\"mt-1\">$$= -8 + 5$$</p>" }
+                ],
+                result: "$$= -3$$"
+            },
+            {
+                id: 2,
+                title: "Ejercicio 2 (Agrupación Múltiple)",
+                problem: "$$\\{12-[4-(2-8)]\\} - [5-(7-3)+(-8)]$$",
+                steps: [
+                    { title: "Resolvemos los paréntesis", content: "$$= \\{12-[4-\\color{#e11d48}{\\mathbf{(-6)}}]\\} - [5-\\color{#e11d48}{\\mathbf{(4)}}+\\color{#e11d48}{\\mathbf{(-8)}}]$$" },
+                    { title: "Resolvemos los corchetes", content: "$$= \\{12 - \\color{#d97706}{\\mathbf{[4+6]}}\\} - \\color{#d97706}{\\mathbf{[5-4-8]}}$$<p class=\"mt-1\">$$= \\{12 - \\color{#d97706}{\\mathbf{[10]}}\\} - \\color{#d97706}{\\mathbf{[-7]}}$$</p>" },
+                    { title: "Resolvemos la llave y resta final", content: "$$= \\color{#0284c7}{\\mathbf{\\{12-10\\}}} - [-7]$$<p class=\"mt-1\">$$= \\color{#0284c7}{\\mathbf{\\{2\\}}} - [-7]$$</p><p class=\"mt-1\">$$= 2 + 7$$</p>" }
+                ],
+                result: "$$= 9$$"
+            },
+            {
+                id: 3,
+                title: "Ejercicio 3 (Signos de agrupación precedidos por negativos)",
+                problem: "$$15-[(7-3)+(5-12)]-[6-(4+1)-(2-9)]$$",
+                steps: [
+                    { title: "Resolvemos los paréntesis", content: "$$= 15-[\\color{#e11d48}{\\mathbf{(4)}}+\\color{#e11d48}{\\mathbf{(-7)}}]-[6-\\color{#e11d48}{\\mathbf{(5)}}-\\color{#e11d48}{\\mathbf{(-7)}}]$$" },
+                    { title: "Resolvemos los corchetes", content: "$$= 15-\\color{#d97706}{\\mathbf{[4 - 7]}}-\\color{#d97706}{\\mathbf{[6 - 5 + 7]}}$$<p class=\"mt-1\">$$= 15-\\color{#d97706}{\\mathbf{[-3]}}-\\color{#d97706}{\\mathbf{[8]}}$$</p>" },
+                    { title: "Operación final", content: "$$= 15 + 3 - 8$$" }
+                ],
+                result: "$$= 10$$"
+            },
+            {
+                id: 4,
+                title: "Ejercicio 4 (Corchetes y paréntesis anidados)",
+                problem: "$$-[-5+(3-8)+(1-4-2)]+[(7-2)-(3-7-5)-10]$$",
+                steps: [
+                    { title: "Resolvemos los paréntesis", content: "$$= -[-5+\\color{#e11d48}{\\mathbf{(-5)}}+\\color{#e11d48}{\\mathbf{(-5)}}]+[\\color{#e11d48}{\\mathbf{(5)}}-\\color{#e11d48}{\\mathbf{(-9)}}-10]$$" },
+                    { title: "Resolvemos los corchetes", content: "$$= -\\color{#d97706}{\\mathbf{[-5-5-5]}}+\\color{#d97706}{\\mathbf{[5+9-10]}}$$<p class=\"mt-1\">$$= -\\color{#d97706}{\\mathbf{[-15]}}+\\color{#d97706}{\\mathbf{[4]}}$$</p>" },
+                    { title: "Operación final", content: "$$= 15 + 4$$" }
+                ],
+                result: "$$= 19$$"
+            },
+            {
+                id: 5,
+                title: "Ejercicio 5 (Cantidades mayores y agrupación)",
+                problem: "$$-1250 + 345 + 87 - (450 - 120) + 105$$",
+                steps: [
+                    { title: "Resolvemos el paréntesis", content: "$$= -1250 + 345 + 87 - \\color{#e11d48}{\\mathbf{(330)}} + 105$$<p class=\"mt-1\">$$= -1250 + 345 + 87 - 330 + 105$$</p>" },
+                    { title: "Agrupamos términos positivos y negativos", content: "$$= \\color{#0284c7}{\\mathbf{(345 + 87 + 105)}} + \\color{#e11d48}{\\mathbf{(-1250 - 330)}}$$<p class=\"mt-1\">$$= \\color{#0284c7}{\\mathbf{537}} \\color{#e11d48}{\\mathbf{- 1580}}$$</p>" }
+                ],
+                result: "$$= -1043$$"
+            },
+            {
+                id: 6,
+                title: "Ejercicio 6 (Problema de Aplicación: Finanzas)",
+                problem: "Una cuenta tiene un saldo de \\$4,200. Se efectúan dos retiros de \\$1,350 y \\$850, luego se depositan \\$1,200 y el banco cobra una comisión de \\$15 por cada retiro. ¿Cuál es el saldo final?",
+                steps: [
+                    { title: "Planteamiento y cálculo de comisiones", content: "$$= 4200 - 1350 - 850 + 1200 - \\color{#e11d48}{\\mathbf{(2 \\times 15)}}$$<p class=\"mt-1\">$$= 4200 - 1350 - 850 + 1200 - \\color{#e11d48}{\\mathbf{30}}$$</p>" },
+                    { title: "Agrupamos ingresos (+) y egresos (-)", content: "$$= \\color{#0284c7}{\\mathbf{(4200 + 1200)}} - \\color{#e11d48}{\\mathbf{(1350 + 850 + 30)}}$$<p class=\"mt-1\">$$= \\color{#0284c7}{\\mathbf{5400}} - \\color{#e11d48}{\\mathbf{2230}}$$</p>" }
+                ],
+                result: "$$= 3170$$"
+            },
+            {
+                id: 7,
+                title: "Ejercicio 7 (Problema de Aplicación: Préstamos)",
+                problem: "Carlos solicitó un préstamo de \\$35,000. El primer mes abonó \\$8,500, el segundo mes \\$6,200, y en el tercero se le sumó un recargo de \\$1,500 antes de abonar \\$10,000. ¿Cuánto le falta pagar para cubrir su adeudo?",
+                steps: [
+                    { title: "Planteamiento de la ecuación", content: "$$= 35000 - 8500 - 6200 + 1500 - 10000$$" },
+                    { title: "Agrupamos adeudos (+) vs abonos (-)", content: "$$= \\color{#e11d48}{\\mathbf{(35000 + 1500)}} - \\color{#0284c7}{\\mathbf{(8500 + 6200 + 10000)}}$$<p class=\"mt-1\">$$= \\color{#e11d48}{\\mathbf{36500}} - \\color{#0284c7}{\\mathbf{24700}}$$</p>" }
+                ],
+                result: "$$= 11800$$"
+            },
+            {
+                id: 8,
+                title: "Ejercicio 8 (Problema de Aplicación: Diferencias Numéricas)",
+                problem: "La edad de Ana es 28 años, la de Luis es 45, y la diferencia de las edades de Carlos y María es de 15 años. ¿En cuánto excede la suma de las edades de Ana y Luis a la diferencia de las edades de Carlos y María, si a esta última se le aumentan 8 años?",
+                steps: [
+                    { title: "Planteamiento de la expresión", content: "$$= (28 + 45) - (15 + 8)$$" },
+                    { title: "Resolvemos los paréntesis", content: "$$= \\color{#0284c7}{\\mathbf{(73)}} - \\color{#e11d48}{\\mathbf{(23)}}$$" }
+                ],
+                result: "$$= 50\\text{ años}$$"
+            },
+            {
+                id: 9,
+                title: "Ejercicio 9 (Estructura de anidación profunda)",
+                problem: "$$-10 - \\{ 8 - [-3 + (15 - 22)] - 4 \\}$$",
+                steps: [
+                    { title: "Resolvemos el paréntesis interno", content: "$$= -10 - \\{ 8 - [-3 + \\color{#e11d48}{\\mathbf{(-7)}}] - 4 \\}$$" },
+                    { title: "Resolvemos el corchete", content: "$$= -10 - \\{ 8 - \\color{#d97706}{\\mathbf{[-3 - 7]}} - 4 \\}$$<p class=\"mt-1\">$$= -10 - \\{ 8 - \\color{#d97706}{\\mathbf{[-10]}} - 4 \\}$$</p>" },
+                    { title: "Resolvemos la llave", content: "$$= -10 - \\color{#0284c7}{\\mathbf{\\{ 8 + 10 - 4 \\}}}$$<p class=\"mt-1\">$$= -10 - \\color{#0284c7}{\\mathbf{\\{ 14 \\}}}$$</p>" },
+                    { title: "Operación final", content: "$$= -10 - 14$$" }
+                ],
+                result: "$$= -24$$"
+            },
+            {
+                id: 10,
+                title: "Ejercicio 10 (Evaluación combinada extensa)",
+                problem: "$$[(5+3-14)+(16+8-25)] - [(-4+7-18)-(20-12+5)]$$",
+                steps: [
+                    { title: "Resolvemos los paréntesis", content: "$$= [\\color{#e11d48}{\\mathbf{(-6)}} + \\color{#e11d48}{\\mathbf{(-1)}}] - [\\color{#e11d48}{\\mathbf{(-15)}} - \\color{#e11d48}{\\mathbf{(13)}}]$$" },
+                    { title: "Resolvemos los corchetes", content: "$$= \\color{#d97706}{\\mathbf{[-6 - 1]}} - \\color{#d97706}{\\mathbf{[-15 - 13]}}$$<p class=\"mt-1\">$$= \\color{#d97706}{\\mathbf{[-7]}} - \\color{#d97706}{\\mathbf{[-28]}}$$</p>" },
+                    { title: "Operación final", content: "$$= -7 + 28$$" }
+                ],
+                result: "$$= 21$$"
+            }
+        ];
+
+        // DATA DE SECCIÓN 2: SIMULADOR DE EXAMEN (FORMATO EXACTO AL EJEMPLO DE LA LIBRETA)
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Jerarquía y Anidación)",
+                problem: "$$-12 + \\{8 - [6 - (3-11) + (-2-5)]\\}$$",
+                answer: -11,
+                steps: [
+                    { title: "1.- Resolvemos paréntesis internos", lines: ["$$= -12 + \\{8 - [6 - \\color{#e11d48}{\\mathbf{(-8)}} + \\color{#e11d48}{\\mathbf{(-7)}}]\\}$$"] },
+                    { title: "2.- Resolvemos el corchete", lines: ["$$= -12 + \\{8 - \\color{#d97706}{\\mathbf{[6 + 8 - 7]}}\\}$$", "$$= -12 + \\{8 - \\color{#d97706}{\\mathbf{[7]}}\\}$$"] },
+                    { title: "3.- Resolvemos la llave", lines: ["$$= -12 + \\color{#0284c7}{\\mathbf{\\{8 - 7\\}}}$$", "$$= -12 + \\color{#0284c7}{\\mathbf{\\{1\\}}}$$"] },
+                    { title: "4.- Operación final", lines: ["$$= -12 + 1$$"] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (Agrupación Doble)",
+                problem: "$$\\{15-[6-(4-9)]\\} - [8-(10-4)+(-5)]$$",
+                answer: 7,
+                steps: [
+                    { title: "1.- Resolvemos los paréntesis", lines: ["$$= \\{15-[6-\\color{#e11d48}{\\mathbf{(-5)}}]\\} - [8-\\color{#e11d48}{\\mathbf{(6)}}+\\color{#e11d48}{\\mathbf{(-5)}}]$$"] },
+                    { title: "2.- Resolvemos los corchetes", lines: ["$$= \\{15 - \\color{#d97706}{\\mathbf{[6+5]}}\\} - \\color{#d97706}{\\mathbf{[8-6-5]}}$$", "$$= \\{15 - \\color{#d97706}{\\mathbf{[11]}}\\} - \\color{#d97706}{\\mathbf{[-3]}}$$"] },
+                    { title: "3.- Resolvemos la llave", lines: ["$$= \\color{#0284c7}{\\mathbf{\\{15 - 11\\}}} - [-3]$$", "$$= \\color{#0284c7}{\\mathbf{\\{4\\}}} - [-3]$$"] },
+                    { title: "4.- Operación final", lines: ["$$= 4 + 3$$"] }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Signos de Agrupación)",
+                problem: "$$20 - [(8-5) + (4-15)] - [9 - (6+2) - (3-10)]$$",
+                answer: 20,
+                steps: [
+                    { title: "1.- Resolvemos los paréntesis", lines: ["$$= 20 - [\\color{#e11d48}{\\mathbf{(3)}} + \\color{#e11d48}{\\mathbf{(-11)}}] - [9 - \\color{#e11d48}{\\mathbf{(8)}} - \\color{#e11d48}{\\mathbf{(-7)}}]$$"] },
+                    { title: "2.- Resolvemos los corchetes", lines: ["$$= 20 - \\color{#d97706}{\\mathbf{[3 - 11]}} - \\color{#d97706}{\\mathbf{[9 - 8 + 7]}}$$", "$$= 20 - \\color{#d97706}{\\mathbf{[-8]}} - \\color{#d97706}{\\mathbf{[8]}}$$"] },
+                    { title: "3.- Operación final", lines: ["$$= 20 + 8 - 8$$"] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Corchetes Extensos)",
+                problem: "$$-[-8+(5-12)+(3-7-1)]+[(9-4)-(2-8-6)-12]$$",
+                answer: 25,
+                steps: [
+                    { title: "1.- Resolvemos los paréntesis", lines: ["$$= -[-8 + \\color{#e11d48}{\\mathbf{(-7)}} + \\color{#e11d48}{\\mathbf{(-5)}}] + [\\color{#e11d48}{\\mathbf{(5)}} - \\color{#e11d48}{\\mathbf{(-12)}} - 12]$$"] },
+                    { title: "2.- Resolvemos los corchetes", lines: ["$$= -\\color{#d97706}{\\mathbf{[-8 - 7 - 5]}} + \\color{#d97706}{\\mathbf{[5 + 12 - 12]}}$$", "$$= -\\color{#d97706}{\\mathbf{[-20]}} + \\color{#d97706}{\\mathbf{[5]}}$$"] },
+                    { title: "3.- Operación final", lines: ["$$= 20 + 5$$"] }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Cantidades Grandes)",
+                problem: "$$-1500 + 420 + 95 - (580 - 210) + 140$$",
+                answer: -1215,
+                steps: [
+                    { title: "1.- Resolvemos el paréntesis", lines: ["$$= -1500 + 420 + 95 - \\color{#e11d48}{\\mathbf{(370)}} + 140$$", "$$= -1500 + 420 + 95 - 370 + 140$$"] },
+                    { title: "2.- Agrupamos términos positivos y negativos", lines: ["$$= \\color{#0284c7}{\\mathbf{(420 + 95 + 140)}} + \\color{#e11d48}{\\mathbf{(-1500 - 370)}}$$", "$$= \\color{#0284c7}{\\mathbf{655}} \\color{#e11d48}{\\mathbf{- 1870}}$$"] },
+                    { title: "3.- Operación final", lines: ["$$= 655 - 1870$$"] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Aplicación: Inventario)",
+                problem: "Una tienda tiene un inventario de 2,500 piezas. Recibe dos entregas de 800 y 450 piezas, vende 1,600 piezas y descarta 40 dañadas. ¿Cuántas piezas quedan?",
+                answer: 2110,
+                steps: [
+                    { title: "1.- Planteamiento de la ecuación", lines: ["$$= 2500 + 800 + 450 - 1600 - 40$$"] },
+                    { title: "2.- Agrupamos entradas (+) y salidas (-)", lines: ["$$= \\color{#0284c7}{\\mathbf{(2500 + 800 + 450)}} - \\color{#e11d48}{\\mathbf{(1600 + 40)}}$$", "$$= \\color{#0284c7}{\\mathbf{3750}} - \\color{#e11d48}{\\mathbf{1640}}$$"] },
+                    { title: "3.- Operación final", lines: ["$$= 3750 - 1640$$"] }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Aplicación: Estado de Cuenta)",
+                problem: "María tiene un saldo bancario de \\$18,000. Pagó \\$4,300 y \\$2,800. Luego depositó \\$5,500 y se le cobró una comisión de \\$250. ¿Cuál es su saldo final?",
+                answer: 16150,
+                steps: [
+                    { title: "1.- Planteamiento de la ecuación", lines: ["$$= 18000 - 4300 - 2800 + 5500 - 250$$"] },
+                    { title: "2.- Agrupamos abonos/saldo (+) y cargos (-)", lines: ["$$= \\color{#0284c7}{\\mathbf{(18000 + 5500)}} - \\color{#e11d48}{\\mathbf{(4300 + 2800 + 250)}}$$", "$$= \\color{#0284c7}{\\mathbf{23500}} - \\color{#e11d48}{\\mathbf{7350}}$$"] },
+                    { title: "3.- Operación final", lines: ["$$= 23500 - 7350$$"] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Aplicación: Altitud)",
+                problem: "Un alpinista está a 1,800m de altitud. Asciende 650m, desciende 420m para acampar y luego asciende otros 890m. ¿A qué altitud se encuentra?",
+                answer: 2920,
+                steps: [
+                    { title: "1.- Planteamiento de la ecuación", lines: ["$$= 1800 + 650 - 420 + 890$$"] },
+                    { title: "2.- Agrupamos ascensos (+) y descensos (-)", lines: ["$$= \\color{#0284c7}{\\mathbf{(1800 + 650 + 890)}} - 420$$", "$$= \\color{#0284c7}{\\mathbf{3340}} - 420$$"] },
+                    { title: "3.- Operación final", lines: ["$$= 3340 - 420$$"] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Anidación Compleja)",
+                problem: "$$-15 - \\{ 10 - [-4 + (18 - 25)] - 6 \\}$$",
+                answer: -30,
+                steps: [
+                    { title: "1.- Resolvemos el paréntesis interno", lines: ["$$= -15 - \\{ 10 - [-4 + \\color{#e11d48}{\\mathbf{(-7)}}] - 6 \\}$$"] },
+                    { title: "2.- Resolvemos el corchete", lines: ["$$= -15 - \\{ 10 - \\color{#d97706}{\\mathbf{[-4 - 7]}} - 6 \\}$$", "$$= -15 - \\{ 10 - \\color{#d97706}{\\mathbf{[-11]}} - 6 \\}$$"] },
+                    { title: "3.- Resolvemos la llave", lines: ["$$= -15 - \\color{#0284c7}{\\mathbf{\\{ 10 + 11 - 6 \\}}}$$", "$$= -15 - \\color{#0284c7}{\\mathbf{\\{ 15 \\}}}$$"] },
+                    { title: "4.- Operación final", lines: ["$$= -15 - 15$$"] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Evaluación Combinada)",
+                problem: "$$[(6+4-18)+(12+9-28)] - [(-5+8-16)-(18-10+6)]$$",
+                answer: 12,
+                steps: [
+                    { title: "1.- Resolvemos los paréntesis", lines: ["$$= [\\color{#e11d48}{\\mathbf{(-8)}} + \\color{#e11d48}{\\mathbf{(-7)}}] - [\\color{#e11d48}{\\mathbf{(-13)}} - \\color{#e11d48}{\\mathbf{(14)}}]$$"] },
+                    { title: "2.- Resolvemos los corchetes", lines: ["$$= \\color{#d97706}{\\mathbf{[-8 - 7]}} - \\color{#d97706}{\\mathbf{[-13 - 14]}}$$", "$$= \\color{#d97706}{\\mathbf{[-15]}} - \\color{#d97706}{\\mathbf{[-27]}}$$"] },
+                    { title: "3.- Operación final", lines: ["$$= -15 + 27$$"] }
+                ]
+            }
+        ];
+
+        // ESTADOS DE LA APLICACIÓN
+        const currentStepState = {};
+        let examUserStates = {};
+
+        // CAMBIO DE PESTAÑAS (TABS)
+        function switchTab(tab) {
+            const guiaTab = document.getElementById('tab-guia');
+            const examenTab = document.getElementById('tab-examen');
+            const btnGuia = document.getElementById('btn-tab-guia');
+            const btnExamen = document.getElementById('btn-tab-examen');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            if (tab === 'guia') {
+                guiaTab.classList.remove('hidden');
+                examenTab.classList.add('hidden');
+                btnGuia.className = activeClass;
+                btnExamen.className = inactiveClass;
+            } else {
+                guiaTab.classList.add('hidden');
+                examenTab.classList.remove('hidden');
+                btnExamen.className = activeClass;
+                btnGuia.className = inactiveClass;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // ALTERNAR MODO CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        // LÓGICA SECCIÓN 1: GUÍA DIDÁCTICA (PASOS)
+        function nextStep(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            let current = currentStepState[id] || 0;
+            
+            if (current < maxStage) {
+                current++;
+                currentStepState[id] = current;
+                
+                const stepElem = document.getElementById(`step-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetSteps(id);
+                return;
+            }
+            
+            updateStepUI(id, ex);
+        }
+
+        function showAllSteps(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            currentStepState[id] = maxStage;
+            
+            const container = document.getElementById(`steps-container-${id}`);
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                }
+            }
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+            
+            updateStepUI(id, ex);
+        }
+
+        function resetSteps(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            currentStepState[id] = 0;
+            
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.remove('visible');
+                }
+            }
+            
+            updateStepUI(id, ex);
+        }
+
+        function updateStepUI(id, ex) {
+            const totalSteps = ex.steps.length;
+            const current = currentStepState[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${id}`);
+            const btnNext = document.getElementById(`btn-next-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else if (current === totalSteps) {
+                btnText.innerText = `Ver Resultado Final`;
+                btnIcon.className = "fa-solid fa-trophy";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            }
+        }
+
+        function renderExercises() {
+            const container = document.getElementById('exercises-container');
+            container.innerHTML = '';
+            
+            exercises.forEach(ex => {
+                currentStepState[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+                
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+                
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    stepsHTML += `
+                        <div id="step-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3.5 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> ${stepNum}.- ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                const resultStepNum = totalSteps + 1;
+                stepsHTML += `
+                    <div id="step-${ex.id}-${resultStepNum}" class="step-item bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 border-y border-r border-emerald-300 dark:border-emerald-800 p-4 rounded-r-lg text-center shadow-xs">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-1">
+                            <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> Resultado Final
+                        </span>
+                        <div class="result-box-notebook text-xl text-emerald-900 dark:text-emerald-200 mt-1">
+                            ${ex.result}
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-3 mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 px-4 text-center">
+                        <span class="text-base sm:text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-${ex.id}" onclick="nextStep(${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-${ex.id}">Ver Paso 1 de ${totalSteps}</span>
+                        </button>
+
+                        <button id="btn-all-${ex.id}" onclick="showAllSteps(${ex.id})" class="py-2.5 px-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Mostrar todos los pasos">
+                            <i class="fa-solid fa-eye"></i>
+                            <span class="hidden sm:inline">Ver Todo</span>
+                        </button>
+
+                        <button id="btn-reset-${ex.id}" onclick="resetSteps(${ex.id})" class="hidden py-2.5 px-3 bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Ocultar y reiniciar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span class="hidden sm:inline">Reiniciar</span>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // LÓGICA SECCIÓN 2: SIMULADOR DE EXAMEN INTERACTIVO
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            container.innerHTML = '';
+
+            examProblems.forEach((prob, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between hover:shadow-md";
+                card.id = `exam-card-${prob.id}`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3 flex justify-between items-center">
+                            <h3 class="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature"></i>
+                                ${prob.title}
+                            </h3>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                Problema ${index + 1} de 10
+                            </span>
+                        </div>
+                        
+                        <div class="py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-4 px-4 text-center">
+                            <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">${prob.problem}</span>
+                        </div>
+
+                        <!-- Formulario de Respuesta Tecleada -->
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 flex flex-wrap sm:flex-nowrap items-center gap-3">
+                            <label for="exam-input-${prob.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                                Tu respuesta =
+                            </label>
+                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa número" 
+                                class="w-full sm:w-36 px-3 py-1.5 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white"
+                                onkeydown="if(event.key==='Enter') checkExamAnswer(${prob.id})">
+                            <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Verificar
+                            </button>
+                        </div>
+
+                        <!-- Cuadro de Retroalimentación -->
+                        <div id="exam-feedback-${prob.id}" class="hidden mt-3 p-4 rounded-lg text-xs sm:text-sm"></div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function checkExamAnswer(id) {
+            const inputEl = document.getElementById(`exam-input-${id}`);
+            const feedbackEl = document.getElementById(`exam-feedback-${id}`);
+            const val = parseFloat(inputEl.value.trim());
+
+            if (isNaN(val)) {
+                alert("Por favor ingresa un resultado numérico antes de verificar.");
+                return;
+            }
+
+            const problem = examProblems.find(p => p.id === id);
+            const isCorrect = val === problem.answer;
+
+            examUserStates[id] = {
+                answered: true,
+                correct: isCorrect,
+                userVal: val
+            };
+
+            // Limpieza del caché de MathJax para evitar superposición
+            if (window.MathJax && window.MathJax.typesetClear) {
+                window.MathJax.typesetClear([feedbackEl]);
+            }
+
+            feedbackEl.classList.remove('hidden');
+
+            // Generar HTML con desarrollo matemático exacto al cuaderno del profesor
+            let stepsHTML = `<div class="space-y-2.5 mt-3 font-medium">`;
+            problem.steps.forEach((step, idx) => {
+                stepsHTML += `
+                    <div class="bg-white/90 dark:bg-slate-800/90 p-3 rounded-lg border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
+                        <div class="text-xs font-bold text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-line text-teal-500"></i> ${step.title}
+                        </div>
+                        <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                            ${step.lines.map(line => `<div class="my-0.5">${line}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            stepsHTML += `
+                <div class="bg-emerald-100/80 dark:bg-emerald-950/60 p-3.5 rounded-lg border border-emerald-400 dark:border-emerald-800 text-center mt-2">
+                    <span class="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider block mb-1">Resultado final</span>
+                    <div class="result-box-notebook text-xl text-emerald-900 dark:text-emerald-200">
+                        $$= ${problem.answer}$$
+                    </div>
+                </div>
+            </div>`;
+
+            if (isCorrect) {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-emerald-500/10 dark:bg-emerald-950/40 border-emerald-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-check text-base"></i> ¡Respuesta Correcta! (+1 Punto)
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-emerald-500/20 pb-1 mb-2">
+                        Procedimiento paso a paso que debiste seguir:
+                    </div>
+                    ${stepsHTML}
+                `;
+            } else {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-rose-500/10 dark:bg-rose-950/40 border-rose-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-rose-600 dark:text-rose-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-xmark text-base"></i> Respuesta Incorrecta (Ingresaste: ${val})
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-rose-500/20 pb-1 mb-2">
+                        Procedimiento paso a paso que debiste seguir:
+                    </div>
+                    ${stepsHTML}
+                `;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
+            }
+
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            const total = examProblems.length;
+            const answeredKeys = Object.keys(examUserStates);
+            const answeredCount = answeredKeys.length;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            answeredKeys.forEach(k => {
+                if (examUserStates[k].correct) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = correctCount;
+            document.getElementById('score-incorrect').innerText = incorrectCount;
+        }
+
+        function resetExam() {
+            examUserStates = {};
+            const container = document.getElementById('exam-container');
+            if (window.MathJax && window.MathJax.typesetClear && container) {
+                window.MathJax.typesetClear([container]);
+            }
+            renderExam();
+            updateScoreboard();
+            if (window.MathJax && window.MathJax.typesetPromise && container) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+        }
+
+        // INICIALIZACIÓN DE LA PÁGINA
+        window.addEventListener('DOMContentLoaded', () => {
+            renderExercises();
+            renderExam();
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.startup) {
+                window.MathJax.startup.promise.then(() => {
+                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

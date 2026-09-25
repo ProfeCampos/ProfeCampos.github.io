@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Números Primos, MCD y mcm | Guía Didáctica y Simulador</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: all 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin-top: 0;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 800px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.75rem;
+        }
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver al Temario Principal
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: Números Primos, MCD y mcm
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva y Simulador de Examen (Unidad 3)
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
+                            <span id="theme-text">Modo Claro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Navegación por Pestañas -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-primos" onclick="switchTab('primos')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Sección 1: Números Primos
+                </button>
+                <button id="btn-tab-guia1" onclick="switchTab('guia1')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica I: MCD
+                </button>
+                <button id="btn-tab-guia2" onclick="switchTab('guia2')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica II: mcm
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Presiona <strong>"Ver Paso"</strong> para avanzar línea a línea en la tabla de descomposición factorial, permitiendo pensar en el siguiente número primo antes de revelarlo.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- SECCIÓN 1: NÚMEROS PRIMOS Y DESCOMPOSICIÓN -->
+        <section id="tab-primos" class="space-y-6">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-book-open text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Números Primos y Descomposición Factorial Paso a Paso
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>
+                        Un <strong>número primo</strong> es aquel entero positivo mayor que $1$ que únicamente es divisible entre sí mismo y la unidad ($1$). Los números enteros mayores que $1$ que no son primos reciben el nombre de <strong>números compuestos</strong>. Por definición, el $1$ no se considera ni primo ni compuesto.
+                    </p>
+                    <div class="p-4 bg-teal-50 dark:bg-teal-950/40 border-l-4 border-teal-500 rounded-r-lg">
+                        <h4 class="font-bold text-teal-800 dark:text-teal-300 text-sm uppercase tracking-wide mb-1">
+                            <i class="fa-solid fa-border-all mr-1"></i> Primos menores que 100 (Criba de Eratóstenes):
+                        </h4>
+                        <p class="font-mono text-teal-900 dark:text-teal-200 font-semibold text-xs sm:text-sm">
+                            \{ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 \}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2 border-b-2 border-teal-500/40 pb-2">
+                <i class="fa-solid fa-cubes text-teal-600 dark:text-teal-400 text-xl"></i>
+                <h3 class="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">
+                    Ejemplos de Descomposición en Factores Primos (Despliegue Factor por Factor)
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="primos-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: GUÍA DIDÁCTICA I (MCD) -->
+        <section id="tab-guia1" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-teal-500/40">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Guía Didáctica I: Máximo Común Divisor (MCD)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Ejercicios de cálculo directo y problemas de aplicación desplegados paso a paso.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia1-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: GUÍA DIDÁCTICA II (mcm) -->
+        <section id="tab-guia2" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-teal-500/40">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Guía Didáctica II: Mínimo Común Múltiplo (mcm)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Ejercicios de cálculo directo y problemas de aplicación desplegados paso a paso.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia2-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: SIMULADOR DE EXAMEN INTERACTIVO -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Simulador de Examen Interactivo
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve minuciosamente en tu libreta, ingresa tu respuesta y verifica la solución.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Números Primos, MCD y mcm &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DATA SECCIÓN 1: NÚMEROS PRIMOS Y FACTORIZACIÓN DESPLEGADA PASO A PASO POR CADA FACTOR
+        const exercisesPrimos = [
+            {
+                id: 1,
+                title: "Ejemplo 1: Factorización de $1,260$",
+                problem: "Expresa el número $1,260$ como el producto de sus factores primos.",
+                steps: [
+                    {
+                        title: "Primer divisor primo: 2",
+                        content: "$1,260$ es par, dividimos entre el primer número primo $2$:<br>$$1,260 \\div 2 = 630$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 1260 & \\mathbf{2} \\\\ 630 & \\end{array}$$</p>"
+                    },
+                    {
+                        title: "Segundo divisor primo: 2",
+                        content: "$630$ sigue siendo par, dividimos nuevamente entre $2$:<br>$$630 \\div 2 = 315$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 1260 & 2 \\\\ 630 & \\mathbf{2} \\\\ 315 & \\end{array}$$</p>"
+                    },
+                    {
+                        title: "Tercer divisor primo: 3",
+                        content: "$315$ ya no es par ($3+1+5=9$, múltiplo de $3$), dividimos entre $3$:<br>$$315 \\div 3 = 105$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 1260 & 2 \\\\ 630 & 2 \\\\ 315 & \\mathbf{3} \\\\ 105 & \\end{array}$$</p>"
+                    },
+                    {
+                        title: "Cuarto divisor primo: 3",
+                        content: "$105$ es divisible entre $3$ ($1+0+5=6$), dividimos entre $3$:<br>$$105 \\div 3 = 35$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 1260 & 2 \\\\ 630 & 2 \\\\ 315 & 3 \\\\ 105 & \\mathbf{3} \\\\ 35 & \\end{array}$$</p>"
+                    },
+                    {
+                        title: "Quinto divisor primo: 5",
+                        content: "$35$ termina en $5$, dividimos entre $5$:<br>$$35 \\div 5 = 7$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 1260 & 2 \\\\ 630 & 2 \\\\ 315 & 3 \\\\ 105 & 3 \\\\ 35 & \\mathbf{5} \\\\ 7 & \\end{array}$$</p>"
+                    },
+                    {
+                        title: "Sexto divisor primo: 7",
+                        content: "$7$ es un número primo, dividimos entre $7$:<br>$$7 \\div 7 = 1 \\quad \\text{(¡Llegamos a 1!)}$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 1260 & 2 \\\\ 630 & 2 \\\\ 315 & 3 \\\\ 105 & 3 \\\\ 35 & 5 \\\\ 7 & \\mathbf{7} \\\\ 1 & \\end{array}$$</p>"
+                    },
+                    {
+                        title: "Expresión en potencias de primos",
+                        content: "Agrupamos los divisores primos obtenidos ($2, 2, 3, 3, 5, 7$):<p class=\"my-2 text-center\">$$1,260 = 2^2 \\cdot 3^2 \\cdot 5 \\cdot 7$$</p>"
+                    }
+                ],
+                result: "$$1,260 = 2^2 \\cdot 3^2 \\cdot 5 \\cdot 7$$"
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2: Factorización de $3,780$",
+                problem: "Encuentra la factorización completa de $3,780$ en factores primos.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "$3,780$ es par, dividimos entre $2$:<br>$$3,780 \\div 2 = 1,890$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & \\mathbf{2} \\\\ 1890 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "$1,890$ es par, dividimos entre $2$:<br>$$1,890 \\div 2 = 945$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & 2 \\\\ 1890 & \\mathbf{2} \\\\ 945 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$945$ es impar ($9+4+5=18$), dividimos entre $3$:<br>$$945 \\div 3 = 315$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & \\mathbf{3} \\\\ 315 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$315$ es divisible entre $3$, dividimos entre $3$:<br>$$315 \\div 3 = 105$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & \\mathbf{3} \\\\ 105 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$105$ es divisible entre $3$, dividimos entre $3$:<br>$$105 \\div 3 = 35$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & 3 \\\\ 105 & \\mathbf{3} \\\\ 35 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "$35$ termina en $5$, dividimos entre $5$:<br>$$35 \\div 5 = 7$$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & 3 \\\\ 105 & 3 \\\\ 35 & \\mathbf{5} \\\\ 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "$7 \\div 7 = 1$:<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & 3 \\\\ 105 & 3 \\\\ 35 & 5 \\\\ 7 & \\mathbf{7} \\\\ 1 & \\end{array}$$</p>" },
+                    { title: "Expresión final", content: "Sintetizamos en notación exponencial:<p class=\"my-2 text-center\">$$3,780 = 2^2 \\cdot 3^3 \\cdot 5 \\cdot 7$$</p>" }
+                ],
+                result: "$$3,780 = 2^2 \\cdot 3^3 \\cdot 5 \\cdot 7$$"
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3: Factorización de $7,560$",
+                problem: "Descompón el número entero $7,560$ en sus divisores primos.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "$7,560 \\div 2 = 3,780$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & \\mathbf{2} \\\\ 3780 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "$3,780 \\div 2 = 1,890$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & \\mathbf{2} \\\\ 1890 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "$1,890 \\div 2 = 945$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & 2 \\\\ 1890 & \\mathbf{2} \\\\ 945 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$945 \\div 3 = 315$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & \\mathbf{3} \\\\ 315 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$315 \\div 3 = 105$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & \\mathbf{3} \\\\ 105 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$105 \\div 3 = 35$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & 3 \\\\ 105 & \\mathbf{3} \\\\ 35 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "$35 \\div 5 = 7$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & 3 \\\\ 105 & 3 \\\\ 35 & \\mathbf{5} \\\\ 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "$7 \\div 7 = 1$:<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 7560 & 2 \\\\ 3780 & 2 \\\\ 1890 & 2 \\\\ 945 & 3 \\\\ 315 & 3 \\\\ 105 & 3 \\\\ 35 & 5 \\\\ 7 & \\mathbf{7} \\\\ 1 & \\end{array}$$</p>" },
+                    { title: "Expresión final", content: "Resumen en notación exponencial:<p class=\"my-2 text-center\">$$7,560 = 2^3 \\cdot 3^3 \\cdot 5 \\cdot 7$$</p>" }
+                ],
+                result: "$$7,560 = 2^3 \\cdot 3^3 \\cdot 5 \\cdot 7$$"
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4: Factorización de $14,700$",
+                problem: "Expresa $14,700$ como el producto de sus factores primos.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "$14,700 \\div 2 = 7,350$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & \\mathbf{2} \\\\ 7350 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "$7,350 \\div 2 = 3,675$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & 2 \\\\ 7350 & \\mathbf{2} \\\\ 3675 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$3,675 \\div 3 = 1,225$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & 2 \\\\ 7350 & 2 \\\\ 3675 & \\mathbf{3} \\\\ 1225 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "$1,225 \\div 5 = 245$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & 2 \\\\ 7350 & 2 \\\\ 3675 & 3 \\\\ 1225 & \\mathbf{5} \\\\ 245 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "$245 \\div 5 = 49$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & 2 \\\\ 7350 & 2 \\\\ 3675 & 3 \\\\ 1225 & 5 \\\\ 245 & \\mathbf{5} \\\\ 49 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "$49 \\div 7 = 7$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & 2 \\\\ 7350 & 2 \\\\ 3675 & 3 \\\\ 1225 & 5 \\\\ 245 & 5 \\\\ 49 & \\mathbf{7} \\\\ 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "$7 \\div 7 = 1$:<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 14700 & 2 \\\\ 7350 & 2 \\\\ 3675 & 3 \\\\ 1225 & 5 \\\\ 245 & 5 \\\\ 49 & 7 \\\\ 7 & \\mathbf{7} \\\\ 1 & \\end{array}$$</p>" },
+                    { title: "Expresión final", content: "Resultado agrupado:<p class=\"my-2 text-center\">$$14,700 = 2^2 \\cdot 3 \\cdot 5^2 \\cdot 7^2$$</p>" }
+                ],
+                result: "$$14,700 = 2^2 \\cdot 3 \\cdot 5^2 \\cdot 7^2$$"
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5: Factorización de $18,018$",
+                problem: "Determina la descomposición en factores primos de $18,018$.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "$18,018 \\div 2 = 9,009$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 18018 & \\mathbf{2} \\\\ 9009 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$9,009 \\div 3 = 3,003$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 18018 & 2 \\\\ 9009 & \\mathbf{3} \\\\ 3003 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "$3,003 \\div 3 = 1,001$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 18018 & 2 \\\\ 9009 & 3 \\\\ 3003 & \\mathbf{3} \\\\ 1001 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "$1,001 \\div 7 = 143$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 18018 & 2 \\\\ 9009 & 3 \\\\ 3003 & 3 \\\\ 1001 & \\mathbf{7} \\\\ 143 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 11", content: "$143 \\div 11 = 13$<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 18018 & 2 \\\\ 9009 & 3 \\\\ 3003 & 3 \\\\ 1001 & 7 \\\\ 143 & \\mathbf{11} \\\\ 13 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 13", content: "$13 \\div 13 = 1$:<p class=\"my-2 text-center\">$$\\begin{array}{r|l} 18018 & 2 \\\\ 9009 & 3 \\\\ 3003 & 3 \\\\ 1001 & 7 \\\\ 143 & 11 \\\\ 13 & \\mathbf{13} \\\\ 1 & \\end{array}$$</p>" },
+                    { title: "Expresión final", content: "Notación final:<p class=\"my-2 text-center\">$$18,018 = 2 \\cdot 3^2 \\cdot 7 \\cdot 11 \\cdot 13$$</p>" }
+                ],
+                result: "$$18,018 = 2 \\cdot 3^2 \\cdot 7 \\cdot 11 \\cdot 13$$"
+            }
+        ];
+
+        // DATA SECCIÓN 2: GUÍA DIDÁCTICA I (MCD)
+        const exercisesGuia1 = [
+            {
+                id: 1,
+                title: "MCD 1: Cálculo Directo de Tres Números",
+                problem: "Calcula el Máximo Común Divisor de $360$, $540$ y $900$.",
+                steps: [
+                    { title: "Divisor primo común: 2", content: "Todos son pares. Dividimos simultáneamente entre $2$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 540 & 900 & \\mathbf{2} \\\\ 180 & 270 & 450 & \\end{array}$$</p>" },
+                    { title: "Divisor primo común: 2", content: "Siguen siendo pares. Dividimos entre $2$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 540 & 900 & 2 \\\\ 180 & 270 & 450 & \\mathbf{2} \\\\ 90 & 135 & 225 & \\end{array}$$</p>" },
+                    { title: "Divisor primo común: 3", content: "Ya no todos son pares. Probamos con $3$ (todos son divisibles entre $3$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 540 & 900 & 2 \\\\ 180 & 270 & 450 & 2 \\\\ 90 & 135 & 225 & \\mathbf{3} \\\\ 30 & 45 & 75 & \\end{array}$$</p>" },
+                    { title: "Divisor primo común: 3", content: "Dividimos nuevamente entre $3$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 540 & 900 & 2 \\\\ 180 & 270 & 450 & 2 \\\\ 90 & 135 & 225 & 3 \\\\ 30 & 45 & 75 & \\mathbf{3} \\\\ 10 & 15 & 25 & \\end{array}$$</p>" },
+                    { title: "Divisor primo común: 5", content: "Terminan en $0$ o $5$. Dividimos entre $5$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 540 & 900 & 2 \\\\ 180 & 270 & 450 & 2 \\\\ 90 & 135 & 225 & 3 \\\\ 30 & 45 & 75 & 3 \\\\ 10 & 15 & 25 & \\mathbf{5} \\\\ 2 & 3 & 5 & \\end{array}$$</p>" },
+                    { title: "Calcular el MCD", content: "Los cocientes finales ($2, 3, 5$) ya no comparten ningún divisor primo en común. Multiplicamos los divisores comunes obtenidos:<p class=\"my-2 text-center\">$$2 \\cdot 2 \\cdot 3 \\cdot 3 \\cdot 5 = 180$$</p>" }
+                ],
+                result: "$$\\text{MCD}(360, 540, 900) = 180$$"
+            },
+            {
+                id: 2,
+                title: "MCD 2: Cálculo Directo de Gran Escala",
+                problem: "Determina el $MCD(420, 700, 980)$.",
+                steps: [
+                    { title: "Divisor común: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 420 & 700 & 980 & \\mathbf{2} \\\\ 210 & 350 & 490 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 420 & 700 & 980 & 2 \\\\ 210 & 350 & 490 & \\mathbf{2} \\\\ 105 & 175 & 245 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 5", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 420 & 700 & 980 & 2 \\\\ 210 & 350 & 490 & 2 \\\\ 105 & 175 & 245 & \\mathbf{5} \\\\ 21 & 35 & 49 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 7", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 420 & 700 & 980 & 2 \\\\ 210 & 350 & 490 & 2 \\\\ 105 & 175 & 245 & 5 \\\\ 21 & 35 & 49 & \\mathbf{7} \\\\ 3 & 5 & 7 & \\end{array}$$</p>" },
+                    { title: "Producto final MCD", content: "Multiplicamos divisores extraídos:<p class=\"my-2 text-center\">$$2 \\cdot 2 \\cdot 5 \\cdot 7 = 140$$</p>" }
+                ],
+                result: "$$\\text{MCD}(420, 700, 980) = 140$$"
+            },
+            {
+                id: 3,
+                title: "MCD 3: Factores Primos con 11",
+                problem: "Encuentra el Máximo Común Divisor de $462$, $770$ y $1,078$.",
+                steps: [
+                    { title: "Divisor común: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 462 & 770 & 1078 & \\mathbf{2} \\\\ 231 & 385 & 539 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 7", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 462 & 770 & 1078 & 2 \\\\ 231 & 385 & 539 & \\mathbf{7} \\\\ 33 & 55 & 77 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 11", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 462 & 770 & 1078 & 2 \\\\ 231 & 385 & 539 & 7 \\\\ 33 & 55 & 77 & \\mathbf{11} \\\\ 3 & 5 & 7 & \\end{array}$$</p>" },
+                    { title: "Producto del MCD", content: "Como $3, 5$ y $7$ son primos relativos:<p class=\"my-2 text-center\">$$2 \\cdot 7 \\cdot 11 = 154$$</p>" }
+                ],
+                result: "$$\\text{MCD}(462, 770, 1078) = 154$$"
+            },
+            {
+                id: 4,
+                title: "MCD 4: Factores Elevados",
+                problem: "Calcula el $MCD(858, 1,287, 2,145)$.",
+                steps: [
+                    { title: "Divisor común: 3", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 858 & 1287 & 2145 & \\mathbf{3} \\\\ 286 & 429 & 715 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 11", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 858 & 1287 & 2145 & 3 \\\\ 286 & 429 & 715 & \\mathbf{11} \\\\ 26 & 39 & 65 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 13", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 858 & 1287 & 2145 & 3 \\\\ 286 & 429 & 715 & 11 \\\\ 26 & 39 & 65 & \\mathbf{13} \\\\ 2 & 3 & 5 & \\end{array}$$</p>" },
+                    { title: "Producto final", content: "<p class=\"my-2 text-center\">$$3 \\cdot 11 \\cdot 13 = 429$$</p>" }
+                ],
+                result: "$$\\text{MCD}(858, 1287, 2145) = 429$$"
+            },
+            {
+                id: 5,
+                title: "MCD 5: Múltiples de 10 y 13",
+                problem: "Determina el $MCD(1,170, 1,950, 2,730)$.",
+                steps: [
+                    { title: "Divisor común: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 1170 & 1950 & 2730 & \\mathbf{2} \\\\ 585 & 975 & 1365 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 3", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 1170 & 1950 & 2730 & 2 \\\\ 585 & 975 & 1365 & \\mathbf{3} \\\\ 195 & 325 & 455 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 5", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 1170 & 1950 & 2730 & 2 \\\\ 585 & 975 & 1365 & 3 \\\\ 195 & 325 & 455 & \\mathbf{5} \\\\ 39 & 65 & 91 & \\end{array}$$</p>" },
+                    { title: "Divisor común: 13", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 1170 & 1950 & 2730 & 2 \\\\ 585 & 975 & 1365 & 3 \\\\ 195 & 325 & 455 & 5 \\\\ 39 & 65 & 91 & \\mathbf{13} \\\\ 3 & 5 & 7 & \\end{array}$$</p>" },
+                    { title: "Producto final del MCD", content: "<p class=\"my-2 text-center\">$$2 \\cdot 3 \\cdot 5 \\cdot 13 = 390$$</p>" }
+                ],
+                result: "$$\\text{MCD}(1170, 1950, 2730) = 390$$"
+            },
+            {
+                id: 6,
+                title: "MCD 6 (Aplicación): Empaque Máximo de Frutas",
+                problem: "Tres contenedores tienen $320\\text{ kg}$ de manzana, $480\\text{ kg}$ de pera y $640\\text{ kg}$ de durazno. Se quieren empacar en cajas del mismo peso máximo posible sin mezclar frutas. ¿Cuánto pesa cada caja y cuántas cajas salen por fruta?",
+                steps: [
+                    { title: "Obtener el MCD de los pesos.", content: "Calculamos el $MCD(320, 480, 640)$ simultáneamente:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 320 & 480 & 640 & 2 \\\\ 160 & 240 & 320 & 2 \\\\ 80 & 120 & 160 & 2 \\\\ 40 & 60 & 80 & 2 \\\\ 20 & 30 & 40 & 2 \\\\ 10 & 15 & 20 & 5 \\\\ 2 & 3 & 4 & \\end{array}$$</p><p>$$MCD = 2^5 \\cdot 5 = 160\\text{ kg}$$</p>" },
+                    { title: "Determinar el número de cajas por fruta.", content: "Manzana: $320 \\div 160 = 2$ cajas.<br>Pera: $480 \\div 160 = 3$ cajas.<br>Durazno: $640 \\div 160 = 4$ cajas." }
+                ],
+                result: "$$160\\text{ kg por caja. (Total: 9 cajas: 2 de manzana, 3 de pera y 4 de durazno)}$$"
+            },
+            {
+                id: 7,
+                title: "MCD 7 (Aplicación): Corte de Vigas de Madera",
+                problem: "Un carpintero tiene $3$ vigas de madera de $240\\text{ cm}$, $360\\text{ cm}$ y $540\\text{ cm}$ de largo. Quiere cortarlas en trozos iguales de la mayor longitud posible sin que sobre madera. ¿Cuánto mide cada trozo y cuántos trozos se obtienen?",
+                steps: [
+                    { title: "Obtener la máxima longitud común (MCD).", content: "Calculamos el $MCD(240, 360, 540)$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 240 & 360 & 540 & 2 \\\\ 120 & 180 & 270 & 2 \\\\ 60 & 90 & 135 & 3 \\\\ 20 & 30 & 45 & 5 \\\\ 4 & 6 & 9 & \\end{array}$$</p><p>$$MCD = 2 \\cdot 2 \\cdot 3 \\cdot 5 = 60\\text{ cm}$$</p>" },
+                    { title: "Calcular el total de trozos resultantes.", content: "Sumamos los residuos: $4 + 6 + 9 = 19$ trozos." }
+                ],
+                result: "$$\\text{Cada trozo mide } 60\\text{ cm} \\quad | \\quad \\text{Total } = 19 \\text{ trozos}$$"
+            },
+            {
+                id: 8,
+                title: "MCD 8 (Aplicación): Donaciones a Fundaciones",
+                problem: "Tres empresas juntan $\$180,000$, $\$420,000$ y $\$540,000$ respectivamente para donar a varias fundaciones. Desean entregar cheques de la misma cantidad máxima posible a cada fundación. ¿De cuánto es cada cheque y cuántas fundaciones reciben apoyo?",
+                steps: [
+                    { title: "Calcular el MCD de los montos.", content: "Factores comunes de $180, 420$ y $540$ en miles:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 180 & 420 & 540 & 2 \\\\ 90 & 210 & 270 & 2 \\\\ 45 & 105 & 135 & 3 \\\\ 15 & 35 & 45 & 5 \\\\ 3 & 7 & 9 & \\end{array}$$</p><p>$$MCD = 2 \\cdot 2 \\cdot 3 \\cdot 5 = 60 \\rightarrow \\$60,000$$</p>" },
+                    { title: "Sumar las fundaciones beneficiadas.", content: "Fundaciones beneficiadas $= 3 + 7 + 9 = 19$ fundaciones." }
+                ],
+                result: "$$\\$60,000 \\text{ por cheque} \\quad | \\quad 19 \\text{ fundaciones beneficiadas}$$"
+            },
+            {
+                id: 9,
+                title: "MCD 9 (Aplicación): Reparto de Billetes de $200",
+                problem: "En un banco se organizan $3$ fardos de billetes de la misma denominación. El primero suma $\$3,400$, el segundo $\$5,800$ y el tercero $\$8,200$. ¿Cuál es la mayor denominación de billete posible y cuántos billetes hay en cada fardo?",
+                steps: [
+                    { title: "Obtener el MCD de las tres cantidades.", content: "Descomponemos simultáneamente $3,400$, $5,800$ y $8,200$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 3400 & 5800 & 8200 & 2 \\\\ 1700 & 2900 & 4100 & 2 \\\\ 850 & 1450 & 2050 & 5 \\\\ 170 & 290 & 410 & 2 \\\\ 85 & 145 & 205 & 5 \\\\ 17 & 29 & 41 & \\end{array}$$</p><p>$$MCD = 2^3 \\cdot 5^2 = 200$$</p>" },
+                    { title: "Cantidad de billetes por fardo.", content: "Fardo 1: $17$ billetes. Fardo 2: $29$ billetes. Fardo 3: $41$ billetes." }
+                ],
+                result: "$$\\text{Denominación: } \\$200 \\quad | \\quad \\text{Billetes: } 17, 29 \\text{ y } 41$$"
+            },
+            {
+                id: 10,
+                title: "MCD 10 (Aplicación): Recubrimiento de Mosaicos",
+                problem: "El piso de una sala rectangular mide $750\\text{ cm}$ de largo por $525\\text{ cm}$ de ancho. Se desea colocar el menor número posible de mosaicos cuadrados enteros. ¿Cuáles deben ser las dimensiones de cada mosaico y cuántos se necesitarán?",
+                steps: [
+                    { title: "Hallar el lado máximo del mosaico (MCD).", content: "Calculamos el $MCD(750, 525)$:<p class=\"my-2 text-center\">$$\\begin{array}{cc|c} 750 & 525 & 3 \\\\ 250 & 175 & 5 \\\\ 50 & 35 & 5 \\\\ 10 & 7 & \\end{array}$$</p><p>$$MCD = 3 \\cdot 5 \\cdot 5 = 75\\text{ cm por lado}$$</p>" },
+                    { title: "Calcular el número total de mosaicos.", content: "Multiplicamos el número de mosaicos a lo largo y a lo ancho:<p class=\"my-2 text-center\">$$\\text{Mosaicos} = 10 \\times 7 = 70 \\text{ mosaicos}$$</p>" }
+                ],
+                result: "$$\\text{Mosaicos cuadrados de } 75 \\times 75\\text{ cm} \\quad | \\quad \\text{Total } = 70 \\text{ mosaicos}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 3: GUÍA DIDÁCTICA II (mcm)
+        const exercisesGuia2 = [
+            {
+                id: 1,
+                title: "mcm 1: Cálculo Directo de Tres Números",
+                problem: "Calcula el Mínimo Común Múltiplo de $48$, $72$ y $108$.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & \\mathbf{2} \\\\ 24 & 36 & 54 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & \\mathbf{2} \\\\ 12 & 18 & 27 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & 2 \\\\ 12 & 18 & 27 & \\mathbf{2} \\\\ 6 & 9 & 27 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & 2 \\\\ 12 & 18 & 27 & 2 \\\\ 6 & 9 & 27 & \\mathbf{2} \\\\ 3 & 9 & 27 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & 2 \\\\ 12 & 18 & 27 & 2 \\\\ 6 & 9 & 27 & 2 \\\\ 3 & 9 & 27 & \\mathbf{3} \\\\ 1 & 3 & 9 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & 2 \\\\ 12 & 18 & 27 & 2 \\\\ 6 & 9 & 27 & 2 \\\\ 3 & 9 & 27 & 3 \\\\ 1 & 3 & 9 & \\mathbf{3} \\\\ 1 & 1 & 3 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & 2 \\\\ 12 & 18 & 27 & 2 \\\\ 6 & 9 & 27 & 2 \\\\ 3 & 9 & 27 & 3 \\\\ 1 & 3 & 9 & 3 \\\\ 1 & 1 & 3 & \\mathbf{3} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Producto final del mcm", content: "Multiplicamos los factores obtenidos:<p class=\"my-2 text-center\">$$2^4 \\cdot 3^3 = 16 \\cdot 27 = 432$$</p>" }
+                ],
+                result: "$$\\text{mcm}[48, 72, 108] = 432$$"
+            },
+            {
+                id: 2,
+                title: "mcm 2: Múltiplos con Factores 5 y 7",
+                problem: "Determina el $mcm[90, 126, 180]$.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ los números pares ($90, 126, 180$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 90 & 126 & 180 & \\mathbf{2} \\\\ 45 & 63 & 90 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ el número par restante ($90$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 90 & 126 & 180 & 2 \\\\ 45 & 63 & 90 & \\mathbf{2} \\\\ 45 & 63 & 45 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Ya no hay pares. Dividimos entre $3$ ($45, 63, 45$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 90 & 126 & 180 & 2 \\\\ 45 & 63 & 90 & 2 \\\\ 45 & 63 & 45 & \\mathbf{3} \\\\ 15 & 21 & 15 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($15, 21, 15$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 90 & 126 & 180 & 2 \\\\ 45 & 63 & 90 & 2 \\\\ 45 & 63 & 45 & 3 \\\\ 15 & 21 & 15 & \\mathbf{3} \\\\ 5 & 7 & 5 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5, 5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 90 & 126 & 180 & 2 \\\\ 45 & 63 & 90 & 2 \\\\ 45 & 63 & 45 & 3 \\\\ 15 & 21 & 15 & 3 \\\\ 5 & 7 & 5 & \\mathbf{5} \\\\ 1 & 7 & 1 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "Dividimos entre $7$ ($7$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 90 & 126 & 180 & 2 \\\\ 45 & 63 & 90 & 2 \\\\ 45 & 63 & 45 & 3 \\\\ 15 & 21 & 15 & 3 \\\\ 5 & 7 & 5 & 5 \\\\ 1 & 7 & 1 & \\mathbf{7} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Producto final del mcm", content: "Multiplicamos los factores obtenidos:<p class=\"my-2 text-center\">$$2^2 \\cdot 3^2 \\cdot 5 \\cdot 7 = 4 \\cdot 9 \\cdot 35 = 1,260$$</p>" }
+                ],
+                result: "$$\\text{mcm}[90, 126, 180] = 1,260$$"
+            },
+            {
+                id: 3,
+                title: "mcm 3: Múltiplos Escala Media",
+                problem: "Encuentra el Mínimo Común Múltiplo de $140$, $210$ y $350$.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($140, 210, 350$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 140 & 210 & 350 & \\mathbf{2} \\\\ 70 & 105 & 175 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($70$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 140 & 210 & 350 & 2 \\\\ 70 & 105 & 175 & \\mathbf{2} \\\\ 35 & 105 & 175 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($105$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 140 & 210 & 350 & 2 \\\\ 70 & 105 & 175 & 2 \\\\ 35 & 105 & 175 & \\mathbf{3} \\\\ 35 & 35 & 175 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($35, 35, 175$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 140 & 210 & 350 & 2 \\\\ 70 & 105 & 175 & 2 \\\\ 35 & 105 & 175 & 3 \\\\ 35 & 35 & 175 & \\mathbf{5} \\\\ 7 & 7 & 35 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($35$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 140 & 210 & 350 & 2 \\\\ 70 & 105 & 175 & 2 \\\\ 35 & 105 & 175 & 3 \\\\ 35 & 35 & 175 & 5 \\\\ 7 & 7 & 35 & \\mathbf{5} \\\\ 7 & 7 & 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "Dividimos entre $7$ ($7, 7, 7$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 140 & 210 & 350 & 2 \\\\ 70 & 105 & 175 & 2 \\\\ 35 & 105 & 175 & 3 \\\\ 35 & 35 & 175 & 5 \\\\ 7 & 7 & 35 & 5 \\\\ 7 & 7 & 7 & \\mathbf{7} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Producto final del mcm", content: "Multiplicamos los factores primos obtenidos:<p class=\"my-2 text-center\">$$2^2 \\cdot 3 \\cdot 5^2 \\cdot 7 = 4 \\cdot 3 \\cdot 25 \\cdot 7 = 2,100$$</p>" }
+                ],
+                result: "$$\\text{mcm}[140, 210, 350] = 2,100$$"
+            },
+            {
+                id: 4,
+                title: "mcm 4: Gran Escala de Centenas",
+                problem: "Calcula el $mcm[360, 450, 540]$.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($360, 450, 540$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & \\mathbf{2} \\\\ 180 & 225 & 270 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($180, 270$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & \\mathbf{2} \\\\ 90 & 225 & 135 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($90$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & \\mathbf{2} \\\\ 45 & 225 & 135 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($45, 225, 135$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & \\mathbf{3} \\\\ 15 & 75 & 45 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($15, 75, 45$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & \\mathbf{3} \\\\ 5 & 25 & 15 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($15$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & 3 \\\\ 5 & 25 & 15 & \\mathbf{3} \\\\ 5 & 25 & 5 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5, 25, 5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & 3 \\\\ 5 & 25 & 15 & 3 \\\\ 5 & 25 & 5 & \\mathbf{5} \\\\ 1 & 5 & 1 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & 3 \\\\ 5 & 25 & 15 & 3 \\\\ 5 & 25 & 5 & 5 \\\\ 1 & 5 & 1 & \\mathbf{5} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Producto final del mcm", content: "Multiplicamos los factores obtenidos:<p class=\"my-2 text-center\">$$2^3 \\cdot 3^3 \\cdot 5^2 = 8 \\cdot 27 \\cdot 25 = 5,400$$</p>" }
+                ],
+                result: "$$\\text{mcm}[360, 450, 540] = 5,400$$"
+            },
+            {
+                id: 5,
+                title: "mcm 5: Múltiplos con Primos 11",
+                problem: "Determina el $mcm[396, 594, 891]$.",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($396, 594$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & \\mathbf{2} \\\\ 198 & 297 & 891 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($198$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & 2 \\\\ 198 & 297 & 891 & \\mathbf{2} \\\\ 99 & 297 & 891 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($99, 297, 891$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & 2 \\\\ 198 & 297 & 891 & 2 \\\\ 99 & 297 & 891 & \\mathbf{3} \\\\ 33 & 99 & 297 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($33, 99, 297$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & 2 \\\\ 198 & 297 & 891 & 2 \\\\ 99 & 297 & 891 & 3 \\\\ 33 & 99 & 297 & \\mathbf{3} \\\\ 11 & 33 & 99 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($33, 99$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & 2 \\\\ 198 & 297 & 891 & 2 \\\\ 99 & 297 & 891 & 3 \\\\ 33 & 99 & 297 & 3 \\\\ 11 & 33 & 99 & \\mathbf{3} \\\\ 11 & 11 & 33 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($33$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & 2 \\\\ 198 & 297 & 891 & 2 \\\\ 99 & 297 & 891 & 3 \\\\ 33 & 99 & 297 & 3 \\\\ 11 & 33 & 99 & 3 \\\\ 11 & 11 & 33 & \\mathbf{3} \\\\ 11 & 11 & 11 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 11", content: "Dividimos entre $11$ ($11, 11, 11$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 396 & 594 & 891 & 2 \\\\ 198 & 297 & 891 & 2 \\\\ 99 & 297 & 891 & 3 \\\\ 33 & 99 & 297 & 3 \\\\ 11 & 33 & 99 & 3 \\\\ 11 & 11 & 33 & 3 \\\\ 11 & 11 & 11 & \\mathbf{11} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Producto final del mcm", content: "Multiplicamos divisores:<p class=\"my-2 text-center\">$$2^2 \\cdot 3^4 \\cdot 11 = 4 \\cdot 81 \\cdot 11 = 3,564$$</p>" }
+                ],
+                result: "$$\\text{mcm}[396, 594, 891] = 3,564$$"
+            },
+            {
+                id: 6,
+                title: "mcm 6 (Aplicación): Coincidencia de Semáforos",
+                problem: "En un cruce vial, tres semáforos cambian a luz verde cada $24$, $36$ y $45$ segundos respectivamente. Si coinciden a las 8:00 AM, ¿después de cuántos segundos volverán a encender juntos y a qué hora exacta será?",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($24, 36$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 24 & 36 & 45 & \\mathbf{2} \\\\ 12 & 18 & 45 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($12, 18$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 24 & 36 & 45 & 2 \\\\ 12 & 18 & 45 & \\mathbf{2} \\\\ 6 & 9 & 45 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($6$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 24 & 36 & 45 & 2 \\\\ 12 & 18 & 45 & 2 \\\\ 6 & 9 & 45 & \\mathbf{2} \\\\ 3 & 9 & 45 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($3, 9, 45$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 24 & 36 & 45 & 2 \\\\ 12 & 18 & 45 & 2 \\\\ 6 & 9 & 45 & 2 \\\\ 3 & 9 & 45 & \\mathbf{3} \\\\ 1 & 3 & 15 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($3, 15$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 24 & 36 & 45 & 2 \\\\ 12 & 18 & 45 & 2 \\\\ 6 & 9 & 45 & 2 \\\\ 3 & 9 & 45 & 3 \\\\ 1 & 3 & 15 & \\mathbf{3} \\\\ 1 & 1 & 5 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 24 & 36 & 45 & 2 \\\\ 12 & 18 & 45 & 2 \\\\ 6 & 9 & 45 & 2 \\\\ 3 & 9 & 45 & 3 \\\\ 1 & 3 & 15 & 3 \\\\ 1 & 1 & 5 & \\mathbf{5} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Calcular el mcm y hora de coincidencia", content: "Multiplicamos los factores:<p class=\"my-2 text-center\">$$mcm = 2^3 \\cdot 3^2 \\cdot 5 = 360 \\text{ segundos}$$</p><p>$360 \\text{ segundos} \\div 60 = 6 \\text{ minutos}$. Por tanto, coincidirán a las **8:06 AM**.</p>" }
+                ],
+                result: "$$360\\text{ segundos (6 minutos)} \\quad | \\quad \\text{Hora: } 8:06\\text{ AM}$$"
+            },
+            {
+                id: 7,
+                title: "mcm 7 (Aplicación): Ciclistas en la Pista",
+                problem: "Tres ciclistas tardan $15$, $20$ y $24$ minutos en dar una vuelta completa a un velódromo. Si parten al mismo tiempo, ¿después de cuántos minutos se reencontrarán en la línea de salida y cuántas vueltas habrá dado cada uno?",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($20, 24$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 15 & 20 & 24 & \\mathbf{2} \\\\ 15 & 10 & 12 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($10, 12$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 15 & 20 & 24 & 2 \\\\ 15 & 10 & 12 & \\mathbf{2} \\\\ 15 & 5 & 6 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($6$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 15 & 20 & 24 & 2 \\\\ 15 & 10 & 12 & 2 \\\\ 15 & 5 & 6 & \\mathbf{2} \\\\ 15 & 5 & 3 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($15, 3$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 15 & 20 & 24 & 2 \\\\ 15 & 10 & 12 & 2 \\\\ 15 & 5 & 6 & 2 \\\\ 15 & 5 & 3 & \\mathbf{3} \\\\ 5 & 5 & 1 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5, 5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 15 & 20 & 24 & 2 \\\\ 15 & 10 & 12 & 2 \\\\ 15 & 5 & 6 & 2 \\\\ 15 & 5 & 3 & 3 \\\\ 5 & 5 & 1 & \\mathbf{5} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Calcular tiempo y vueltas por ciclista", content: "Multiplicamos los factores:<p class=\"my-2 text-center\">$$mcm = 2^3 \\cdot 3 \\cdot 5 = 120 \\text{ minutos}$$</p><p>Ciclista 1: $120 \\div 15 = 8$ vueltas.<br>Ciclista 2: $120 \\div 20 = 6$ vueltas.<br>Ciclista 3: $120 \\div 24 = 5$ vueltas.</p>" }
+                ],
+                result: "$$120 \\text{ minutos (2 horas)} \\quad | \\quad \\text{Vueltas: } 8, 6 \\text{ y } 5$$"
+            },
+            {
+                id: 8,
+                title: "mcm 8 (Aplicación): Llenado de Tanque con Tubos",
+                problem: "Un tanque puede llenarse con tres tubos diferentes que vierten $12$, $18$ y $28$ litros por minuto respectivamente. ¿Cuál es la menor capacidad entera en litros que debe tener el tanque para llenarse exactamente por cualquiera de los tubos por separado?",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($12, 18, 28$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 12 & 18 & 28 & \\mathbf{2} \\\\ 6 & 9 & 14 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($6, 14$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 12 & 18 & 28 & 2 \\\\ 6 & 9 & 14 & \\mathbf{2} \\\\ 3 & 9 & 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($3, 9$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 12 & 18 & 28 & 2 \\\\ 6 & 9 & 14 & 2 \\\\ 3 & 9 & 7 & \\mathbf{3} \\\\ 1 & 3 & 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($3$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 12 & 18 & 28 & 2 \\\\ 6 & 9 & 14 & 2 \\\\ 3 & 9 & 7 & 3 \\\\ 1 & 3 & 7 & \\mathbf{3} \\\\ 1 & 1 & 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "Dividimos entre $7$ ($7$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 12 & 18 & 28 & 2 \\\\ 6 & 9 & 14 & 2 \\\\ 3 & 9 & 7 & 3 \\\\ 1 & 3 & 7 & 3 \\\\ 1 & 1 & 7 & \\mathbf{7} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Calcular la capacidad mínima", content: "Multiplicamos los factores:<p class=\"my-2 text-center\">$$mcm = 2^2 \\cdot 3^2 \\cdot 7 = 4 \\cdot 9 \\cdot 7 = 252 \\text{ litros}$$</p>" }
+                ],
+                result: "$$\\text{Capacidad mínima} = 252 \\text{ litros}$$"
+            },
+            {
+                id: 9,
+                title: "mcm 9 (Aplicación): Apilamiento de Cajas",
+                problem: "Un almacén apila cajas cuadradas de tres marcas cuyas alturas son $18\\text{ cm}$, $24\\text{ cm}$ y $30\\text{ cm}$. Se quiere formar tres columnas de la misma altura exacta usando un solo tipo de caja por columna. ¿Cuál es la menor altura común y cuántas cajas de cada tipo se necesitan?",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($18, 24, 30$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 18 & 24 & 30 & \\mathbf{2} \\\\ 9 & 12 & 15 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($12$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 18 & 24 & 30 & 2 \\\\ 9 & 12 & 15 & \\mathbf{2} \\\\ 9 & 6 & 15 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($6$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 18 & 24 & 30 & 2 \\\\ 9 & 12 & 15 & 2 \\\\ 9 & 6 & 15 & \\mathbf{2} \\\\ 9 & 3 & 15 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($9, 3, 15$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 18 & 24 & 30 & 2 \\\\ 9 & 12 & 15 & 2 \\\\ 9 & 6 & 15 & 2 \\\\ 9 & 3 & 15 & \\mathbf{3} \\\\ 3 & 1 & 5 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($3$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 18 & 24 & 30 & 2 \\\\ 9 & 12 & 15 & 2 \\\\ 9 & 6 & 15 & 2 \\\\ 9 & 3 & 15 & 3 \\\\ 3 & 1 & 5 & \\mathbf{3} \\\\ 1 & 1 & 5 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 18 & 24 & 30 & 2 \\\\ 9 & 12 & 15 & 2 \\\\ 9 & 6 & 15 & 2 \\\\ 9 & 3 & 15 & 3 \\\\ 3 & 1 & 5 & 3 \\\\ 1 & 1 & 5 & \\mathbf{5} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Calcular la altura común y número de cajas", content: "Multiplicamos los factores:<p class=\"my-2 text-center\">$$mcm = 2^3 \\cdot 3^2 \\cdot 5 = 360\\text{ cm}$$</p><p>Cajas de $18\\text{ cm}: 360 \\div 18 = 20$ cajas.<br>Cajas de $24\\text{ cm}: 360 \\div 24 = 15$ cajas.<br>Cajas de $30\\text{ cm}: 360 \\div 30 = 12$ cajas.</p>" }
+                ],
+                result: "$$\\text{Altura común} = 360\\text{ cm (3.6 m)} \\quad | \\quad \\text{Cajas: } 20, 15 \\text{ y } 12$$"
+            },
+            {
+                id: 10,
+                title: "mcm 10 (Aplicación): Reunión de Comités Escolares",
+                problem: "Un comité de salud escolar se reúne cada $14$ días, uno de ecología cada $21$ días y uno de cultura cada $28$ días. Si hoy coincidieron los tres comités, ¿dentro de cuántos días volverán a reunirse simultáneamente por primera vez?",
+                steps: [
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($14, 28$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 14 & 21 & 28 & \\mathbf{2} \\\\ 7 & 21 & 14 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($14$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 14 & 21 & 28 & 2 \\\\ 7 & 21 & 14 & \\mathbf{2} \\\\ 7 & 21 & 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($21$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 14 & 21 & 28 & 2 \\\\ 7 & 21 & 14 & 2 \\\\ 7 & 21 & 7 & \\mathbf{3} \\\\ 7 & 7 & 7 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 7", content: "Dividimos entre $7$ ($7, 7, 7$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 14 & 21 & 28 & 2 \\\\ 7 & 21 & 14 & 2 \\\\ 7 & 21 & 7 & 3 \\\\ 7 & 7 & 7 & \\mathbf{7} \\\\ 1 & 1 & 1 & \\end{array}$$</p>" },
+                    { title: "Calcular los días para la coincidencia", content: "Multiplicamos los factores:<p class=\"my-2 text-center\">$$mcm = 2^2 \\cdot 3 \\cdot 7 = 4 \\cdot 3 \\cdot 7 = 84 \\text{ días}$$</p>" }
+                ],
+                result: "$$\\text{Transcurrirán } 84 \\text{ días para volver a coincidir.}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 4: SIMULADOR DE EXAMEN INTERACTIVO
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Descomposición Factorial)",
+                problem: "¿Cuál es el número entero cuyo producto de factores primos es $2^3 \\cdot 3^2 \\cdot 5 \\cdot 7$?",
+                answer: 2520,
+                steps: [
+                    { title: "1.- Desarrollar potencias y efectuar el producto.", lines: ["$2^3 = 8$", "$3^2 = 9$", "Producto: $8 \\times 9 \\times 5 \\times 7 = 2,520$"] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (MCD Directo)",
+                problem: "Calcula el Máximo Común Divisor (MCD) de $420$, $700$ y $980$.",
+                answer: 140,
+                steps: [
+                    { title: "1.- Factores primos comunes simultáneos.", lines: ["$\\begin{array}{ccc|c} 420 & 700 & 980 & 2 \\\\ 210 & 350 & 490 & 2 \\\\ 105 & 175 & 245 & 5 \\\\ 21 & 35 & 49 & 7 \\\\ 3 & 5 & 7 & \\end{array}$", "$\\text{MCD} = 2 \\times 2 \\times 5 \\times 7 = 140$"] }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (mcm Directo)",
+                problem: "Determina el Mínimo Común Múltiplo (mcm) de los números $48$, $72$ y $108$.",
+                answer: 432,
+                steps: [
+                    { title: "1.- Descomposición simultánea hasta cocientes 1.", lines: ["$\\begin{array}{ccc|c} 48 & 72 & 108 & 2 \\\\ 24 & 36 & 54 & 2 \\\\ 12 & 18 & 27 & 2 \\\\ 6 & 9 & 27 & 2 \\\\ 3 & 9 & 27 & 3 \\\\ 1 & 3 & 9 & 3 \\\\ 1 & 1 & 3 & 3 \\\\ 1 & 1 & 1 & \\end{array}$", "$\\text{mcm} = 2^4 \\times 3^3 = 16 \\times 27 = 432$"] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Aplicación MCD - Peso de Sacos)",
+                problem: "Tres bodegas contienen $320\\text{ kg}$, $480\\text{ kg}$ y $640\\text{ kg}$ de granos. Se empaquetan en sacos idénticos del máximo peso posible. ¿Cuántos kilogramos debe pesar cada saco?",
+                answer: 160,
+                steps: [
+                    { title: "1.- Obtener el MCD de los pesos.", lines: ["$\\text{MCD}(320, 480, 640) = 160$", "Cada saco pesa $160\\text{ kg}$."] }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Aplicación mcm - Semáforos)",
+                problem: "Tres semáforos se encienden a intervalos de $24$, $36$ y $45$ segundos. Si encienden juntos, ¿después de cuántos segundos volverán a coincidir simultáneamente?",
+                answer: 360,
+                steps: [
+                    { title: "1.- Calcular el mcm de los tiempos.", lines: ["$\\text{mcm}[24, 36, 45] = 2^3 \\times 3^2 \\times 5 = 360$", "Volverán a coincidir a los $360\\text{ segundos}$."] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Aplicación MCD - Billetes)",
+                problem: "Tres fajos de billetes suman $\$3,400$, $\$5,800$ y $\$8,200$ en billetes de la misma denominación. ¿Cuál es el valor en pesos de la mayor denominación posible?",
+                answer: 200,
+                steps: [
+                    { title: "1.- Calcular el MCD de las tres montos.", lines: ["$\\text{MCD}(3400, 5800, 8200) = 200$", "Denominación del billete $= \\$200$."] }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Aplicación mcm - Capacidad de Estanque)",
+                problem: "Tres llaves vierten $12$, $18$ y $28$ litros por minuto. ¿Cuál es la menor capacidad entera en litros de un estanque que se llena exactamente por cualquiera de ellas?",
+                answer: 252,
+                steps: [
+                    { title: "1.- Calcular el mcm de los caudales.", lines: ["$\\text{mcm}[12, 18, 28] = 2^2 \\times 3^2 \\times 7 = 252$", "Capacidad mínima $= 252\\text{ litros}$."] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Identificación de Primos)",
+                problem: "Selecciona <strong>todos</strong> los números verdaderamente primos de la siguiente lista:",
+                type: "checkbox",
+                options: ["119", "127", "143", "151", "161"],
+                answer: [1, 3], // 127 y 151
+                steps: [
+                    { title: "1.- Criterio de prueba por primos menores.", lines: ["$119 = 7 \\times 17$ (Compuesto)", "$127 \\rightarrow$ No divisible por $2, 3, 5, 7, 11$ (Es PRIMO)", "$143 = 11 \\times 13$ (Compuesto)", "$151 \\rightarrow$ No divisible por $2, 3, 5, 7, 11$ (Es PRIMO)", "$161 = 7 \\times 23$ (Compuesto)"] },
+                    { title: "2.- Respuesta correcta.", lines: ["Los números primos son $127$ y $151$."] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Aplicación MCD - Mosaicos)",
+                problem: "Un salón rectangular mide $750\\text{ cm}$ por $525\\text{ cm}$. Se cubre con el menor número de mosaicos cuadrados. ¿Cuál es la longitud en cm del lado de cada mosaico?",
+                answer: 75,
+                steps: [
+                    { title: "1.- Calcular el MCD de las dimensiones.", lines: ["$\\text{MCD}(750, 525) = 75$", "Lado del mosaico $= 75\\text{ cm}$."] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Aplicación mcm - Días de Reunión)",
+                problem: "Tres comités escolares se reúnen cada $14$, $21$ y $28$ días. Si hoy coincidieron, ¿dentro de cuántos días volverán a reunirse simultáneamente por primera vez?",
+                answer: 84,
+                steps: [
+                    { title: "1.- Calcular el mcm de los periodos.", lines: ["$\\text{mcm}[14, 21, 28] = 2^2 \\times 3 \\cdot 7 = 84$", "Días necesarios $= 84\\text{ días}$."] }
+                ]
+            }
+        ];
+
+        // ESTADOS DE PASOS Y EXAMEN
+        const currentStepStatePrimos = {};
+        const currentStepStateGuia1 = {};
+        const currentStepStateGuia2 = {};
+        let examUserStates = {};
+
+        // CAMBIO DE PESTAÑAS
+        function switchTab(tab) {
+            const primosTab = document.getElementById('tab-primos');
+            const guia1Tab = document.getElementById('tab-guia1');
+            const guia2Tab = document.getElementById('tab-guia2');
+            const examenTab = document.getElementById('tab-examen');
+
+            const btnPrimos = document.getElementById('btn-tab-primos');
+            const btnGuia1 = document.getElementById('btn-tab-guia1');
+            const btnGuia2 = document.getElementById('btn-tab-guia2');
+            const btnExamen = document.getElementById('btn-tab-examen');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            primosTab.classList.add('hidden');
+            guia1Tab.classList.add('hidden');
+            guia2Tab.classList.add('hidden');
+            examenTab.classList.add('hidden');
+
+            btnPrimos.className = inactiveClass;
+            btnGuia1.className = inactiveClass;
+            btnGuia2.className = inactiveClass;
+            btnExamen.className = inactiveClass;
+
+            if (tab === 'primos') {
+                primosTab.classList.remove('hidden');
+                btnPrimos.className = activeClass;
+            } else if (tab === 'guia1') {
+                guia1Tab.classList.remove('hidden');
+                btnGuia1.className = activeClass;
+            } else if (tab === 'guia2') {
+                guia2Tab.classList.remove('hidden');
+                btnGuia2.className = activeClass;
+            } else {
+                examenTab.classList.remove('hidden');
+                btnExamen.className = activeClass;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // MODO CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        function getGuiaContext(section) {
+            if (section === 'primos') {
+                return { exList: exercisesPrimos, stateDict: currentStepStatePrimos, prefix: 'p' };
+            } else if (section === 'guia1' || section === 1 || section === '1') {
+                return { exList: exercisesGuia1, stateDict: currentStepStateGuia1, prefix: 'g1' };
+            } else {
+                return { exList: exercisesGuia2, stateDict: currentStepStateGuia2, prefix: 'g2' };
+            }
+        }
+
+        // CONTROL DE PASOS DE GUÍAS Y PRIMOS
+        function nextStepGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            let current = stateDict[id] || 0;
+            
+            if (current < maxStage) {
+                current++;
+                stateDict[id] = current;
+                
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetStepsGuia(section, id);
+                return;
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function showAllStepsGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            stateDict[id] = maxStage;
+            
+            const container = document.getElementById(`steps-container-${prefix}-${id}`);
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                }
+            }
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function resetStepsGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            stateDict[id] = 0;
+            
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.remove('visible');
+                }
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function updateStepUIGuia(section, id, ex, prefix) {
+            const { stateDict } = getGuiaContext(section);
+
+            const totalSteps = ex.steps.length;
+            const current = stateDict[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-${prefix}-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${prefix}-${id}`);
+            const btnNext = document.getElementById(`btn-next-${prefix}-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${prefix}-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else if (current === totalSteps) {
+                btnText.innerText = `Ver Resultado Final`;
+                btnIcon.className = "fa-solid fa-trophy";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            }
+        }
+
+        function renderGuiaGeneric(section, exList, containerId, prefix) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            const { stateDict } = getGuiaContext(section);
+
+            exList.forEach(ex => {
+                stateDict[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    stepsHTML += `
+                        <div id="step-${prefix}-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3.5 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> Paso ${stepNum}: ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const resultStepNum = totalSteps + 1;
+                stepsHTML += `
+                    <div id="step-${prefix}-${ex.id}-${resultStepNum}" class="step-item bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 border-y border-r border-emerald-300 dark:border-emerald-800 p-4 rounded-r-lg text-center shadow-xs">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-1">
+                            <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> Solución Final
+                        </span>
+                        <div class="result-box-notebook text-lg text-emerald-900 dark:text-emerald-200 mt-1">
+                            ${ex.result}
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-3 mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 px-4 text-center">
+                        <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-${prefix}-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-${prefix}-${ex.id}" onclick="nextStepGuia('${section}', ${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-${prefix}-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-${prefix}-${ex.id}">Ver Paso 1 de ${totalSteps}</span>
+                        </button>
+
+                        <button id="btn-all-${prefix}-${ex.id}" onclick="showAllStepsGuia('${section}', ${ex.id})" class="py-2.5 px-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Mostrar todos los pasos">
+                            <i class="fa-solid fa-eye"></i>
+                            <span class="hidden sm:inline">Ver Todo</span>
+                        </button>
+
+                        <button id="btn-reset-${prefix}-${ex.id}" onclick="resetStepsGuia('${section}', ${ex.id})" class="hidden py-2.5 px-3 bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Ocultar y reiniciar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span class="hidden sm:inline">Reiniciar</span>
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // LÓGICA SIMULADOR DE EXAMEN
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            container.innerHTML = '';
+
+            examProblems.forEach((prob, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between hover:shadow-md";
+                card.id = `exam-card-${prob.id}`;
+
+                let inputControlHTML = '';
+                
+                if (prob.type === 'checkbox') {
+                    let optionsHTML = prob.options.map((opt, optIdx) => `
+                        <label class="flex items-center gap-2 bg-white dark:bg-slate-800 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 cursor-pointer hover:border-amber-500 font-bold text-slate-800 dark:text-slate-200 text-sm transition-all shadow-xs">
+                            <input type="checkbox" name="exam-check-${prob.id}" value="${optIdx}" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 border-slate-300">
+                            <span>$${opt}$</span>
+                        </label>
+                    `).join('');
+
+                    inputControlHTML = `
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3.5 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 space-y-3">
+                            <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 block">
+                                Selecciona una o más opciones correctas:
+                            </span>
+                            <div class="flex flex-wrap gap-2.5">
+                                ${optionsHTML}
+                            </div>
+                            <div class="pt-1">
+                                <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-check"></i> Verificar Respuesta
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    inputControlHTML = `
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 flex flex-wrap sm:flex-nowrap items-center gap-3">
+                            <label for="exam-input-${prob.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                                Tu respuesta =
+                            </label>
+                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa número" 
+                                class="w-full sm:w-36 px-3 py-1.5 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white"
+                                onkeydown="if(event.key==='Enter') checkExamAnswer(${prob.id})">
+                            <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Verificar
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3 flex justify-between items-center">
+                            <h3 class="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature"></i>
+                                ${prob.title}
+                            </h3>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                Reactivo ${index + 1} de 10
+                            </span>
+                        </div>
+                        
+                        <div class="py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-4 px-4 text-center">
+                            <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">${prob.problem}</span>
+                        </div>
+
+                        ${inputControlHTML}
+
+                        <div id="exam-feedback-${prob.id}" class="hidden mt-3 p-4 rounded-lg text-xs sm:text-sm"></div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+        }
+
+        function checkExamAnswer(id) {
+            const problem = examProblems.find(p => p.id === id);
+            const feedbackEl = document.getElementById(`exam-feedback-${id}`);
+            let isCorrect = false;
+            let userDisplayVal = "";
+
+            if (problem.type === 'checkbox') {
+                const checkedBoxes = Array.from(document.querySelectorAll(`input[name="exam-check-${id}"]:checked`));
+                if (checkedBoxes.length === 0) {
+                    alert("Por favor selecciona al menos una opción antes de verificar.");
+                    return;
+                }
+                const selectedIndices = checkedBoxes.map(cb => parseInt(cb.value)).sort((a, b) => a - b);
+                const expectedIndices = [...problem.answer].sort((a, b) => a - b);
+
+                isCorrect = selectedIndices.length === expectedIndices.length &&
+                            selectedIndices.every((val, idx) => val === expectedIndices[idx]);
+
+                userDisplayVal = selectedIndices.map(i => problem.options[i]).join(", ");
+            } else {
+                const inputEl = document.getElementById(`exam-input-${id}`);
+                const val = parseFloat(inputEl.value.trim());
+
+                if (isNaN(val)) {
+                    alert("Por favor ingresa un resultado numérico antes de verificar.");
+                    return;
+                }
+
+                isCorrect = val === problem.answer;
+                userDisplayVal = val.toString();
+            }
+
+            examUserStates[id] = {
+                answered: true,
+                correct: isCorrect,
+                userVal: userDisplayVal
+            };
+
+            if (window.MathJax && window.MathJax.typesetClear) {
+                window.MathJax.typesetClear([feedbackEl]);
+            }
+
+            feedbackEl.classList.remove('hidden');
+
+            let stepsHTML = `<div class="space-y-3 mt-3">`;
+            problem.steps.forEach(step => {
+                stepsHTML += `
+                    <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg border-l-4 border-amber-500 shadow-xs">
+                        <p class="font-bold text-amber-700 dark:text-amber-400 text-xs sm:text-sm mb-1.5">${step.title}</p>
+                        <div class="space-y-1 font-mono text-xs sm:text-sm pl-2">
+                `;
+                step.lines.forEach((line, idx) => {
+                    const isLastLine = (step === problem.steps[problem.steps.length - 1]) && (idx === step.lines.length - 1);
+                    if (isLastLine) {
+                        stepsHTML += `<div class="text-sm sm:text-base font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/80 px-2.5 py-1 rounded inline-block border border-emerald-400 dark:border-emerald-700 mt-1">${line}</div>`;
+                    } else {
+                        stepsHTML += `<div class="text-slate-800 dark:text-slate-200">${line}</div>`;
+                    }
+                });
+                stepsHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            stepsHTML += `</div>`;
+
+            const expectedText = problem.type === 'checkbox' 
+                ? problem.answer.map(i => problem.options[i]).join(", ")
+                : problem.answer;
+
+            if (isCorrect) {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-emerald-500/10 dark:bg-emerald-950/40 border-emerald-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-check text-base"></i> ¡Respuesta Correcta! (+1 Punto)
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-emerald-500/20 pb-1 mb-2">
+                        Procedimiento ejecutado correctamente:
+                    </div>
+                    ${stepsHTML}
+                `;
+            } else {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-rose-500/10 dark:bg-rose-950/40 border-rose-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-rose-600 dark:text-rose-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-xmark text-base"></i> Respuesta Incorrecta (Seleccionaste: ${userDisplayVal})
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-rose-500/20 pb-1 mb-2">
+                        Procedimiento detallado paso a paso (Selección esperada = <strong>${expectedText}</strong>):
+                    </div>
+                    ${stepsHTML}
+                `;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
+            }
+
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            const total = examProblems.length;
+            const answeredKeys = Object.keys(examUserStates);
+            const answeredCount = answeredKeys.length;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            answeredKeys.forEach(k => {
+                if (examUserStates[k].correct) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = correctCount;
+            document.getElementById('score-incorrect').innerText = incorrectCount;
+        }
+
+        function resetExam() {
+            examUserStates = {};
+            renderExam();
+            updateScoreboard();
+        }
+
+        // INICIALIZACIÓN
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGuiaGeneric('primos', exercisesPrimos, 'primos-container', 'p');
+            renderGuiaGeneric('guia1', exercisesGuia1, 'guia1-container', 'g1');
+            renderGuiaGeneric('guia2', exercisesGuia2, 'guia2-container', 'g2');
+            renderExam();
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.startup) {
+                window.MathJax.startup.promise.then(() => {
+                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

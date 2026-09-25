@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidad 3: Clasificación de los Números | Lección Interactiva</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .tree-node {
+            transition: all 0.2s ease-in-out;
+        }
+        .tree-node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver al Temario Principal
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                
+                <!-- Logo Izquierdo: CECyTEM (Aumentado de tamaño) -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <!-- Bloque Central: Titulación y Conmutador de Modo -->
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Unidad 3: Clasificación de los Números
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva de Examen Paso a Paso
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <!-- Botón Modo Claro/Oscuro con ícono dinámico Sol/Luna -->
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
+                            <span id="theme-text">Modo Claro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logo Derecho: Profe Campos (Aumentado de tamaño) -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <!-- Divisor Horizontal -->
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Fila Inferior: Botones de Pestañas/Navegación -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-lesson" onclick="switchTab('lesson')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Mapa Conceptual y Lección
+                </button>
+                <button id="btn-tab-quiz" onclick="switchTab('quiz')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Ejercicios y Evaluación (20)
+                </button>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- TAB 1: MAPA CONCEPTUAL Y LECCIÓN -->
+        <section id="tab-lesson" class="space-y-6">
+            <div class="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-xl p-5 shadow-sm transition-colors">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-diagram-project text-teal-600 dark:text-teal-400"></i>
+                    Esquema Jerárquico de Conjuntos Numéricos
+                </h2>
+                <p class="text-slate-600 dark:text-slate-300 text-sm">
+                    Haz clic en cualquiera de las cajas del esquema para explorar su definición formal, notación matemática ($\mathbb{C}, \mathbb{R}, \mathbb{Q}, \mathbb{I}, \mathbb{Z}, \mathbb{N}$) y ejemplos.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Árbol Visualizador -->
+                <div class="lg:col-span-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-md flex flex-col justify-between transition-colors">
+                    <div class="space-y-4">
+                        <!-- Nivel 1: Complejos -->
+                        <div class="flex justify-center">
+                            <button onclick="selectConcept('complex')" class="tree-node border-2 border-indigo-500 bg-indigo-50 dark:bg-indigo-950/80 hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-950 dark:text-indigo-200 px-6 py-3 rounded-xl font-bold text-center w-full max-w-xs shadow">
+                                Números Complejos ($\mathbb{C}$)
+                            </button>
+                        </div>
+                        
+                        <div class="h-4 border-l-2 border-indigo-500/50 mx-auto w-0"></div>
+
+                        <!-- Nivel 2: Reales e Imaginarios -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col items-center">
+                                <button onclick="selectConcept('real')" class="tree-node border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-950 dark:text-emerald-200 px-4 py-2.5 rounded-lg font-bold w-full text-center">
+                                    Reales ($\mathbb{R}$)
+                                </button>
+                                <div class="h-4 border-l-2 border-emerald-500/50 mx-auto w-0"></div>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <button onclick="selectConcept('imaginary')" class="tree-node border-2 border-purple-500 bg-purple-50 dark:bg-purple-950/80 hover:bg-purple-100 dark:hover:bg-purple-900 text-purple-950 dark:text-purple-200 px-4 py-2.5 rounded-lg font-bold w-full text-center">
+                                    Imaginarios ($i$)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Nivel 3: Racionales e Irracionales -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex flex-col items-center">
+                                    <button onclick="selectConcept('rational')" class="tree-node border border-sky-500 bg-sky-50 dark:bg-sky-950/80 hover:bg-sky-100 dark:hover:bg-sky-900 text-sky-950 dark:text-sky-200 px-2 py-2 rounded-md font-semibold text-xs w-full text-center">
+                                        Racionales ($\mathbb{Q}$)
+                                    </button>
+                                    <div class="h-3 border-l border-sky-500/50 mx-auto w-0"></div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <button onclick="selectConcept('irrational')" class="tree-node border border-teal-500 bg-teal-50 dark:bg-teal-950/80 hover:bg-teal-100 dark:hover:bg-teal-900 text-teal-950 dark:text-teal-200 px-2 py-2 rounded-md font-semibold text-xs w-full text-center">
+                                        Irracionales ($\mathbb{I}$)
+                                    </button>
+                                </div>
+                            </div>
+                            <div></div>
+                        </div>
+
+                        <!-- Nivel 4: Enteros y Fraccionarios -->
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="selectConcept('integer')" class="tree-node border border-amber-500 bg-amber-50 dark:bg-amber-950/80 hover:bg-amber-100 dark:hover:bg-amber-900 text-amber-950 dark:text-amber-200 px-2 py-1.5 rounded text-xs font-medium text-center">
+                                Enteros ($\mathbb{Z}$)
+                            </button>
+                            <button onclick="selectConcept('fractional')" class="tree-node border border-orange-500 bg-orange-50 dark:bg-orange-950/80 hover:bg-orange-100 dark:hover:bg-orange-900 text-orange-950 dark:text-orange-200 px-2 py-1.5 rounded text-xs font-medium text-center">
+                                Fraccionarios
+                            </button>
+                            <div></div>
+                            <div></div>
+                        </div>
+
+                        <!-- Nivel 5: Naturales -->
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="selectConcept('natural')" class="tree-node border border-rose-500 bg-rose-50 dark:bg-rose-950/80 hover:bg-rose-100 dark:hover:bg-rose-900 text-rose-950 dark:text-rose-200 px-2 py-1.5 rounded text-xs font-medium text-center">
+                                Naturales ($\mathbb{N}$)
+                            </button>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-md flex flex-col transition-colors">
+                    <div id="detail-header" class="border-b border-slate-200 dark:border-slate-700 pb-3 mb-4">
+                        <span id="detail-tag" class="text-xs uppercase font-bold tracking-wider px-2 py-1 rounded bg-teal-100 dark:bg-teal-500/20 text-teal-700 dark:text-teal-300">
+                            Cargando...
+                        </span>
+                        <h3 id="detail-title" class="text-2xl font-bold text-slate-900 dark:text-white mt-2">Selecciona un conjunto</h3>
+                    </div>
+                    <div id="detail-body" class="space-y-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed flex-grow">
+                        <p>Haz clic sobre cualquiera de los bloques del mapa conceptual para ver su definición y ejemplos.</p>
+                    </div>
+                    <div id="detail-footer" class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700/50 text-xs text-slate-500 dark:text-slate-400">
+                        <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Explora conceptos especiales como los números primos, compuestos, o constantes trascendentes.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: EJERCICIOS Y EVALUACIÓN -->
+        <section id="tab-quiz" class="space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-xl gap-4 shadow-sm transition-colors">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Prueba de Clasificación y Lógica Inversa</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Resuelve ejercicios directos e identifica anomalías, falsedades y exclusiones en conjuntos numéricos.</p>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Puntuación:</span>
+                    <span id="score-display" class="text-xl font-extrabold text-teal-600 dark:text-teal-400">0 / 0</span>
+                </div>
+            </div>
+
+            <!-- Quiz Questions Container -->
+            <div id="quiz-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start"></div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="resetQuiz()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-rotate-right"></i> Reiniciar Ejercicios
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors">
+        Unidad 3: Clasificación de los Números &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const concepts = {
+            complex: {
+                title: "Números Complejos ($\\mathbb{C}$)",
+                tag: "Conjunto Universal",
+                content: `
+                    <p>Los <strong>Números Complejos ($\\mathbb{C}$)</strong> abarcan la totalidad de los números conocidos. Contienen tanto a la parte real como a la parte imaginaria.</p>
+                    <div class="bg-slate-100 dark:bg-slate-900/60 p-3 rounded-lg border border-slate-200 dark:border-slate-700 my-2">
+                        <strong>Estructura general:</strong> $a + bi$, donde $a$ representa la parte real y $bi$ representa la parte imaginaria.
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Ejemplos: $7 - 2i$, $4 + 3i$, $-2 - 11j$</li>
+                    </ul>
+                `
+            },
+            imaginary: {
+                title: "Números Imaginarios ($i$)",
+                tag: "Unidad Imaginaria",
+                content: `
+                    <p>Es una clase especial de números diferente a los reales. Se escriben combinando un número real con la unidad imaginaria $i$ (donde $i = \\sqrt{-1}$ e $i^2 = -1$).</p>
+                    <div class="bg-purple-50 dark:bg-purple-950/40 p-3 rounded-lg border border-purple-200 dark:border-purple-800/50 my-2 text-purple-900 dark:text-purple-200">
+                        <strong>Nota técnica:</strong> En ramas como la ingeniería eléctrica o de sistemas, se utiliza habitualmente la letra $j$ en lugar de $i$.
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Ejemplos: $3.25i$, $-\\frac{18}{79}i$, $40i$, $-\\pi i$</li>
+                    </ul>
+                `
+            },
+            real: {
+                title: "Números Reales ($\\mathbb{R}$)",
+                tag: "Recta Numérica",
+                content: `
+                    <p>Es la unión de los números <strong>Racionales ($\\mathbb{Q}$)</strong> e <strong>Irracionales ($\\mathbb{I}$)</strong>. Corresponden a todos los puntos continuos sobre la recta numérica.</p>
+                    <ul class="list-disc pl-5 space-y-1 mt-2">
+                        <li>Abarcan valores positivos, negativos, cero, fracciones y raíces no exactas.</li>
+                        <li>Ejemplos: $-5$, $0$, $3/4$, $\\sqrt{2}$, $\\pi$.</li>
+                    </ul>
+                `
+            },
+            rational: {
+                title: "Números Racionales ($\\mathbb{Q}$)",
+                tag: "Fracciones y Decimales",
+                content: `
+                    <p>Son números que pueden expresarse formalmente como el cociente de dos números enteros. Incluyen decimales exactos y periódicos.</p>
+                    <p class="mt-2">Se dividen en <strong>Enteros</strong> y <strong>Fraccionarios</strong>.</p>
+                    <ul class="list-disc pl-5 space-y-1 mt-2">
+                        <li>Ejemplos: $1/2$, $-3/7$, $0.75$, $2.333...$</li>
+                        <li><em>Nota:</em> Todo número entero es racional porque puede escribirse dividido entre 1 (ej. $4 = 4/1$).</li>
+                    </ul>
+                `
+            },
+            irrational: {
+                title: "Números Irracionales ($\\mathbb{I}$)",
+                tag: "Decimales Infinitos No Periódicos",
+                content: `
+                    <p>Son aquellos números que <strong>NO</strong> se pueden escribir como una fracción exacta. Poseen un número infinito de cifras decimales sin patrón repetitivo.</p>
+                    <div class="space-y-2 mt-3">
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-2.5 rounded border border-slate-200 dark:border-slate-700">
+                            <strong class="text-teal-700 dark:text-teal-300">1. Irracional Algebraico:</strong> Surge como solución de ecuaciones algebraicas.
+                            <br><span class="text-xs text-slate-600 dark:text-slate-400">Ejemplos: $\\sqrt{2} \\approx 1.4142...$, $\\sqrt{3} \\approx 1.7320...$, $\\sqrt{5} \\approx 2.2360...$</span>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-2.5 rounded border border-slate-200 dark:border-slate-700">
+                            <strong class="text-teal-700 dark:text-teal-300">2. Irracional Trascendente:</strong> No proviene de ecuaciones polinómicas algebraicas simples.
+                            <br><span class="text-xs text-slate-600 dark:text-slate-400">Ejemplos: $e \\approx 2.7182...$, $\\pi \\approx 3.1415...$</span>
+                        </div>
+                    </div>
+                `
+            },
+            integer: {
+                title: "Números Enteros ($\\mathbb{Z}$)",
+                tag: "Sin Parte Decimal",
+                content: `
+                    <p>Incluyen a los números naturales (enteros positivos), el cero ($0$) y los enteros negativos.</p>
+                    <ul class="list-disc pl-5 space-y-1 mt-2">
+                        <li><strong>Enteros Positivos ($\\mathbb{Z}^+$):</strong> Naturales ($1, 2, 3...$)</li>
+                        <li><strong>Cero ($0$):</strong> Elemento neutro.</li>
+                        <li><strong>Enteros Negativos ($\\mathbb{Z}^-$):</strong> $-1, -2, -3, -4...$</li>
+                    </ul>
+                `
+            },
+            fractional: {
+                title: "Números Fraccionarios",
+                tag: "Propias e Impropias",
+                content: `
+                    <p>Representan partes de una unidad dividida:</p>
+                    <div class="space-y-2 mt-2">
+                        <div class="bg-slate-100 dark:bg-slate-900/60 p-2 rounded border border-slate-200 dark:border-slate-700">
+                            <strong>Fracción Propia:</strong> El numerador es menor que el denominador (su valor es $< 1$).
+                            <br><span class="text-xs text-slate-600 dark:text-slate-400">Ejemplos: $\\frac{3}{7}$, $\\frac{2}{5}$, $\\frac{3}{11}$</span>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-900/60 p-2 rounded border border-slate-200 dark:border-slate-700">
+                            <strong>Fracción Impropia:</strong> El numerador es mayor que el denominador (se expresa como <strong>Número Mixto</strong>).
+                            <br><span class="text-xs text-slate-600 dark:text-slate-400">Ejemplos: $\\frac{7}{3} = 2\\frac{1}{3}$, $\\frac{9}{2} = 4\\frac{1}{2}$</span>
+                        </div>
+                    </div>
+                `
+            },
+            natural: {
+                title: "Números Naturales ($\\mathbb{N}$)",
+                tag: "Para Contar",
+                content: `
+                    <p>Son los números utilizados para contar elementos discretos ($0, 1, 2, 3...$). Dentro de los enteros positivos distinguimos:</p>
+                    <div class="space-y-2 mt-2">
+                        <div class="p-2 bg-slate-100 dark:bg-slate-900/60 rounded border border-slate-200 dark:border-slate-700">
+                            <strong>Números Primos:</strong> Tienen únicamente 2 divisores (el 1 y sí mismos).
+                            <br><span class="text-xs text-indigo-600 dark:text-indigo-300">2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31...</span>
+                        </div>
+                        <div class="p-2 bg-slate-100 dark:bg-slate-900/60 rounded border border-slate-200 dark:border-slate-700">
+                            <strong>Números Compuestos:</strong> Son divisibles por más de dos enteros positivos.
+                            <br><span class="text-xs text-purple-600 dark:text-purple-300">4, 6, 8, 9, 10, 12, 14, 15...</span>
+                        </div>
+                        <div class="p-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded text-amber-900 dark:text-amber-200">
+                            <strong>Regla del 1 y del 0:</strong> El <strong>1 no es primo ni compuesto</strong> porque posee solo un divisor. El 0 tampoco califica en ninguna de estas categorías.
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        const questions = [
+            {
+                number: "1",
+                expression: "\\sqrt{3}",
+                questionText: "¿A qué conjunto pertenece principalmente el número $\\sqrt{3}$?",
+                options: [
+                    { text: "Irracional Algebraico", correct: true },
+                    { text: "Racional / Fraccionario", correct: false },
+                    { text: "Número Imaginario", correct: false },
+                    { text: "Entero Negativo", correct: false }
+                ],
+                explanation: "La raíz cuadrada de 3 es una raíz no exacta que proviene de una relación algebraica, generando decimales infinitos no periódicos."
+            },
+            {
+                number: "2",
+                expression: "-18",
+                questionText: "¿Cómo se clasifica el número $-18$?",
+                options: [
+                    { text: "Entero Negativo ($\\mathbb{Z}^-$)", correct: true },
+                    { text: "Número Natural ($\\mathbb{N}$)", correct: false },
+                    { text: "Irracional Trascendente", correct: false },
+                    { text: "Número Imaginario", correct: false }
+                ],
+                explanation: "-18 es un número entero sin parte decimal con valor menor a cero."
+            },
+            {
+                number: "3",
+                expression: "\\pi",
+                questionText: "¿Cuál es la categoría precisa de la constante $\\pi$?",
+                options: [
+                    { text: "Irracional Trascendente", correct: true },
+                    { text: "Racional ($\\mathbb{Q}$)", correct: false },
+                    { text: "Número Primo", correct: false },
+                    { text: "Fracción Impropia", correct: false }
+                ],
+                explanation: "Pi es una constante trascendente con infinitos decimales no periódicos que no proviene de raíces algebraicas de polinomios simples."
+            },
+            {
+                number: "4",
+                expression: "3.25i",
+                questionText: "¿A qué tipo de número corresponde $3.25i$?",
+                options: [
+                    { text: "Número Imaginario", correct: true },
+                    { text: "Entero Positivo", correct: false },
+                    { text: "Fracción Propia", correct: false },
+                    { text: "Irracional Algebraico", correct: false }
+                ],
+                explanation: "Acompaña a la unidad imaginaria $i$ (donde $i = \\sqrt{-1}$)."
+            },
+            {
+                number: "5",
+                expression: "\\frac{7}{3}",
+                questionText: "¿Qué tipo de número fraccionario es $\\frac{7}{3}$?",
+                options: [
+                    { text: "Fracción Impropia (o Número Mixto $2\\frac{1}{3}$)", correct: true },
+                    { text: "Fracción Propia", correct: false },
+                    { text: "Número Primo", correct: false },
+                    { text: "Número Imaginario", correct: false }
+                ],
+                explanation: "El numerador (7) es mayor que el denominador (3), lo que representa una cantidad mayor a la unidad."
+            },
+            {
+                number: "6",
+                expression: "1",
+                questionText: "¿Cuál es la clasificación del número $1$ dentro de los naturales?",
+                options: [
+                    { text: "No es primo ni compuesto", correct: true },
+                    { text: "Número Primo", correct: false },
+                    { text: "Número Compuesto", correct: false },
+                    { text: "Número Irracional", correct: false }
+                ],
+                explanation: "El número 1 posee únicamente un divisor positivo (él mismo). La definición formal de primo exige exactamente dos divisores positivos distintos."
+            },
+            {
+                number: "7",
+                expression: "0",
+                questionText: "¿Cuál es la función del número $0$ en la clasificación de enteros?",
+                options: [
+                    { text: "Elemento neutro (Entero no positivo ni negativo)", correct: true },
+                    { text: "Número Primo", correct: false },
+                    { text: "Número Imaginario", correct: false },
+                    { text: "Fracción Propia", correct: false }
+                ],
+                explanation: "El cero marca el origen de la recta numérica: pertenece a $\\mathbb{Z}$ y $\\mathbb{N}$, pero no es positivo ni negativo."
+            },
+            {
+                number: "8",
+                expression: "\\sqrt{-16}",
+                questionText: "¿A qué conjunto pertenece el resultado de $\\sqrt{-16}$?",
+                options: [
+                    { text: "Número Imaginario ($4i$)", correct: true },
+                    { text: "Número Real Irracional", correct: false },
+                    { text: "Entero Negativo ($-4$)", correct: false },
+                    { text: "Número Natural", correct: false }
+                ],
+                explanation: "Las raíces pares de números negativos no tienen solución en los Reales ($\\mathbb{R}$). $\\sqrt{-16} = \\sqrt{16} \\cdot \\sqrt{-1} = 4i$."
+            },
+            {
+                number: "9",
+                expression: "0.333...",
+                questionText: "¿Cómo se clasifica el decimal periódico $0.333...$?",
+                options: [
+                    { text: "Racional Fraccionario ($\\frac{1}{3}$)", correct: true },
+                    { text: "Irracional Algebraico", correct: false },
+                    { text: "Entero Positivo", correct: false },
+                    { text: "Número Imaginario", correct: false }
+                ],
+                explanation: "Todo decimal infinito periódico es un número racional porque se puede expresar como el cociente exacto de dos enteros."
+            },
+            {
+                number: "10",
+                expression: "e \\approx 2.7182...",
+                questionText: "¿A qué conjunto pertenece la constante de Euler $e$?",
+                options: [
+                    { text: "Irracional Trascendente", correct: true },
+                    { text: "Irracional Algebraico", correct: false },
+                    { text: "Racional Fraccionario", correct: false },
+                    { text: "Complejo no Real", correct: false }
+                ],
+                explanation: "Al igual que $\\pi$, el número de Euler $e$ es una constante fundamental que no surge como raíz polinómica de enteros."
+            },
+            {
+                number: "11",
+                expression: "\\text{Exclusión: } \\mathbb{Q}",
+                questionText: "¿Cuál de los siguientes números **NO** pertenece al conjunto de los números Racionales ($\\mathbb{Q}$)?",
+                options: [
+                    { text: "$\\sqrt{5}$", correct: true },
+                    { text: "$-0.75$", correct: false },
+                    { text: "$\\frac{22}{7}$", correct: false },
+                    { text: "$4$", correct: false }
+                ],
+                explanation: "$\\sqrt{5} \\approx 2.2360...$ posee decimales infinitos no periódicos, por lo que es **Irracional**."
+            },
+            {
+                number: "12",
+                expression: "\\text{Falsedad: } \\mathbb{N}",
+                questionText: "¿Cuál de las siguientes afirmaciones sobre el número $2$ es **FALSA**?",
+                options: [
+                    { text: "Es un número compuesto", correct: true },
+                    { text: "Es el único número primo que es par", correct: false },
+                    { text: "Pertenece al conjunto de los Naturales ($\\mathbb{N}$)", correct: false },
+                    { text: "Es un entero positivo ($\\mathbb{Z}^+$)", correct: false }
+                ],
+                explanation: "El número 2 **NO** es compuesto; es un número **primo** porque sus únicos divisores son 1 y 2."
+            },
+            {
+                number: "13",
+                expression: "\\text{Lógica Inversa: } \\mathbb{I}",
+                questionText: "¿Cuál de los siguientes números **SÍ** es un número Irracional?",
+                options: [
+                    { text: "$\\sqrt{7}$", correct: true },
+                    { text: "$\\sqrt{9}$", correct: false },
+                    { text: "$3.1416$", correct: false },
+                    { text: "$\\frac{5}{2}$", correct: false }
+                ],
+                explanation: "$\\sqrt{7}$ no es exacto (irracional). En cambio $\\sqrt{9} = 3$ (entero), $3.1416$ es decimal finito y $\\frac{5}{2}$ es fracción."
+            },
+            {
+                number: "14",
+                expression: "-\\frac{15}{3}",
+                questionText: "¿A qué conjunto pertenece el resultado de simplificar la expresión $-\\frac{15}{3}$?",
+                options: [
+                    { text: "Entero Negativo ($-5$)", correct: true },
+                    { text: "Fracción Propia", correct: false },
+                    { text: "Número Irracional", correct: false },
+                    { text: "Número Imaginario", correct: false }
+                ],
+                explanation: "Al realizar la división $-15 \\div 3 = -5$, el resultado es un número entero negativo ($\\mathbb{Z}^-$)."
+            },
+            {
+                number: "15",
+                expression: "\\frac{2}{9}",
+                questionText: "¿Qué tipo de fracción representa el número $\\frac{2}{9}$?",
+                options: [
+                    { text: "Fracción Propia", correct: true },
+                    { text: "Fracción Impropia", correct: false },
+                    { text: "Número Entero", correct: false },
+                    { text: "Número Irracional", correct: false }
+                ],
+                explanation: "Es una fracción propia porque el numerador (2) es menor que el denominador (9)."
+            },
+            {
+                number: "16",
+                expression: "\\text{Inclusión: } \\mathbb{R} \\subset \\mathbb{C}",
+                questionText: "¿Es correcto afirmar que **todo** número Real ($\\mathbb{R}$) es también un número Complejo ($\\mathbb{C}$)?",
+                options: [
+                    { text: "Verdadero: Tienen parte imaginaria igual a cero ($a + 0i$)", correct: true },
+                    { text: "Falso: Los reales e imaginarios están aislados", correct: false },
+                    { text: "Solo si el número es positivo", correct: false },
+                    { text: "Solo si es un número entero", correct: false }
+                ],
+                explanation: "¡Correcto! Los reales son un subconjunto de los complejos con $b = 0$ ($a + 0i$)."
+            },
+            {
+                number: "17",
+                expression: "\\sqrt[3]{-8}",
+                questionText: "¿A qué conjunto pertenece el resultado de la raíz cúbica $\\sqrt[3]{-8}$?",
+                options: [
+                    { text: "Entero Negativo ($-2$)", correct: true },
+                    { text: "Número Imaginario ($-2i$)", correct: false },
+                    { text: "Irracional Algebraico", correct: false },
+                    { text: "No existe solución matemática", correct: false }
+                ],
+                explanation: "Las raíces de índice **impar** de números negativos **SÍ existen en los Reales**: $(-2)^3 = -8$, por lo que $\\sqrt[3]{-8} = -2$."
+            },
+            {
+                number: "18",
+                expression: "\\text{Lógica Inversa: Primos}",
+                questionText: "¿Cuál de los siguientes números **NO** es un número primo?",
+                options: [
+                    { text: "$9$", correct: true },
+                    { text: "$7$", correct: false },
+                    { text: "$13$", correct: false },
+                    { text: "$2$", correct: false }
+                ],
+                explanation: "El $9$ es un número **compuesto** porque posee más de 2 divisores ($1, 3, 9$)."
+            },
+            {
+                number: "19",
+                expression: "5 + 0i",
+                questionText: "El número $5 + 0i$ pertenece a los conjuntos:",
+                options: [
+                    { text: "Tanto a los Reales ($\\mathbb{R}$) como a los Complejos ($\\mathbb{C}$)", correct: true },
+                    { text: "Únicamente a los Imaginarios Puros", correct: false },
+                    { text: "Exclusivamente a los Irracionales", correct: false },
+                    { text: "A ninguno de los anteriores", correct: false }
+                ],
+                explanation: "Como la parte imaginaria es cero ($0i$), el valor se reduce a $5$, perteneciendo a $\\mathbb{N}, \\mathbb{Z}, \\mathbb{Q}, \\mathbb{R}$ y $\\mathbb{C}$."
+            },
+            {
+                number: "20",
+                expression: "\\text{Falsedad: Decimales}",
+                questionText: "Si un número tiene cifras decimales infinitas **NO periódicas**, ¿cuál afirmación es **VERDADERA**?",
+                options: [
+                    { text: "Jamás podrá expresarse como una fracción $\\frac{a}{b}$ de enteros", correct: true },
+                    { text: "Es un número Racional Fraccionario", correct: false },
+                    { text: "Se trata siempre de un entero negativo", correct: false },
+                    { text: "Es un número Imaginario Puro", correct: false }
+                ],
+                explanation: "Esa es la definición fundamental de los números **Irracionales**."
+            }
+        ];
+
+        let score = 0;
+
+        // Función de alternancia de Modo Claro / Oscuro con intercambio de Ícono
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        function safeTypeset(element) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                const target = element ? [element] : null;
+                if (window.MathJax.typesetClear && target) {
+                    window.MathJax.typesetClear(target);
+                }
+                window.MathJax.typesetPromise(target).catch((err) => console.error("MathJax error:", err));
+            }
+        }
+
+        function switchTab(tab) {
+            const lessonTab = document.getElementById('tab-lesson');
+            const quizTab = document.getElementById('tab-quiz');
+            const btnLesson = document.getElementById('btn-tab-lesson');
+            const btnQuiz = document.getElementById('btn-tab-quiz');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            if (tab === 'lesson') {
+                lessonTab.classList.remove('hidden');
+                quizTab.classList.add('hidden');
+                btnLesson.className = activeClass;
+                btnQuiz.className = inactiveClass;
+            } else {
+                lessonTab.classList.add('hidden');
+                quizTab.classList.remove('hidden');
+                btnQuiz.className = activeClass;
+                btnLesson.className = inactiveClass;
+            }
+            safeTypeset();
+        }
+
+        function selectConcept(key) {
+            const data = concepts[key];
+            if (!data) return;
+
+            const headerEl = document.getElementById('detail-header');
+            const titleEl = document.getElementById('detail-title');
+            const tagEl = document.getElementById('detail-tag');
+            const detailBody = document.getElementById('detail-body');
+
+            titleEl.innerHTML = data.title;
+            tagEl.innerText = data.tag;
+            detailBody.innerHTML = data.content;
+
+            safeTypeset(headerEl);
+            safeTypeset(detailBody);
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            questions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm space-y-3 transition-colors h-full flex flex-col justify-between";
+                
+                let optionsHTML = q.options.map((opt, oIndex) => `
+                    <button onclick="checkAnswer(${qIndex}, ${oIndex}, this)" class="option-btn text-left p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-medium transition-all flex justify-between items-center w-full gap-2">
+                        <span>${opt.text}</span>
+                        <i class="fa-regular fa-circle text-slate-400 dark:text-slate-500 status-icon flex-shrink-0"></i>
+                    </button>
+                `).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3">
+                            <span class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">Pregunta ${q.number} de ${questions.length}</span>
+                            <span class="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400">$${q.expression}$</span>
+                        </div>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 font-medium mb-3">${q.questionText}</p>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${optionsHTML}
+                        </div>
+                    </div>
+                    <div id="explanation-${qIndex}" class="hidden p-3 rounded-lg text-xs leading-relaxed mt-3 border"></div>
+                `;
+                container.appendChild(card);
+            });
+
+            safeTypeset(container);
+        }
+
+        function checkAnswer(qIndex, oIndex, btnElement) {
+            const parent = btnElement.closest('.bg-white, .dark\\:bg-slate-800');
+            if (parent.dataset.answered === "true") return;
+            parent.dataset.answered = "true";
+
+            const question = questions[qIndex];
+            const selectedOpt = question.options[oIndex];
+            const explanationBox = document.getElementById(`explanation-${qIndex}`);
+            const allBtns = parent.querySelectorAll('.option-btn');
+
+            allBtns.forEach((btn, idx) => {
+                btn.disabled = true;
+                const icon = btn.querySelector('.status-icon');
+                if (question.options[idx].correct) {
+                    btn.classList.remove('bg-slate-50', 'dark:bg-slate-900/60', 'border-slate-200', 'dark:border-slate-700');
+                    btn.classList.add('bg-emerald-100', 'dark:bg-emerald-950/80', 'border-emerald-500', 'text-emerald-950', 'dark:text-emerald-200');
+                    icon.className = "fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 flex-shrink-0";
+                }
+            });
+
+            if (selectedOpt.correct) {
+                score++;
+                explanationBox.className = "p-3 rounded-lg text-xs leading-relaxed mt-3 border border-emerald-500/50 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200";
+                explanationBox.innerHTML = `<strong>¡Correcto!</strong> ${question.explanation}`;
+            } else {
+                btnElement.classList.remove('bg-slate-50', 'dark:bg-slate-900/60', 'border-slate-200', 'dark:border-slate-700');
+                btnElement.classList.add('bg-rose-100', 'dark:bg-rose-950/80', 'border-rose-500', 'text-rose-950', 'dark:text-rose-200');
+                const icon = btnElement.querySelector('.status-icon');
+                icon.className = "fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 flex-shrink-0";
+
+                explanationBox.className = "p-3 rounded-lg text-xs leading-relaxed mt-3 border border-rose-500/50 bg-rose-50 dark:bg-rose-950/40 text-rose-950 dark:text-rose-200";
+                explanationBox.innerHTML = `<strong>Incorrecto.</strong> ${question.explanation}`;
+            }
+
+            explanationBox.classList.remove('hidden');
+            safeTypeset(explanationBox);
+            document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
+        }
+
+        function resetQuiz() {
+            score = 0;
+            document.getElementById('score-display').innerText = `0 / ${questions.length}`;
+            renderQuiz();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            selectConcept('complex');
+            renderQuiz();
+            
+            if (window.MathJax && window.MathJax.startup) {
+                window.MathJax.startup.promise.then(() => {
+                    safeTypeset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

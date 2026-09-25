@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplicación de Enteros | Guía y Simulador de Examen</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: all 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin-top: 0;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 800px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver al Temario Principal
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                
+                <!-- Logo Izquierdo: CECyTEM -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <!-- Bloque Central: Titulación y Conmutador de Modo -->
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: Multiplicación de Enteros y Signos de Agrupación
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva y Simulador de Examen Nivel Medio-Alto
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <!-- Botón Modo Claro/Oscuro -->
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
+                            <span id="theme-text">Modo Claro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logo Derecho: Profe Campos -->
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <!-- Divisor Horizontal -->
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Fila Inferior: Botones de Pestañas / Secciones -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-guia" onclick="switchTab('guia')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Guía Didáctica (Ejercicios Resueltos)
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen (10 Problemas)
+                </button>
+            </nav>
+
+            <!-- Fila Inferior: Información Didáctica -->
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Domina la ley de signos y la eliminación de agrupaciones progresivas. Alterna entre la <strong>Guía Didáctica</strong> (paso a paso) y el <strong>Simulador de Examen Interactivo</strong> con resolución rigurosa línea a línea.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- SECCIÓN 1: GUÍA DIDÁCTICA (PESTAÑA GUÍA) -->
+        <section id="tab-guia" class="space-y-6">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-teal-500/40">
+                <div class="w-10 h-10 rounded-lg bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Sección 1: Guía Didáctica (Ejercicios Resueltos Paso a Paso)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Analiza cómo los factores multiplicativos afectan a los términos dentro de paréntesis, corchetes y llaves.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exercises-container">
+                <!-- Los ejercicios de la Guía Didáctica se inyectarán mediante JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: SIMULADOR DE EXAMEN (PESTAÑA EXAMEN) -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Sección 2: Simulador de Examen Interactivo (10 Problemas)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Calcula cuidadosamente en tu libreta respetando la jerarquía y desglosando la expresión completa en cada paso.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container">
+                <!-- Los problemas del examen se inyectarán mediante JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Multiplicación de Enteros &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DATA DE SECCIÓN 1: GUÍA DIDÁCTICA (Multiplicación y Signos de Agrupación)
+        const exercises = [
+            {
+                id: 1,
+                title: "Ejercicio 1 (Multiplicación Simple con Paréntesis)",
+                problem: "$$4(8-3) - 3(2-7) - 2(9+4)$$",
+                steps: [
+                    { title: "Paso 1: Resolvemos las operaciones dentro de cada paréntesis.", content: "$$ 4(5) - 3(-5) - 2(13) $$" },
+                    { title: "Paso 2: Realizamos las multiplicaciones aplicando ley de signos.", content: "$$ 20 + 15 - 26 $$" },
+                    { title: "Paso 3: Reducimos términos positivos y negativos.", content: "$$ 35 - 26 $$" }
+                ],
+                result: "$$ 9 $$"
+            },
+            {
+                id: 2,
+                title: "Ejercicio 2 (Factores Negativos en Paréntesis)",
+                problem: "$$-5(3-7-2) + 4(9-4) - 3(6-11)$$",
+                steps: [
+                    { title: "Paso 1: Evaluamos el contenido de los paréntesis.", content: "$$ -5(-6) + 4(5) - 3(-5) $$" },
+                    { title: "Paso 2: Multiplicamos respetando los signos negativos que anteceden.", content: "$$ 30 + 20 + 15 $$" },
+                    { title: "Paso 3: Sumamos los resultados parciales.", content: "$$ 65 $$" }
+                ],
+                result: "$$ 65 $$"
+            },
+            {
+                id: 3,
+                title: "Ejercicio 3 (Corchetes y Llaves Anidadas)",
+                problem: "$$8 - 2\\{5 - 3[4 - 2(6-9) + (5-8)]\\}$$",
+                steps: [
+                    { title: "Paso 1: Operamos los paréntesis más internos.", content: "$$ 8 - 2\\{5 - 3[4 - 2(-3) + (-3)]\\} $$" },
+                    { title: "Paso 2: Eliminamos los paréntesis multiplicando y reducimos el corchete.", content: "$$ 8 - 2\\{5 - 3[4 + 6 - 3]\\} $$<p class=\"mt-2\">$$ 8 - 2\\{5 - 3[7]\\} $$</p>" },
+                    { title: "Paso 3: Multiplicamos dentro de las llaves y resolvemos.", content: "$$ 8 - 2\\{5 - 21\\} = 8 - 2\\{-16\\} $$<p class=\"mt-2\">$$ 8 + 32 $$</p>" }
+                ],
+                result: "$$ 40 $$"
+            },
+            {
+                id: 4,
+                title: "Ejercicio 4 (Estructura con Factores Múltiples)",
+                problem: "$$-3 - 4[2 - 5(3-7)] + 2\\{8 - 3[4 - 2(5-2)]\\}$$",
+                steps: [
+                    { title: "Paso 1: Resolvemos paréntesis en ambos términos.", content: "$$ -3 - 4[2 - 5(-4)] + 2\\{8 - 3[4 - 2(3)]\\} $$" },
+                    { title: "Paso 2: Simplificamos el interior de los corchetes.", content: "$$ -3 - 4[2 + 20] + 2\\{8 - 3[4 - 6]\\} $$<p class=\"mt-2\">$$ -3 - 4[22] + 2\\{8 - 3[-2]\\} $$</p>" },
+                    { title: "Paso 3: Multiplicamos para resolver corchetes y llaves.", content: "$$ -3 - 88 + 2\\{8 + 6\\} = -3 - 88 + 2\\{14\\} $$<p class=\"mt-2\">$$ -3 - 88 + 28 $$</p>" }
+                ],
+                result: "$$ -63 $$"
+            },
+            {
+                id: 5,
+                title: "Ejercicio 5 (Cantidades Mayores con Factores)",
+                problem: "$$150 - 3(450 - 120) + 4(280 - 90) - 2(100 - 350)$$",
+                steps: [
+                    { title: "Paso 1: Operamos las restas dentro de cada paréntesis.", content: "$$ 150 - 3(330) + 4(190) - 2(-250) $$" },
+                    { title: "Paso 2: Realizamos los productos correspondientes.", content: "$$ 150 - 990 + 760 + 500 $$" },
+                    { title: "Paso 3: Agrupamos positivos y negativos para la resta final.", content: "<p class=\"mb-1\">Positivos: $$ 150 + 760 + 500 = 1410 $$</p><p>Negativos: $$ -990 $$</p><p class=\"mt-2\">$$ 1410 - 990 $$</p>" }
+                ],
+                result: "$$ 420 $$"
+            },
+            {
+                id: 6,
+                title: "Ejercicio 6 (Aplicación: Venta de Taquilla y Descuentos)",
+                problem: "Un teatro vende 150 boletos VIP a \\$850 cada uno, 220 boletos Preferentes a \\$550 cada uno y 180 boletos Generales a \\$300. Si además aplicó un descuento de \\$50 a cada uno de los 180 boletos Generales por una promoción, ¿cuál fue el ingreso total?",
+                steps: [
+                    { title: "Paso 1: Planteamos la expresión multiplicativa general.", content: "Ingreso = $$ 150(850) + 220(550) + 180(300 - 50) $$" },
+                    { title: "Paso 2: Resolvemos la resta con descuento y multiplicamos cada categoría.", content: "<p class=\"mb-1\">VIP: $$ 150 \\times 850 = 127500 $$</p><p class=\"mb-1\">Preferente: $$ 220 \\times 550 = 121000 $$</p><p>General: $$ 180 \\times 250 = 45000 $$</p>" },
+                    { title: "Paso 3: Sumamos los ingresos parciales.", content: "$$ 127500 + 121000 + 45000 $$" }
+                ],
+                result: "$$ \\$293,500 $$"
+            },
+            {
+                id: 7,
+                title: "Ejercicio 7 (Aplicación: Salario y Comisiones)",
+                problem: "Un agente de ventas recibe un sueldo base de \\$3,500 quincenales. Por cada una de las 12 ventas que realizó en el mes, recibe una comisión de \\$450 pero se le retienen \\$80 de impuestos por comisión. Además recibe un bono único de \\$1,200. ¿Cuánto cobra en total al mes? (Considera 2 quincenas por mes).",
+                steps: [
+                    { title: "Paso 1: Planteamos la expresión agrupada.", content: "Monto = $$ 2(3500) + 12(450 - 80) + 1200 $$" },
+                    { title: "Paso 2: Operamos el paréntesis de comisiones netas e impulsamos los productos.", content: "<p class=\"mb-1\">Sueldo base: $$ 2 \\times 3500 = 7000 $$</p><p>Comisiones netas: $$ 12 \\times 370 = 4440 $$</p>" },
+                    { title: "Paso 3: Sumamos todos los conceptos.", content: "$$ 7000 + 4440 + 1200 $$" }
+                ],
+                result: "$$ \\$12,640 $$"
+            },
+            {
+                id: 8,
+                title: "Ejercicio 8 (Aplicación: Terrenos e Inmobiliaria)",
+                problem: "Un terreno rectangular de 5 hectáreas se divide en partes iguales entre 2 socios. Si el costo por metro cuadrado es de \\$180 y cada socio pagó un trámite legal de \\$12,500, ¿cuál es el valor neto que le corresponde a cada uno? (Considera 1 hectárea = $10,000\\text{ m}^2$).",
+                steps: [
+                    { title: "Paso 1: Calculamos el área en $m^2$ para cada socio.", content: "<p class=\"mb-1\">Área total = $$ 5 \\times 10000 = 50000\\text{ m}^2 $$</p><p>Área por socio = $$ 50000 \\div 2 = 25000\\text{ m}^2 $$</p>" },
+                    { title: "Paso 2: Planteamos la multiplicación de valor del suelo menos gastos.", content: "Valor neto = $$ 25000(180) - 12500 $$" },
+                    { title: "Paso 3: Multiplicamos el valor bruto y restamos el costo del trámite.", content: "$$ 4500000 - 12500 $$" }
+                ],
+                result: "$$ \\$4,487,500 $$"
+            },
+            {
+                id: 9,
+                title: "Ejercicio 9 (Anidación Profunda con Multiplicadores)",
+                problem: "$$-10 - 3\\{ 4 - 2[-5 + 3(2 - 7)] - 8 \\}$$",
+                steps: [
+                    { title: "Paso 1: Resolvemos el paréntesis profundo.", content: "$$-10 - 3\\{ 4 - 2[-5 + 3(-5)] - 8 \\}$$" },
+                    { title: "Paso 2: Multiplicamos dentro del corchete y simplificamos.", content: "$$-10 - 3\\{ 4 - 2[-5 - 15] - 8 \\}$$<p class=\"mt-2\">$$-10 - 3\\{ 4 - 2[-20] - 8 \\}$$</p>" },
+                    { title: "Paso 3: Eliminamos el corchete por producto y resolvemos llaves.", content: "$$-10 - 3\\{ 4 + 40 - 8 \\}$$<p class=\"mt-2\">$$-10 - 3\\{ 36 \\}$$</p>" },
+                    { title: "Paso 4: Multiplicación final y combinación.", content: "$$-10 - 108$$" }
+                ],
+                result: "$$-118$$"
+            },
+            {
+                id: 10,
+                title: "Ejercicio 10 (Evaluación Combinada Extensa con Factores)",
+                problem: "$$[2(4+3-9) - 3(5-11)] \\times [-4(2-6) + 2(-8+3)]$$",
+                steps: [
+                    { title: "Paso 1: Calculamos el contenido de cada paréntesis interior.", content: "$$[2(-2) - 3(-6)] \\times [-4(-4) + 2(-5)]$$" },
+                    { title: "Paso 2: Multiplicamos los coeficientes dentro de cada corchete.", content: "$$[-4 + 18] \\times [16 - 10]$$" },
+                    { title: "Paso 3: Reducimos los corchetes a valores numéricos simples.", content: "$$[14] \\times [6]$$" }
+                ],
+                result: "$$84$$"
+            }
+        ];
+
+        // DATA DE SECCIÓN 2: SIMULADOR DE EXAMEN INTERACTIVO (Estructura rigurosa de Libreta)
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Jerarquía y Factores)",
+                problem: "$$-4 + 3\\{6 - 2[5 - 3(4-8)]\\}$$",
+                answer: -88,
+                steps: [
+                    {
+                        title: "1.- Resolvemos el paréntesis.",
+                        lines: [
+                            "$= -4 + 3\\{6 - 2[5 - 3(-4)]\\}$"
+                        ]
+                    },
+                    {
+                        title: "2.- Resolvemos el corchete.",
+                        lines: [
+                            "$= -4 + 3\\{6 - 2[5 + 12]\\}$",
+                            "$= -4 + 3\\{6 - 2[17]\\}$"
+                        ]
+                    },
+                    {
+                        title: "3.- Resolvemos la llave.",
+                        lines: [
+                            "$= -4 + 3\\{6 - 34\\}$",
+                            "$= -4 + 3\\{-28\\}$"
+                        ]
+                    },
+                    {
+                        title: "4.- Multiplicación y resta final.",
+                        lines: [
+                            "$= -4 - 84$",
+                            "$= -88$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (Agrupación Doble con Multiplicación)",
+                problem: "$$2\\{12 - 3[4 - (2-7)]\\} - 5[3 - 2(8-5)]$$",
+                answer: -15,
+                steps: [
+                    {
+                        title: "1.- Resolvemos los paréntesis interiores.",
+                        lines: [
+                            "$= 2\\{12 - 3[4 - (-5)]\\} - 5[3 - 2(3)]$"
+                        ]
+                    },
+                    {
+                        title: "2.- Resolvemos los corchetes.",
+                        lines: [
+                            "$= 2\\{12 - 3[4 + 5]\\} - 5[3 - 6]$",
+                            "$= 2\\{12 - 3[9]\\} - 5[-3]$"
+                        ]
+                    },
+                    {
+                        title: "3.- Resolvemos la llave y multiplicaciones parciales.",
+                        lines: [
+                            "$= 2\\{12 - 27\\} - (-15)$",
+                            "$= 2\\{-15\\} + 15$"
+                        ]
+                    },
+                    {
+                        title: "4.- Operación final.",
+                        lines: [
+                            "$= -30 + 15$",
+                            "$= -15$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Factores Negativos)",
+                problem: "$$-3[2(5-9) - 4(-3+7)] + 2[(-4-2)(6-10)]$$",
+                answer: 120,
+                steps: [
+                    {
+                        title: "1.- Resolvemos los paréntesis.",
+                        lines: [
+                            "$= -3[2(-4) - 4(4)] + 2[(-6)(-4)]$"
+                        ]
+                    },
+                    {
+                        title: "2.- Multiplicaciones dentro de los corchetes.",
+                        lines: [
+                            "$= -3[-8 - 16] + 2[24]$",
+                            "$= -3[-24] + 2[24]$"
+                        ]
+                    },
+                    {
+                        title: "3.- Multiplicamos los coeficientes exteriores.",
+                        lines: [
+                            "$= 72 + 48$"
+                        ]
+                    },
+                    {
+                        title: "4.- Suma final.",
+                        lines: [
+                            "$= 120$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Corchetes Extensos)",
+                problem: "$$-[-6 + 4(2-7) - 3(1-5)] + 2[(8-3)(4-9) - 5]$$",
+                answer: -46,
+                steps: [
+                    {
+                        title: "1.- Resolvemos los paréntesis.",
+                        lines: [
+                            "$= -[-6 + 4(-5) - 3(-4)] + 2[(5)(-5) - 5]$"
+                        ]
+                    },
+                    {
+                        title: "2.- Multiplicaciones dentro de los corchetes.",
+                        lines: [
+                            "$= -[-6 - 20 + 12] + 2[-25 - 5]$"
+                        ]
+                    },
+                    {
+                        title: "3.- Reducimos los términos dentro de los corchetes.",
+                        lines: [
+                            "$= -[-14] + 2[-30]$"
+                        ]
+                    },
+                    {
+                        title: "4.- Multiplicación de signos y resta final.",
+                        lines: [
+                            "$= 14 - 60$",
+                            "$= -46$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Cantidades Mayores con Coeficientes)",
+                problem: "$$3(450 - 180) - 2(620 - 350) + 5(120 - 240)$$",
+                answer: -330,
+                steps: [
+                    {
+                        title: "1.- Resolvemos las restas dentro de los paréntesis.",
+                        lines: [
+                            "$= 3(270) - 2(270) + 5(-120)$"
+                        ]
+                    },
+                    {
+                        title: "2.- Realizamos las multiplicaciones de cada término.",
+                        lines: [
+                            "$= 810 - 540 - 600$"
+                        ]
+                    },
+                    {
+                        title: "3.- Agrupamos positivos y negativos.",
+                        lines: [
+                            "$= 810 - 1140$"
+                        ]
+                    },
+                    {
+                        title: "4.- Resta final.",
+                        lines: [
+                            "$= -330$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Aplicación: Venta de Granja)",
+                problem: "Un agricultor vende 12 sacos de maíz a \\$450 cada uno, 8 sacos de frijol a \\$780 cada uno y 15 sacos de trigo a \\$320 cada uno. Si además por flete tuvo un gasto fijo de \\$1,400, ¿cuál fue su ganancia neta?",
+                answer: 15040,
+                steps: [
+                    {
+                        title: "1.- Planteamiento con corchete (Ingresos - Gastos).",
+                        lines: [
+                            "$= [12(450) + 8(780) + 15(320)] - 1400$"
+                        ]
+                    },
+                    {
+                        title: "2.- Multiplicaciones parciales del ingreso bruto.",
+                        lines: [
+                            "$= [5400 + 6240 + 4800] - 1400$"
+                        ]
+                    },
+                    {
+                        title: "3.- Suma total de los ingresos dentro del corchete.",
+                        lines: [
+                            "$= [16440] - 1400$"
+                        ]
+                    },
+                    {
+                        title: "4.- Resta del gasto de flete para la ganancia neta.",
+                        lines: [
+                            "$= 15040$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Aplicación: Nómina y Descuentos)",
+                problem: "Un empleado gana \\$280 diarios durante 20 días trabajados. Por cada día faltado (faltó 4 días) se le descuentan \\$350. Si además le descontaron un seguro mensual de \\$420, ¿cuánto dinero recibió en su cobro final?",
+                answer: 3780,
+                steps: [
+                    {
+                        title: "1.- Planteamiento general de ingresos y deducciones.",
+                        lines: [
+                            "$= 20(280) - 4(350) - 420$"
+                        ]
+                    },
+                    {
+                        title: "2.- Resolvemos los productos de sueldo y deducción por faltas.",
+                        lines: [
+                            "$= 5600 - 1400 - 420$"
+                        ]
+                    },
+                    {
+                        title: "3.- Agrupamos las deducciones totales.",
+                        lines: [
+                            "$= 5600 - 1820$"
+                        ]
+                    },
+                    {
+                        title: "4.- Operación final de cobro neto.",
+                        lines: [
+                            "$= 3780$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Aplicación: Materiales de Construcción)",
+                problem: "Para una obra se compraron 25 bultos de cemento a \\$220 cada uno con un descuento de \\$30 por bulto, y 18 varillas a \\$160 cada una con un descuento de \\$20 por varilla. ¿Cuál fue el costo total pagado?",
+                answer: 7270,
+                steps: [
+                    {
+                        title: "1.- Planteamiento con precio con descuento dentro de paréntesis.",
+                        lines: [
+                            "$= 25(220 - 30) + 18(160 - 20)$"
+                        ]
+                    },
+                    {
+                        title: "2.- Resolvemos las restas de los precios unitarios netos.",
+                        lines: [
+                            "$= 25(190) + 18(140)$"
+                        ]
+                    },
+                    {
+                        title: "3.- Multiplicamos cantidad por costo neto.",
+                        lines: [
+                            "$= 4750 + 2520$"
+                        ]
+                    },
+                    {
+                        title: "4.- Suma final del costo total.",
+                        lines: [
+                            "$= 7270$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Anidación Compleja)",
+                problem: "$$-15 - 2\\{ 8 - 3[-4 + 2(18 - 23)] - 5 \\}$$",
+                answer: -105,
+                steps: [
+                    {
+                        title: "1.- Resolvemos el paréntesis más interno.",
+                        lines: [
+                            "$= -15 - 2\\{ 8 - 3[-4 + 2(-5)] - 5 \\}$"
+                        ]
+                    },
+                    {
+                        title: "2.- Resolvemos las operaciones dentro del corchete.",
+                        lines: [
+                            "$= -15 - 2\\{ 8 - 3[-4 - 10] - 5 \\}$",
+                            "$= -15 - 2\\{ 8 - 3[-14] - 5 \\}$"
+                        ]
+                    },
+                    {
+                        title: "3.- Multiplicamos dentro del corchete y reducimos la llave.",
+                        lines: [
+                            "$= -15 - 2\\{ 8 + 42 - 5 \\}$",
+                            "$= -15 - 2\\{ 45 \\}$"
+                        ]
+                    },
+                    {
+                        title: "4.- Multiplicación final y resta final.",
+                        lines: [
+                            "$= -15 - 90$",
+                            "$= -105$"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Evaluación Combinada Extensa)",
+                problem: "$$[3(6-10) - 2(-4+9)] \\times [-2(5-8) + 3(-3-1)]$$",
+                answer: 132,
+                steps: [
+                    {
+                        title: "1.- Resolvemos los paréntesis interiores.",
+                        lines: [
+                            "$= [3(-4) - 2(5)] \\times [-2(-3) + 3(-4)]$"
+                        ]
+                    },
+                    {
+                        title: "2.- Multiplicaciones dentro de cada corchete.",
+                        lines: [
+                            "$= [-12 - 10] \\times [6 - 12]$"
+                        ]
+                    },
+                    {
+                        title: "3.- Reducimos los términos de los corchetes.",
+                        lines: [
+                            "$= [-22] \\times [-6]$"
+                        ]
+                    },
+                    {
+                        title: "4.- Multiplicación final aplicando ley de signos.",
+                        lines: [
+                            "$= 132$"
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ESTADOS DE LA APLICACIÓN
+        const currentStepState = {};
+        let examUserStates = {};
+
+        // CAMBIO DE PESTAÑAS (TABS)
+        function switchTab(tab) {
+            const guiaTab = document.getElementById('tab-guia');
+            const examenTab = document.getElementById('tab-examen');
+            const btnGuia = document.getElementById('btn-tab-guia');
+            const btnExamen = document.getElementById('btn-tab-examen');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            if (tab === 'guia') {
+                guiaTab.classList.remove('hidden');
+                examenTab.classList.add('hidden');
+                btnGuia.className = activeClass;
+                btnExamen.className = inactiveClass;
+            } else {
+                guiaTab.classList.add('hidden');
+                examenTab.classList.remove('hidden');
+                btnExamen.className = activeClass;
+                btnGuia.className = inactiveClass;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // ALTERNAR MODO CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        // LÓGICA SECCIÓN 1: GUÍA DIDÁCTICA (PASOS)
+        function nextStep(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            let current = currentStepState[id] || 0;
+            
+            if (current < maxStage) {
+                current++;
+                currentStepState[id] = current;
+                
+                const stepElem = document.getElementById(`step-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetSteps(id);
+                return;
+            }
+            
+            updateStepUI(id, ex);
+        }
+
+        function showAllSteps(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            currentStepState[id] = maxStage;
+            
+            const container = document.getElementById(`steps-container-${id}`);
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                }
+            }
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+            
+            updateStepUI(id, ex);
+        }
+
+        function resetSteps(id) {
+            const ex = exercises.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            currentStepState[id] = 0;
+            
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.remove('visible');
+                }
+            }
+            
+            updateStepUI(id, ex);
+        }
+
+        function updateStepUI(id, ex) {
+            const totalSteps = ex.steps.length;
+            const current = currentStepState[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${id}`);
+            const btnNext = document.getElementById(`btn-next-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else if (current === totalSteps) {
+                btnText.innerText = `Ver Resultado Final`;
+                btnIcon.className = "fa-solid fa-trophy";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            }
+        }
+
+        function renderExercises() {
+            const container = document.getElementById('exercises-container');
+            container.innerHTML = '';
+            
+            exercises.forEach(ex => {
+                currentStepState[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+                
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+                
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    stepsHTML += `
+                        <div id="step-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3.5 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                const resultStepNum = totalSteps + 1;
+                stepsHTML += `
+                    <div id="step-${ex.id}-${resultStepNum}" class="step-item bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 border-y border-r border-emerald-300 dark:border-emerald-800 p-4 rounded-r-lg text-center shadow-xs">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-1">
+                            <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> Resultado Final
+                        </span>
+                        <div class="text-xl font-extrabold text-emerald-900 dark:text-emerald-200">
+                            ${ex.result}
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-3 mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 px-4 text-center">
+                        <span class="text-base sm:text-lg lg:text-xl font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-${ex.id}" onclick="nextStep(${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-${ex.id}">Ver Paso 1 de ${totalSteps}</span>
+                        </button>
+
+                        <button id="btn-all-${ex.id}" onclick="showAllSteps(${ex.id})" class="py-2.5 px-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Mostrar todos los pasos">
+                            <i class="fa-solid fa-eye"></i>
+                            <span class="hidden sm:inline">Ver Todo</span>
+                        </button>
+
+                        <button id="btn-reset-${ex.id}" onclick="resetSteps(${ex.id})" class="hidden py-2.5 px-3 bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/50 dark:hover:bg-rose-900/50 text-rose-700 dark:text-rose-300 rounded-lg font-medium text-xs transition-all flex justify-center items-center gap-1.5" title="Ocultar y reiniciar">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span class="hidden sm:inline">Reiniciar</span>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+        }
+
+        // LÓGICA SECCIÓN 2: SIMULADOR DE EXAMEN INTERACTIVO
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            container.innerHTML = '';
+
+            examProblems.forEach((prob, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between hover:shadow-md";
+                card.id = `exam-card-${prob.id}`;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3 flex justify-between items-center">
+                            <h3 class="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature"></i>
+                                ${prob.title}
+                            </h3>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                Problema ${index + 1} de 10
+                            </span>
+                        </div>
+                        
+                        <div class="py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-4 px-4 text-center">
+                            <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">${prob.problem}</span>
+                        </div>
+
+                        <!-- Formulario de Respuesta Tecleada -->
+                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 flex flex-wrap sm:flex-nowrap items-center gap-3">
+                            <label for="exam-input-${prob.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                                Tu respuesta =
+                            </label>
+                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa número" 
+                                class="w-full sm:w-36 px-3 py-1.5 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white"
+                                onkeydown="if(event.key==='Enter') checkExamAnswer(${prob.id})">
+                            <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-check"></i> Verificar
+                            </button>
+                        </div>
+
+                        <!-- Cuadro de Retroalimentación -->
+                        <div id="exam-feedback-${prob.id}" class="hidden mt-3 p-4 rounded-lg text-xs sm:text-sm"></div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Re-renderizar fórmulas de MathJax cuando se actualice el contenedor del examen
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
+            }
+        }
+
+        function checkExamAnswer(id) {
+            const inputEl = document.getElementById(`exam-input-${id}`);
+            const feedbackEl = document.getElementById(`exam-feedback-${id}`);
+            const val = parseFloat(inputEl.value.trim());
+
+            if (isNaN(val)) {
+                alert("Por favor ingresa un resultado número antes de verificar.");
+                return;
+            }
+
+            const problem = examProblems.find(p => p.id === id);
+            const isCorrect = val === problem.answer;
+
+            examUserStates[id] = {
+                answered: true,
+                correct: isCorrect,
+                userVal: val
+            };
+
+            feedbackEl.classList.remove('hidden');
+
+            let stepsHTML = `<div class="space-y-3 mt-3">`;
+            problem.steps.forEach(step => {
+                stepsHTML += `
+                    <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg border-l-4 border-amber-500 shadow-xs">
+                        <p class="font-bold text-amber-700 dark:text-amber-400 text-xs sm:text-sm mb-1.5">${step.title}</p>
+                        <div class="space-y-1 font-mono text-xs sm:text-sm pl-2">
+                `;
+                step.lines.forEach((line, idx) => {
+                    const isLastLine = (step === problem.steps[problem.steps.length - 1]) && (idx === step.lines.length - 1);
+                    if (isLastLine) {
+                        stepsHTML += `<div class="text-sm sm:text-base font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/80 px-2.5 py-1 rounded inline-block border border-emerald-400 dark:border-emerald-700 mt-1">${line}</div>`;
+                    } else {
+                        stepsHTML += `<div class="text-slate-800 dark:text-slate-200">${line}</div>`;
+                    }
+                });
+                stepsHTML += `
+                        </div>
+                    </div>
+                `;
+            });
+            stepsHTML += `</div>`;
+
+            if (isCorrect) {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-emerald-500/10 dark:bg-emerald-950/40 border-emerald-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-check text-base"></i> ¡Respuesta Correcta! (+1 Punto)
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-emerald-500/20 pb-1 mb-2">
+                        Pasos y procedimiento ejecutado correctamente:
+                    </div>
+                    ${stepsHTML}
+                `;
+            } else {
+                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-rose-500/10 dark:bg-rose-950/40 border-rose-500 text-slate-800 dark:text-slate-200";
+                feedbackEl.innerHTML = `
+                    <div class="font-bold text-rose-600 dark:text-rose-400 text-sm flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-circle-xmark text-base"></i> Respuesta Incorrecta (Ingresaste: ${val})
+                    </div>
+                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-rose-500/20 pb-1 mb-2">
+                        Procedimiento desplegado línea a línea que debiste seguir (Resultado esperado = <strong>${problem.answer}</strong>):
+                    </div>
+                    ${stepsHTML}
+                `;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
+            }
+
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            const total = examProblems.length;
+            const answeredKeys = Object.keys(examUserStates);
+            const answeredCount = answeredKeys.length;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            answeredKeys.forEach(k => {
+                if (examUserStates[k].correct) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = correctCount;
+            document.getElementById('score-incorrect').innerText = incorrectCount;
+        }
+
+        function resetExam() {
+            examUserStates = {};
+            renderExam();
+            updateScoreboard();
+        }
+
+        // INICIALIZACIÓN DE LA PÁGINA
+        window.addEventListener('DOMContentLoaded', () => {
+            renderExercises();
+            renderExam();
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.startup) {
+                window.MathJax.startup.promise.then(() => {
+                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+                });
+            }
+        });
+    </script>
+</body>
+</html>
