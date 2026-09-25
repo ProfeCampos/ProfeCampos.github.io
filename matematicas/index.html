@@ -22,6 +22,7 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
+        /* MODO CLARO POR DEFECTO */
         :root {
             --primary: #0056b3;
             --primary-dark: #004085;
@@ -39,7 +40,7 @@
             --border-color: #e9ecef;
         }
 
-        /* Variables para Modo Oscuro */
+        /* MODO OSCURO (SOLO CUANDO SE ACTIVA EL BOTÓN) */
         body.dark-theme {
             --primary: #38bdf8;
             --primary-dark: #0284c7;
@@ -110,7 +111,6 @@
             min-width: 250px;
         }
 
-        /* Título Principal y Subtítulo con mismo tamaño */
         .header-titles h1 {
             margin: 0;
             font-size: 1.8rem;
@@ -132,7 +132,6 @@
             opacity: 0.9;
         }
 
-        /* Logos Más Grandes */
         .logo {
             max-height: 115px;
             width: auto;
@@ -148,7 +147,6 @@
             transform: scale(1.03);
         }
 
-        /* Controles del Encabezado (Modo Oscuro + Contador) */
         .header-controls {
             margin-top: 15px;
             display: flex;
@@ -204,7 +202,6 @@
             padding-bottom: 8px;
         }
 
-        /* Caja Informativa Meta Educativa */
         .info-box {
             background-color: var(--info-bg);
             border-left: 5px solid var(--info-border);
@@ -217,7 +214,6 @@
             color: var(--primary);
         }
 
-        /* Tarjetas de Unidades */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -272,7 +268,6 @@
             padding-left: 18px;
         }
 
-        /* Botón de Repositorio Final */
         .repo-section {
             text-align: center;
             background: var(--card-bg);
@@ -326,6 +321,13 @@
 </head>
 <body>
 
+    <!-- Cargar tema guardado si existe (Por defecto abre en MODO CLARO) -->
+    <script>
+        if (localStorage.getItem('theme-pm1') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    </script>
+
     <!-- Navegación para volver al Portal Principal -->
     <nav>
         <a href="../index.html">← Volver al Portal Principal</a>
@@ -341,9 +343,9 @@
                 <h2>Aritmética</h2>
                 <p>CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</p>
 
-                <!-- Botón de Modo Claro/Oscuro + Contador Harmónico -->
+                <!-- Botón de Modo Claro/Oscuro + Contador -->
                 <div class="header-controls">
-                    <button id="theme-toggle-btn" onclick="toggleTheme()" class="btn-control">
+                    <button id="theme-toggle-btn" onclick="toggleTheme()" class="btn-control" aria-label="Cambiar tema de color">
                         <i id="theme-icon" class="fa-solid fa-moon"></i>
                         <span id="theme-text">Modo Oscuro</span>
                     </button>
@@ -412,10 +414,11 @@
                     <div>
                         <h3>Unidad 3: Números y Operaciones Básicas</h3>
                         <ul class="subtemas">
-                            <li>3.1 Clasificación de reales (ℕ, ℤ, ℚ, 𝕀)</li>
-                            <li>3.2 Propiedades (conmutativa, asociativa, distributiva)</li>
-                            <li>3.3 Operaciones con enteros</li>
-                            <li>3.4 Divisibilidad, criterios, MCD y mcm</li>
+                            <li>3.1 Clasificación de los Números</li>
+                            <li>3.3.1 Suma y Resta de Enteros</li>
+                            <li>3.3.2 Multiplicación y Signos de Agrupación</li>
+                            <li>3.3.3 División y Criterios de Divisibilidad</li>
+                            <li>3.4 Números Primos, MCD y mcm</li>
                         </ul>
                     </div>
                     <div class="proposito">
@@ -522,58 +525,51 @@
         <p>&copy; Pensamiento Matemático 1 — M.C. Edgar Campos Díaz | CECyTEM 05 Guacamayas</p>
     </footer>
 
-    <!-- JavaScript para Modo Oscuro y Contador de Visitas -->
+    <!-- JavaScript para Modo Oscuro y Contador -->
     <script>
-        // Alternar Tema Claro / Oscuro
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
             const text = document.getElementById('theme-text');
 
-            body.classList.toggle('dark-theme');
+            const isDark = body.classList.toggle('dark-theme');
 
-            if (body.classList.contains('dark-theme')) {
-                icon.className = 'fa-solid fa-sun';
-                text.innerText = 'Modo Claro';
-                localStorage.setItem('theme-pm1', 'dark');
-            } else {
-                icon.className = 'fa-solid fa-moon';
-                text.innerText = 'Modo Oscuro';
-                localStorage.setItem('theme-pm1', 'light');
-            }
+            icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            text.innerText = isDark ? 'Modo Claro' : 'Modo Oscuro';
+            localStorage.setItem('theme-pm1', isDark ? 'dark' : 'light');
         }
 
-        // Cargar Contador e Inicializar Tema guardado
-        async function initPage() {
-            // Cargar tema previo si existe
-            const savedTheme = localStorage.getItem('theme-pm1');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Sincronizar el botón si el usuario tenía activado el modo oscuro previamente
+            if (document.body.classList.contains('dark-theme')) {
                 document.getElementById('theme-icon').className = 'fa-solid fa-sun';
                 document.getElementById('theme-text').innerText = 'Modo Claro';
             }
 
-            // Contador de Visitas
-            const namespace = 'cecytem-profe-campos'; 
-            const pageKey = 'index-pensamiento-matematico-1'; 
+            // Contador de Visitas (CounterAPI)
+            const namespace = 'profecampos-cecytem05'; 
+            const pageKey = 'pensamiento-matematico-1'; 
             const countElement = document.getElementById('visitor-count');
 
             try {
                 const response = await fetch(`https://api.counterapi.dev/v1/${namespace}/${pageKey}/up`);
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
                 const data = await response.json();
 
-                if (data && data.count !== undefined) {
-                    countElement.innerText = data.count.toLocaleString();
+                if (data && typeof data.count !== 'undefined') {
+                    countElement.innerText = Number(data.count).toLocaleString();
                 } else {
                     countElement.innerText = '1';
                 }
             } catch (error) {
-                console.error('Error cargando contador:', error);
+                console.warn('Error al actualizar contador (AdBlocker o archivo local):', error);
                 countElement.innerText = '1';
             }
-        }
-
-        document.addEventListener('DOMContentLoaded', initPage);
+        });
     </script>
 </body>
 </html>
