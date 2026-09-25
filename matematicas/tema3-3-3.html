@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,13 @@
     <script>
         tailwind.config = {
             darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: {
+                        'xs': '475px',
+                    }
+                }
+            }
         }
     </script>
     <!-- FontAwesome Icons -->
@@ -133,8 +140,8 @@
                     <!-- Botón Modo Claro/Oscuro -->
                     <div class="pt-3 flex justify-center">
                         <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
-                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
-                            <span id="theme-text">Modo Claro</span>
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
                         </button>
                     </div>
                 </div>
@@ -736,7 +743,7 @@
             }
 
             if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise().catch(err => console.error(err));
+                window.MathJax.typesetPromise().catch(err => console.error("MathJax Tab Error:", err));
             }
         }
 
@@ -1064,10 +1071,6 @@
                 correct: isCorrect,
                 userVal: userDisplayVal
             };
-
-            if (window.MathJax && window.MathJax.typesetClear) {
-                window.MathJax.typesetClear([feedbackEl]);
-            }
 
             feedbackEl.classList.remove('hidden');
 
