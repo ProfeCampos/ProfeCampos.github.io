@@ -25,7 +25,6 @@
       --th-bg: rgba(0, 151, 157, 0.15);
       --btn-sec-bg: rgba(255, 255, 255, 0.08);
       
-      /* Nuevas variables para los colores de la Sección II */
       --highlight-bg: rgba(245, 158, 11, 0.12);
       --prompt-bg: rgba(0, 151, 157, 0.12);
     }
@@ -107,12 +106,12 @@
     }
 
     .header-logo {
-      width: 80px;
-      height: 80px;
+      width: 130px;
+      height: 130px;
       object-fit: contain;
-      border-radius: 10px;
+      border-radius: 12px;
       background-color: #ffffff;
-      padding: 4px;
+      padding: 6px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
@@ -204,7 +203,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       margin-bottom: 20px;
     }
- 
+
     .card-title {
       font-size: 1.1rem;
       font-weight: 700;
@@ -267,7 +266,6 @@
 
     .step-indicator { font-size: 0.85rem; color: var(--accent-gold); font-weight: 700; }
     
-    /* MODIFICACIONES PARA SECCIÓN II: ESTILOS DE LA OTRA PÁGINA */
     .step-box { 
       background-color: var(--highlight-bg); 
       border-left: 4px solid var(--accent-gold); 
@@ -522,7 +520,7 @@
     .rom-badge { font-family: 'Times New Roman', Georgia, serif; display: inline-block; background: rgba(245, 158, 11, 0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 2px 8px; border-radius: 4px; font-weight: bold; }
   </style>
 </head>
-<body>
+<body class="light-mode">
   <!-- BARRA DE NAVEGACIÓN PRINCIPAL CON BOTÓN DESTACADO -->
   <nav>
     <a href="index.html" class="btn-back">⬅️ Volver al Temario Principal</a>
@@ -538,7 +536,7 @@
       <div class="header-subtitle-main">Guía Interactiva Paso a Paso</div>
       <div class="header-subtitle-sub">CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</div>
       <button class="theme-toggle-btn" onclick="toggleTheme()">
-        <span id="themeIcon">☀️</span> Cambiar Modo Claro / Oscuro
+        <span id="themeIcon">🌙</span> Cambiar Modo Claro / Oscuro
       </button>
     </div>
     <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="header-logo">
@@ -894,7 +892,6 @@
     }
 
     // --- SECCIÓN II: PASO A PASO (BASES b) NUEVO ESTILO ---
-    // Ejercicios intactos originales
     const dataCat0 = [{n: "420", b: 5}, {n: "3152", b: 7}, {n: "34052", b: 6}, {n: "110010110", b: 2}, {n: "10323", b: 4}, {n: "10245", b: 8}, {n: "212", b: 3}, {n: "1011", b: 2}, {n: "543", b: 8}, {n: "120", b: 4}];
     const dataCat1 = [{n: 50, b: 4}, {n: 947, b: 3}, {n: 1124, b: 5}, {n: 1425, b: 7}, {n: 874, b: 6}, {n: 249, b: 2}, {n: 100, b: 8}, {n: 45, b: 2}, {n: 300, b: 5}, {n: 85, b: 3}];
 
@@ -982,7 +979,6 @@
       document.getElementById('btnCat0').classList.toggle('active', catIndex === 0);
       document.getElementById('btnCat1').classList.toggle('active', catIndex === 1);
       
-      // Mostrar/Ocultar contenedores correctos
       document.getElementById('procedureTab1').style.display = catIndex === 0 ? 'flex' : 'none';
       document.getElementById('divisionsTab2').style.display = catIndex === 1 ? 'grid' : 'none';
       document.getElementById('assemblyAreaTab2').style.display = catIndex === 1 ? 'block' : 'none';
@@ -1037,7 +1033,6 @@
               boxDesc.innerHTML = cur.desc; 
           }
 
-          // Renderizar Procedimiento Lineal
           const procContainer = document.getElementById("procedureTab1");
           procContainer.innerHTML = "";
           for (let s = 0; s < currentStep; s++) {
@@ -1087,7 +1082,6 @@
             boxDesc.innerHTML = `Tomamos el <strong>ÚLTIMO COCIENTE</strong> (recuadro cian) seguido de todos los <strong>RESIDUOS</strong> de abajo hacia arriba (recuadros dorados) para formar el número final.`;
           }
 
-          // Renderizar Grid de Divisiones
           const divGrid = document.getElementById("divisionsTab2");
           divGrid.innerHTML = "";
           const activeDivCount = Math.ceil(currentStep / 2);
@@ -1120,7 +1114,6 @@
             divGrid.appendChild(card);
           }
 
-          // Área de Ensamblaje
           const assemblyEl = document.getElementById("assemblyAreaTab2");
           assemblyEl.innerHTML = "";
           
@@ -1198,11 +1191,11 @@
            let syms = renderBabylonianSymbol(val) || '(vacío)';
            rows.push([
                `Casilla ${power} (60<sup>${power}</sup> = ${mult})`,
-               `${rem} &divide; ${mult} = <strong>${val}</strong>`,
+               `${rem} &divide; ${mult} = <strong>${val}</strong> (Cociente)`,
                `<strong>${val}</strong>`,
                `<div style="display:inline-block">${syms}</div>`
            ]);
-           stepDesc.push(`Para la <strong>Casilla ${power}</strong> (multiplicador ${mult}), dividimos el remanente ${rem} entre ${mult}. Obtenemos el valor <strong>${val}</strong>, representado con cuñas babilónicas.`);
+           stepDesc.push(`Para la <strong>Casilla ${power}</strong> (multiplicador ${mult}), dividimos el remanente ${rem} entre ${mult}. Obtenemos el cociente entero <strong>${val}</strong> (residuo: ${rem % mult}), representado con cuñas babilónicas.`);
            rem %= mult;
        });
 
@@ -1441,21 +1434,30 @@
            return `<div class="maya-level"><div class="maya-level-lbl">Nivel ${levelNumber}<br>(20<sup>${power}</sup>)</div>${renderMayanSymbol(val)}</div>`;
        }).join('');
 
-       let reversedNiveles = [...niveles].reverse();
-       let rows = []; let stepDesc = [];
+       let rows = []; let stepDesc = []; let rem = num;
 
-       for (let power = 0; power < reversedNiveles.length; power++) {
-           let val = reversedNiveles[power]; let levelNumber = power + 1; let mult = Math.pow(20, power);
+       for (let i = 0; i < len; i++) {
+           let power = len - 1 - i;
+           let levelNumber = power + 1;
+           let mult = Math.pow(20, power);
+           let val = Math.floor(rem / mult);
            rows.push([
-               `Nivel ${levelNumber} (20<sup>${power}</sup> = ${mult})`, `División por base 20`, `Valor del nivel: <strong>${val}</strong>`, `<div style="display:inline-block">${renderMayanSymbol(val)}</div>`
+               `Nivel ${levelNumber} (20<sup>${power}</sup> = ${mult})`,
+               `${rem} &divide; ${mult} = <strong>${val}</strong> (Cociente)`,
+               `<strong>${val}</strong>`,
+               `<div style="display:inline-block">${renderMayanSymbol(val)}</div>`
            ]);
-           stepDesc.push(`En el <strong>Nivel ${levelNumber}</strong> (multiplicador ${mult}), se asigna el valor <strong>${val}</strong> (entre 0 y 19), representado visualmente con sus símbolos correspondientes.`);
+           stepDesc.push(`Para el <strong>Nivel ${levelNumber}</strong> (multiplicador ${mult}), dividimos el remanente ${rem} entre ${mult}. El cociente obtenido es <strong>${val}</strong> (residuo: ${rem % mult}), representado visualmente con sus símbolos correspondientes.`);
+           rem %= mult;
        }
 
        return {
            instruction: `Convertir el número decimal <strong>${num}<sub>10</sub></strong> al sistema maya (base 20):`,
-           display: displayHtml, headers: ["Nivel (Potencia)", "Procedimiento", "Valor del Nivel", "Símbolos Mayas"],
-           rows: rows, stepDesc: stepDesc, conclusion: `El número decimal <strong>${num}<sub>10</sub></strong> expresado en sistema maya se lee de abajo hacia arriba en los niveles mostrados.`
+           display: displayHtml,
+           headers: ["Nivel (Potencia)", "Cálculo", "Valor del Nivel", "Símbolos Mayas"],
+           rows: rows,
+           stepDesc: stepDesc,
+           conclusion: `El número decimal <strong>${num}<sub>10</sub></strong> expresado en sistema maya se lee de abajo hacia arriba en los niveles mostrados.`
        };
     }
 
@@ -1496,9 +1498,9 @@
       const btnNext = document.getElementById("btnNextStepMay"); btnNext.disabled = currentMayStep >= totalSteps; btnNext.style.opacity = currentMayStep >= totalSteps ? "0.5" : "1";
       if (currentMayStep === 0) { 
         document.getElementById("stepBoxTitleMay").innerText = "Inicio"; 
-        document.getElementById("stepBoxDescMay").innerText = "Presiona 'Siguiente Paso' para analizar la cifra desde el nivel inferior (Nivel 1) hacia arriba."; 
+        document.getElementById("stepBoxDescMay").innerText = "Presiona 'Siguiente Paso' para analizar la cifra desde el nivel superior de descomposición."; 
       } else { 
-        document.getElementById("stepBoxTitleMay").innerText = `Análisis del Nivel ${currentMayStep}`; 
+        document.getElementById("stepBoxTitleMay").innerText = `Análisis del Nivel ${totalSteps - currentMayStep + 1}`; 
         document.getElementById("stepBoxDescMay").innerHTML = currentMayData.stepDesc[currentMayStep - 1]; 
       }
       if (currentMayStep === totalSteps) { 
@@ -1535,7 +1537,6 @@
         let nextVal = nextSymbol ? romValueMap[nextSymbol] : 0;
 
         if (nextVal > currentVal) {
-          // Regla Sustractiva
           let subPair = currentSymbol + nextSymbol;
           let subVal = nextVal - currentVal;
           total += subVal;
@@ -1549,7 +1550,6 @@
           stepDesc.push(`Encontramos el par sustractivo <strong>${subPair}</strong>: como el símbolo menor (${currentSymbol}) está antes de uno mayor (${nextSymbol}), restamos sus valores obteniendo <strong>${subVal}</strong>.`);
           i += 2;
         } else {
-          // Regla Aditiva
           total += currentVal;
           sumParts.push(currentVal);
           rows.push([
@@ -1660,9 +1660,7 @@
 
     window.onload = () => { 
       renderQuiz(); 
-      // Se inicializan todas las secciones, pero se mostrará solo la que por defecto tiene "active"
-      loadExercise(); 
-      selectCategory(0); // Forzar inicialización correcta de los contenedores de Sección II
+      selectCategory(0); 
       loadBabExercise(); 
       loadEgyExercise(); 
       loadMayExercise();
