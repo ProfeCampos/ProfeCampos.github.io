@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,10 +62,10 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
 
     <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+    <div class="sticky top-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2.5 px-4 shadow-md transition-all">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
@@ -101,13 +101,13 @@
     </div>
 
     <!-- Encabezado Dinámico -->
-    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
         <div class="max-w-7xl mx-auto space-y-4">
             
             <!-- Volver al Temario Principal -->
             <div class="flex justify-start">
-                <a href="unidad3.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
-                    ← Volver a la Unidad 3
+                <a href="index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver al Temario Principal
                 </a>
             </div>
 
@@ -134,8 +134,8 @@
                     <!-- Botón Modo Claro/Oscuro -->
                     <div class="pt-3 flex justify-center">
                         <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
-                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
-                            <span id="theme-text">Modo Claro</span>
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
                         </button>
                     </div>
                 </div>
@@ -223,7 +223,18 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // DATA DE SECCIÓN 1: GUÍA DIDÁCTICA CON SINTAXIS LATEX REVISADA Y RIGUROSA
+        // Función auxiliar para renderizar MathJax de forma segura evitando duplicaciones
+        function safeTypeset(element) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                const target = element ? (Array.isArray(element) ? element : [element]) : null;
+                if (window.MathJax.typesetClear && target) {
+                    window.MathJax.typesetClear(target);
+                }
+                window.MathJax.typesetPromise(target).catch((err) => console.error("MathJax error:", err));
+            }
+        }
+
+        // DATA DE SECCIÓN 1: GUÍA DIDÁCTICA
         const exercises = [
             {
                 id: 1,
@@ -334,7 +345,7 @@
             }
         ];
 
-        // DATA DE SECCIÓN 2: SIMULADOR DE EXAMEN (FORMATO EXACTO AL EJEMPLO DE LA LIBRETA)
+        // DATA DE SECCIÓN 2: SIMULADOR DE EXAMEN
         const examProblems = [
             {
                 id: 1,
@@ -477,9 +488,7 @@
                 btnGuia.className = inactiveClass;
             }
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise().catch(err => console.error(err));
-            }
+            safeTypeset();
         }
 
         // ALTERNAR MODO CLARO / OSCURO
@@ -515,9 +524,7 @@
                 const stepElem = document.getElementById(`step-${id}-${current}`);
                 if (stepElem) {
                     stepElem.classList.add('visible');
-                    if (window.MathJax && window.MathJax.typesetPromise) {
-                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
-                    }
+                    safeTypeset(stepElem);
                 }
             } else {
                 resetSteps(id);
@@ -544,10 +551,7 @@
                 }
             }
             
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
-            }
-            
+            safeTypeset(container);
             updateStepUI(id, ex);
         }
 
@@ -745,18 +749,12 @@
                 userVal: val
             };
 
-            // Limpieza del caché de MathJax para evitar superposición
-            if (window.MathJax && window.MathJax.typesetClear) {
-                window.MathJax.typesetClear([feedbackEl]);
-            }
-
             feedbackEl.classList.remove('hidden');
 
-            // Generar HTML con desarrollo matemático exacto al cuaderno del profesor
             let stepsHTML = `<div class="space-y-2.5 mt-3 font-medium">`;
-            problem.steps.forEach((step, idx) => {
+            problem.steps.forEach((step) => {
                 stepsHTML += `
-                    <div class="bg-white/90 dark:bg-slate-800/90 p-3 rounded-lg border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
+                    <div class="bg-white/90 dark:bg-slate-800/90 p-3 rounded-lg border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
                         <div class="text-xs font-bold text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
                             <i class="fa-solid fa-pen-line text-teal-500"></i> ${step.title}
                         </div>
@@ -799,10 +797,7 @@
                 `;
             }
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
-            }
-
+            safeTypeset(feedbackEl);
             updateScoreboard();
         }
 
@@ -832,15 +827,9 @@
 
         function resetExam() {
             examUserStates = {};
-            const container = document.getElementById('exam-container');
-            if (window.MathJax && window.MathJax.typesetClear && container) {
-                window.MathJax.typesetClear([container]);
-            }
             renderExam();
             updateScoreboard();
-            if (window.MathJax && window.MathJax.typesetPromise && container) {
-                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
-            }
+            safeTypeset();
         }
 
         // INICIALIZACIÓN DE LA PÁGINA
@@ -851,7 +840,7 @@
 
             if (window.MathJax && window.MathJax.startup) {
                 window.MathJax.startup.promise.then(() => {
-                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+                    safeTypeset();
                 });
             }
         });
