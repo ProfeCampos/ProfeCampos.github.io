@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,8 +125,8 @@
                     <!-- Botón Modo Claro/Oscuro -->
                     <div class="pt-3 flex justify-center">
                         <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
-                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
-                            <span id="theme-text">Modo Claro</span>
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
                         </button>
                     </div>
                 </div>
@@ -210,6 +210,19 @@
 
     <!-- JavaScript Logic -->
     <script>
+        // Función Auxiliar para Renderizar Fórmulas de MathJax de Forma Segura
+        function typesetMath(element) {
+            if (window.MathJax) {
+                if (window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise(element ? [element] : undefined).catch(err => console.error(err));
+                } else if (window.MathJax.startup && window.MathJax.startup.promise) {
+                    window.MathJax.startup.promise.then(() => {
+                        window.MathJax.typesetPromise(element ? [element] : undefined).catch(err => console.error(err));
+                    });
+                }
+            }
+        }
+
         // DATA DE SECCIÓN 1: GUÍA DIDÁCTICA (Multiplicación y Signos de Agrupación)
         const exercises = [
             {
@@ -240,8 +253,8 @@
                 problem: "$$8 - 2\\{5 - 3[4 - 2(6-9) + (5-8)]\\}$$",
                 steps: [
                     { title: "Paso 1: Operamos los paréntesis más internos.", content: "$$ 8 - 2\\{5 - 3[4 - 2(-3) + (-3)]\\} $$" },
-                    { title: "Paso 2: Eliminamos los paréntesis multiplicando y reducimos el corchete.", content: "$$ 8 - 2\\{5 - 3[4 + 6 - 3]\\} $$<p class=\"mt-2\">$$ 8 - 2\\{5 - 3[7]\\} $$</p>" },
-                    { title: "Paso 3: Multiplicamos dentro de las llaves y resolvemos.", content: "$$ 8 - 2\\{5 - 21\\} = 8 - 2\\{-16\\} $$<p class=\"mt-2\">$$ 8 + 32 $$</p>" }
+                    { title: "Paso 2: Eliminamos los paréntesis multiplicando y reducimos el corchete.", content: "<div>$$ 8 - 2\\{5 - 3[4 + 6 - 3]\\} $$</div><div class=\"mt-2\">$$ 8 - 2\\{5 - 3[7]\\} $$</div>" },
+                    { title: "Paso 3: Multiplicamos dentro de las llaves y resolvemos.", content: "<div>$$ 8 - 2\\{5 - 21\\} = 8 - 2\\{-16\\} $$</div><div class=\"mt-2\">$$ 8 + 32 $$</div>" }
                 ],
                 result: "$$ 40 $$"
             },
@@ -251,8 +264,8 @@
                 problem: "$$-3 - 4[2 - 5(3-7)] + 2\\{8 - 3[4 - 2(5-2)]\\}$$",
                 steps: [
                     { title: "Paso 1: Resolvemos paréntesis en ambos términos.", content: "$$ -3 - 4[2 - 5(-4)] + 2\\{8 - 3[4 - 2(3)]\\} $$" },
-                    { title: "Paso 2: Simplificamos el interior de los corchetes.", content: "$$ -3 - 4[2 + 20] + 2\\{8 - 3[4 - 6]\\} $$<p class=\"mt-2\">$$ -3 - 4[22] + 2\\{8 - 3[-2]\\} $$</p>" },
-                    { title: "Paso 3: Multiplicamos para resolver corchetes y llaves.", content: "$$ -3 - 88 + 2\\{8 + 6\\} = -3 - 88 + 2\\{14\\} $$<p class=\"mt-2\">$$ -3 - 88 + 28 $$</p>" }
+                    { title: "Paso 2: Simplificamos el interior de los corchetes.", content: "<div>$$ -3 - 4[2 + 20] + 2\\{8 - 3[4 - 6]\\} $$</div><div class=\"mt-2\">$$ -3 - 4[22] + 2\\{8 - 3[-2]\\} $$</div>" },
+                    { title: "Paso 3: Multiplicamos para resolver corchetes y llaves.", content: "<div>$$ -3 - 88 + 2\\{8 + 6\\} = -3 - 88 + 2\\{14\\} $$</div><div class=\"mt-2\">$$ -3 - 88 + 28 $$</div>" }
                 ],
                 result: "$$ -63 $$"
             },
@@ -263,7 +276,7 @@
                 steps: [
                     { title: "Paso 1: Operamos las restas dentro de cada paréntesis.", content: "$$ 150 - 3(330) + 4(190) - 2(-250) $$" },
                     { title: "Paso 2: Realizamos los productos correspondientes.", content: "$$ 150 - 990 + 760 + 500 $$" },
-                    { title: "Paso 3: Agrupamos positivos y negativos para la resta final.", content: "<p class=\"mb-1\">Positivos: $$ 150 + 760 + 500 = 1410 $$</p><p>Negativos: $$ -990 $$</p><p class=\"mt-2\">$$ 1410 - 990 $$</p>" }
+                    { title: "Paso 3: Agrupamos positivos y negativos para la resta final.", content: "<div class=\"mb-1\">Positivos: $$ 150 + 760 + 500 = 1410 $$</div><div>Negativos: $$ -990 $$</div><div class=\"mt-2\">$$ 1410 - 990 $$</div>" }
                 ],
                 result: "$$ 420 $$"
             },
@@ -273,7 +286,7 @@
                 problem: "Un teatro vende 150 boletos VIP a \\$850 cada uno, 220 boletos Preferentes a \\$550 cada uno y 180 boletos Generales a \\$300. Si además aplicó un descuento de \\$50 a cada uno de los 180 boletos Generales por una promoción, ¿cuál fue el ingreso total?",
                 steps: [
                     { title: "Paso 1: Planteamos la expresión multiplicativa general.", content: "Ingreso = $$ 150(850) + 220(550) + 180(300 - 50) $$" },
-                    { title: "Paso 2: Resolvemos la resta con descuento y multiplicamos cada categoría.", content: "<p class=\"mb-1\">VIP: $$ 150 \\times 850 = 127500 $$</p><p class=\"mb-1\">Preferente: $$ 220 \\times 550 = 121000 $$</p><p>General: $$ 180 \\times 250 = 45000 $$</p>" },
+                    { title: "Paso 2: Resolvemos la resta con descuento y multiplicamos cada categoría.", content: "<div class=\"mb-1\">VIP: $$ 150 \\times 850 = 127500 $$</div><div class=\"mb-1\">Preferente: $$ 220 \\times 550 = 121000 $$</div><div>General: $$ 180 \\times 250 = 45000 $$</div>" },
                     { title: "Paso 3: Sumamos los ingresos parciales.", content: "$$ 127500 + 121000 + 45000 $$" }
                 ],
                 result: "$$ \\$293,500 $$"
@@ -284,7 +297,7 @@
                 problem: "Un agente de ventas recibe un sueldo base de \\$3,500 quincenales. Por cada una de las 12 ventas que realizó en el mes, recibe una comisión de \\$450 pero se le retienen \\$80 de impuestos por comisión. Además recibe un bono único de \\$1,200. ¿Cuánto cobra en total al mes? (Considera 2 quincenas por mes).",
                 steps: [
                     { title: "Paso 1: Planteamos la expresión agrupada.", content: "Monto = $$ 2(3500) + 12(450 - 80) + 1200 $$" },
-                    { title: "Paso 2: Operamos el paréntesis de comisiones netas e impulsamos los productos.", content: "<p class=\"mb-1\">Sueldo base: $$ 2 \\times 3500 = 7000 $$</p><p>Comisiones netas: $$ 12 \\times 370 = 4440 $$</p>" },
+                    { title: "Paso 2: Operamos el paréntesis de comisiones netas e impulsamos los productos.", content: "<div class=\"mb-1\">Sueldo base: $$ 2 \\times 3500 = 7000 $$</div><div>Comisiones netas: $$ 12 \\times 370 = 4440 $$</div>" },
                     { title: "Paso 3: Sumamos todos los conceptos.", content: "$$ 7000 + 4440 + 1200 $$" }
                 ],
                 result: "$$ \\$12,640 $$"
@@ -294,7 +307,7 @@
                 title: "Ejercicio 8 (Aplicación: Terrenos e Inmobiliaria)",
                 problem: "Un terreno rectangular de 5 hectáreas se divide en partes iguales entre 2 socios. Si el costo por metro cuadrado es de \\$180 y cada socio pagó un trámite legal de \\$12,500, ¿cuál es el valor neto que le corresponde a cada uno? (Considera 1 hectárea = $10,000\\text{ m}^2$).",
                 steps: [
-                    { title: "Paso 1: Calculamos el área en $m^2$ para cada socio.", content: "<p class=\"mb-1\">Área total = $$ 5 \\times 10000 = 50000\\text{ m}^2 $$</p><p>Área por socio = $$ 50000 \\div 2 = 25000\\text{ m}^2 $$</p>" },
+                    { title: "Paso 1: Calculamos el área en $m^2$ para cada socio.", content: "<div class=\"mb-1\">Área total = $$ 5 \\times 10000 = 50000\\text{ m}^2 $$</div><div>Área por socio = $$ 50000 \\div 2 = 25000\\text{ m}^2 $$</div>" },
                     { title: "Paso 2: Planteamos la multiplicación de valor del suelo menos gastos.", content: "Valor neto = $$ 25000(180) - 12500 $$" },
                     { title: "Paso 3: Multiplicamos el valor bruto y restamos el costo del trámite.", content: "$$ 4500000 - 12500 $$" }
                 ],
@@ -306,8 +319,8 @@
                 problem: "$$-10 - 3\\{ 4 - 2[-5 + 3(2 - 7)] - 8 \\}$$",
                 steps: [
                     { title: "Paso 1: Resolvemos el paréntesis profundo.", content: "$$-10 - 3\\{ 4 - 2[-5 + 3(-5)] - 8 \\}$$" },
-                    { title: "Paso 2: Multiplicamos dentro del corchete y simplificamos.", content: "$$-10 - 3\\{ 4 - 2[-5 - 15] - 8 \\}$$<p class=\"mt-2\">$$-10 - 3\\{ 4 - 2[-20] - 8 \\}$$</p>" },
-                    { title: "Paso 3: Eliminamos el corchete por producto y resolvemos llaves.", content: "$$-10 - 3\\{ 4 + 40 - 8 \\}$$<p class=\"mt-2\">$$-10 - 3\\{ 36 \\}$$</p>" },
+                    { title: "Paso 2: Multiplicamos dentro del corchete y simplificamos.", content: "<div>$$-10 - 3\\{ 4 - 2[-5 - 15] - 8 \\}$$</div><div class=\"mt-2\">$$-10 - 3\\{ 4 - 2[-20] - 8 \\}$$</div>" },
+                    { title: "Paso 3: Eliminamos el corchete por producto y resolvemos llaves.", content: "<div>$$-10 - 3\\{ 4 + 40 - 8 \\}$$</div><div class=\"mt-2\">$$-10 - 3\\{ 36 \\}$$</div>" },
                     { title: "Paso 4: Multiplicación final y combinación.", content: "$$-10 - 108$$" }
                 ],
                 result: "$$-118$$"
@@ -325,7 +338,7 @@
             }
         ];
 
-        // DATA DE SECCIÓN 2: SIMULADOR DE EXAMEN INTERACTIVO (Estructura rigurosa de Libreta)
+        // DATA DE SECCIÓN 2: SIMULADOR DE EXAMEN INTERACTIVO
         const examProblems = [
             {
                 id: 1,
@@ -686,9 +699,7 @@
                 btnGuia.className = inactiveClass;
             }
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise().catch(err => console.error(err));
-            }
+            typesetMath();
         }
 
         // ALTERNAR MODO CLARO / OSCURO
@@ -724,9 +735,7 @@
                 const stepElem = document.getElementById(`step-${id}-${current}`);
                 if (stepElem) {
                     stepElem.classList.add('visible');
-                    if (window.MathJax && window.MathJax.typesetPromise) {
-                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
-                    }
+                    typesetMath(stepElem);
                 }
             } else {
                 resetSteps(id);
@@ -753,10 +762,7 @@
                 }
             }
             
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
-            }
-            
+            typesetMath(container);
             updateStepUI(id, ex);
         }
 
@@ -886,9 +892,7 @@
                 container.appendChild(card);
             });
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
-            }
+            typesetMath(container);
         }
 
         // LÓGICA SECCIÓN 2: SIMULADOR DE EXAMEN INTERACTIVO
@@ -922,7 +926,7 @@
                             <label for="exam-input-${prob.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
                                 Tu respuesta =
                             </label>
-                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa número" 
+                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa tu respuesta" 
                                 class="w-full sm:w-36 px-3 py-1.5 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white"
                                 onkeydown="if(event.key==='Enter') checkExamAnswer(${prob.id})">
                             <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
@@ -938,10 +942,7 @@
                 container.appendChild(card);
             });
 
-            // Re-renderizar fórmulas de MathJax cuando se actualice el contenedor del examen
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
-            }
+            typesetMath(container);
         }
 
         function checkExamAnswer(id) {
@@ -950,7 +951,7 @@
             const val = parseFloat(inputEl.value.trim());
 
             if (isNaN(val)) {
-                alert("Por favor ingresa un resultado número antes de verificar.");
+                alert("Por favor ingresa un resultado numérico antes de verificar.");
                 return;
             }
 
@@ -1011,10 +1012,7 @@
                 `;
             }
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
-            }
-
+            typesetMath(feedbackEl);
             updateScoreboard();
         }
 
@@ -1053,12 +1051,7 @@
             renderExercises();
             renderExam();
             updateScoreboard();
-
-            if (window.MathJax && window.MathJax.startup) {
-                window.MathJax.startup.promise.then(() => {
-                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
-                });
-            }
+            typesetMath();
         });
     </script>
 </body>
