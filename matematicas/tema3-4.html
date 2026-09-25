@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,8 +129,8 @@
 
                     <div class="pt-3 flex justify-center">
                         <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
-                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
-                            <span id="theme-text">Modo Claro</span>
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
                         </button>
                     </div>
                 </div>
@@ -464,22 +464,22 @@
             {
                 id: 8,
                 title: "MCD 8 (Aplicación): Donaciones a Fundaciones",
-                problem: "Tres empresas juntan $\$180,000$, $\$420,000$ y $\$540,000$ respectivamente para donar a varias fundaciones. Desean entregar cheques de la misma cantidad máxima posible a cada fundación. ¿De cuánto es cada cheque y cuántas fundaciones reciben apoyo?",
+                problem: "Tres empresas juntan \\$180,000, \\$420,000 y \\$540,000 respectivamente para donar a varias fundaciones. Desean entregar cheques de la misma cantidad máxima posible a cada fundación. ¿De cuánto es cada cheque y cuántas fundaciones reciben apoyo?",
                 steps: [
-                    { title: "Calcular el MCD de los montos.", content: "Factores comunes de $180, 420$ y $540$ en miles:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 180 & 420 & 540 & 2 \\\\ 90 & 210 & 270 & 2 \\\\ 45 & 105 & 135 & 3 \\\\ 15 & 35 & 45 & 5 \\\\ 3 & 7 & 9 & \\end{array}$$</p><p>$$MCD = 2 \\cdot 2 \\cdot 3 \\cdot 5 = 60 \\rightarrow \\$60,000$$</p>" },
+                    { title: "Calcular el MCD de los montos.", content: "Factores comunes de $180, 420$ y $540$ en miles:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 180 & 420 & 540 & 2 \\\\ 90 & 210 & 270 & 2 \\\\ 45 & 105 & 135 & 3 \\\\ 15 & 35 & 45 & 5 \\\\ 3 & 7 & 9 & \\end{array}$$</p><p>$$MCD = 2 \\cdot 2 \\cdot 3 \\cdot 5 = 60 \\rightarrow \\text{\\$60,000}$$</p>" },
                     { title: "Sumar las fundaciones beneficiadas.", content: "Fundaciones beneficiadas $= 3 + 7 + 9 = 19$ fundaciones." }
                 ],
-                result: "$$\\$60,000 \\text{ por cheque} \\quad | \\quad 19 \\text{ fundaciones beneficiadas}$$"
+                result: "$$\\text{\\$60,000 por cheque} \\quad | \\quad 19 \\text{ fundaciones beneficiadas}$$"
             },
             {
                 id: 9,
-                title: "MCD 9 (Aplicación): Reparto de Billetes de $200",
-                problem: "En un banco se organizan $3$ fardos de billetes de la misma denominación. El primero suma $\$3,400$, el segundo $\$5,800$ y el tercero $\$8,200$. ¿Cuál es la mayor denominación de billete posible y cuántos billetes hay en cada fardo?",
+                title: "MCD 9 (Aplicación): Reparto de Billetes de \\$200",
+                problem: "En un banco se organizan $3$ fardos de billetes de la misma denominación. El primero suma \\$3,400, el segundo \\$5,800 y el tercero \\$8,200. ¿Cuál es la mayor denominación de billete posible y cuántos billetes hay en cada fardo?",
                 steps: [
                     { title: "Obtener el MCD de las tres cantidades.", content: "Descomponemos simultáneamente $3,400$, $5,800$ y $8,200$:<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 3400 & 5800 & 8200 & 2 \\\\ 1700 & 2900 & 4100 & 2 \\\\ 850 & 1450 & 2050 & 5 \\\\ 170 & 290 & 410 & 2 \\\\ 85 & 145 & 205 & 5 \\\\ 17 & 29 & 41 & \\end{array}$$</p><p>$$MCD = 2^3 \\cdot 5^2 = 200$$</p>" },
                     { title: "Cantidad de billetes por fardo.", content: "Fardo 1: $17$ billetes. Fardo 2: $29$ billetes. Fardo 3: $41$ billetes." }
                 ],
-                result: "$$\\text{Denominación: } \\$200 \\quad | \\quad \\text{Billetes: } 17, 29 \\text{ y } 41$$"
+                result: "$$\\text{Denominación: \\$200} \\quad | \\quad \\text{Billetes: } 17, 29 \\text{ y } 41$$"
             },
             {
                 id: 10,
@@ -549,7 +549,7 @@
                     { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($360, 450, 540$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & \\mathbf{2} \\\\ 180 & 225 & 270 & \\end{array}$$</p>" },
                     { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($180, 270$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & \\mathbf{2} \\\\ 90 & 225 & 135 & \\end{array}$$</p>" },
                     { title: "Divisor primo: 2", content: "Dividimos entre $2$ ($90$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & \\mathbf{2} \\\\ 45 & 225 & 135 & \\end{array}$$</p>" },
-                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($45, 225, 135$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & \\mathbf{3} \\\\ 15 & 75 & 45 & \\end{array}$$</p>" },
+                    { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($45, 225, 135$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & \\mathbf{3} \\\\ 15 & 75 & 45 & \\end{array}$$</p>" },
                     { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($15, 75, 45$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & \\mathbf{3} \\\\ 5 & 25 & 15 & \\end{array}$$</p>" },
                     { title: "Divisor primo: 3", content: "Dividimos entre $3$ ($15$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & 3 \\\\ 5 & 25 & 15 & \\mathbf{3} \\\\ 5 & 25 & 5 & \\end{array}$$</p>" },
                     { title: "Divisor primo: 5", content: "Dividimos entre $5$ ($5, 25, 5$):<p class=\"my-2 text-center\">$$\\begin{array}{ccc|c} 360 & 450 & 540 & 2 \\\\ 180 & 225 & 270 & 2 \\\\ 90 & 225 & 135 & 2 \\\\ 45 & 225 & 135 & 3 \\\\ 15 & 75 & 45 & 3 \\\\ 5 & 25 & 15 & 3 \\\\ 5 & 25 & 5 & \\mathbf{5} \\\\ 1 & 5 & 1 & \\end{array}$$</p>" },
@@ -697,10 +697,10 @@
             {
                 id: 6,
                 title: "Reactivo 6 (Aplicación MCD - Billetes)",
-                problem: "Tres fajos de billetes suman $\$3,400$, $\$5,800$ y $\$8,200$ en billetes de la misma denominación. ¿Cuál es el valor en pesos de la mayor denominación posible?",
+                problem: "Tres fajos de billetes suman \\$3,400, \\$5,800 y \\$8,200 en billetes de la misma denominación. ¿Cuál es el valor en pesos de la mayor denominación posible?",
                 answer: 200,
                 steps: [
-                    { title: "1.- Calcular el MCD de las tres montos.", lines: ["$\\text{MCD}(3400, 5800, 8200) = 200$", "Denominación del billete $= \\$200$."] }
+                    { title: "1.- Calcular el MCD de los tres montos.", lines: ["$\\text{MCD}(3400, 5800, 8200) = 200$", "Denominación del billete $= \\text{\\$200}$."] }
                 ]
             },
             {
@@ -718,7 +718,7 @@
                 problem: "Selecciona <strong>todos</strong> los números verdaderamente primos de la siguiente lista:",
                 type: "checkbox",
                 options: ["119", "127", "143", "151", "161"],
-                answer: [1, 3], // 127 y 151
+                answer: [1, 3], // Índices 1 (127) y 3 (151)
                 steps: [
                     { title: "1.- Criterio de prueba por primos menores.", lines: ["$119 = 7 \\times 17$ (Compuesto)", "$127 \\rightarrow$ No divisible por $2, 3, 5, 7, 11$ (Es PRIMO)", "$143 = 11 \\times 13$ (Compuesto)", "$151 \\rightarrow$ No divisible por $2, 3, 5, 7, 11$ (Es PRIMO)", "$161 = 7 \\times 23$ (Compuesto)"] },
                     { title: "2.- Respuesta correcta.", lines: ["Los números primos son $127$ y $151$."] }
@@ -934,6 +934,7 @@
 
         function renderGuiaGeneric(section, exList, containerId, prefix) {
             const container = document.getElementById(containerId);
+            if (!container) return;
             container.innerHTML = '';
 
             const { stateDict } = getGuiaContext(section);
@@ -1013,213 +1014,130 @@
         // LÓGICA SIMULADOR DE EXAMEN
         function renderExam() {
             const container = document.getElementById('exam-container');
+            if (!container) return;
             container.innerHTML = '';
 
-            examProblems.forEach((prob, index) => {
+            examProblems.forEach(ex => {
                 const card = document.createElement('div');
                 card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between hover:shadow-md";
-                card.id = `exam-card-${prob.id}`;
 
-                let inputControlHTML = '';
-                
-                if (prob.type === 'checkbox') {
-                    let optionsHTML = prob.options.map((opt, optIdx) => `
-                        <label class="flex items-center gap-2 bg-white dark:bg-slate-800 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 cursor-pointer hover:border-amber-500 font-bold text-slate-800 dark:text-slate-200 text-sm transition-all shadow-xs">
-                            <input type="checkbox" name="exam-check-${prob.id}" value="${optIdx}" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 border-slate-300">
-                            <span>$${opt}$</span>
-                        </label>
-                    `).join('');
-
-                    inputControlHTML = `
-                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3.5 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 space-y-3">
-                            <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 block">
-                                Selecciona una o más opciones correctas:
-                            </span>
-                            <div class="flex flex-wrap gap-2.5">
-                                ${optionsHTML}
-                            </div>
-                            <div class="pt-1">
-                                <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
-                                    <i class="fa-solid fa-check"></i> Verificar Respuesta
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    inputControlHTML = `
-                        <div class="bg-slate-100 dark:bg-slate-900/80 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mb-3 flex flex-wrap sm:flex-nowrap items-center gap-3">
-                            <label for="exam-input-${prob.id}" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                                Tu respuesta =
+                let inputHTML = '';
+                if (ex.type === 'checkbox') {
+                    inputHTML = `<div class="space-y-2 my-3 text-left">`;
+                    ex.options.forEach((opt, idx) => {
+                        inputHTML += `
+                            <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 cursor-pointer">
+                                <input type="checkbox" name="exam-opt-${ex.id}" value="${idx}" class="w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500">
+                                <span>${opt}</span>
                             </label>
-                            <input type="number" id="exam-input-${prob.id}" placeholder="Ingresa número" 
-                                class="w-full sm:w-36 px-3 py-1.5 text-sm font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-slate-900 dark:text-white"
-                                onkeydown="if(event.key==='Enter') checkExamAnswer(${prob.id})">
-                            <button onclick="checkExamAnswer(${prob.id})" class="w-full sm:w-auto px-4 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold rounded-md text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-check"></i> Verificar
-                            </button>
+                        `;
+                    });
+                    inputHTML += `</div>`;
+                } else {
+                    inputHTML = `
+                        <div class="my-3 flex items-center gap-2 justify-center">
+                            <input type="number" id="exam-input-${ex.id}" class="w-36 text-center px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white font-bold focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Respuesta">
                         </div>
                     `;
                 }
+
+                let stepsHTML = '';
+                ex.steps.forEach((st) => {
+                    stepsHTML += `<div class="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500 p-3 rounded-r-lg text-xs sm:text-sm text-slate-800 dark:text-slate-200 my-2">
+                        <p class="font-bold text-amber-700 dark:text-amber-400 mb-1">${st.title}</p>`;
+                    st.lines.forEach(ln => {
+                        stepsHTML += `<p class="my-1">${ln}</p>`;
+                    });
+                    stepsHTML += `</div>`;
+                });
 
                 card.innerHTML = `
                     <div>
-                        <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3 flex justify-between items-center">
-                            <h3 class="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                                <i class="fa-solid fa-file-signature"></i>
-                                ${prob.title}
-                            </h3>
-                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                                Reactivo ${index + 1} de 10
-                            </span>
+                        <h3 class="text-base sm:text-lg font-bold text-amber-600 dark:text-amber-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-question"></i> ${ex.title}
+                        </h3>
+                        <p class="text-sm font-medium text-slate-800 dark:text-slate-100 my-3">${ex.problem}</p>
+                        ${inputHTML}
+                        <div id="exam-feedback-${ex.id}" class="hidden my-2 p-2.5 rounded-lg text-xs font-bold text-center"></div>
+                        <div id="exam-solution-${ex.id}" class="hidden mt-3 text-left border-t border-slate-200 dark:border-slate-700 pt-3">
+                            <p class="text-xs font-extrabold uppercase text-amber-600 dark:text-amber-400 mb-2">Procedimiento paso a paso:</p>
+                            ${stepsHTML}
                         </div>
-                        
-                        <div class="py-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-4 px-4 text-center">
-                            <span class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">${prob.problem}</span>
-                        </div>
-
-                        ${inputControlHTML}
-
-                        <div id="exam-feedback-${prob.id}" class="hidden mt-3 p-4 rounded-lg text-xs sm:text-sm"></div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex gap-2">
+                        <button id="exam-btn-${ex.id}" onclick="checkExamAnswer(${ex.id})" class="flex-1 py-2 px-4 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white rounded-lg font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-check"></i> Verificar
+                        </button>
                     </div>
                 `;
-
                 container.appendChild(card);
             });
-
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([container]).catch(err => console.error(err));
-            }
         }
 
         function checkExamAnswer(id) {
-            const problem = examProblems.find(p => p.id === id);
-            const feedbackEl = document.getElementById(`exam-feedback-${id}`);
+            const ex = examProblems.find(e => e.id === id);
+            if (!ex) return;
+
+            const feedback = document.getElementById(`exam-feedback-${id}`);
+            const solution = document.getElementById(`exam-solution-${id}`);
             let isCorrect = false;
-            let userDisplayVal = "";
 
-            if (problem.type === 'checkbox') {
-                const checkedBoxes = Array.from(document.querySelectorAll(`input[name="exam-check-${id}"]:checked`));
-                if (checkedBoxes.length === 0) {
-                    alert("Por favor selecciona al menos una opción antes de verificar.");
-                    return;
+            if (ex.type === 'checkbox') {
+                const checkedOpts = Array.from(document.querySelectorAll(`input[name="exam-opt-${id}"]:checked`)).map(cb => parseInt(cb.value));
+                const targetAns = ex.answer;
+                if (checkedOpts.length === targetAns.length && checkedOpts.every(val => targetAns.includes(val))) {
+                    isCorrect = true;
                 }
-                const selectedIndices = checkedBoxes.map(cb => parseInt(cb.value)).sort((a, b) => a - b);
-                const expectedIndices = [...problem.answer].sort((a, b) => a - b);
-
-                isCorrect = selectedIndices.length === expectedIndices.length &&
-                            selectedIndices.every((val, idx) => val === expectedIndices[idx]);
-
-                userDisplayVal = selectedIndices.map(i => problem.options[i]).join(", ");
             } else {
-                const inputEl = document.getElementById(`exam-input-${id}`);
-                const val = parseFloat(inputEl.value.trim());
-
-                if (isNaN(val)) {
-                    alert("Por favor ingresa un resultado numérico antes de verificar.");
-                    return;
+                const input = document.getElementById(`exam-input-${id}`);
+                if (input && parseFloat(input.value) === ex.answer) {
+                    isCorrect = true;
                 }
-
-                isCorrect = val === problem.answer;
-                userDisplayVal = val.toString();
             }
 
-            examUserStates[id] = {
-                answered: true,
-                correct: isCorrect,
-                userVal: userDisplayVal
-            };
-
-            if (window.MathJax && window.MathJax.typesetClear) {
-                window.MathJax.typesetClear([feedbackEl]);
-            }
-
-            feedbackEl.classList.remove('hidden');
-
-            let stepsHTML = `<div class="space-y-3 mt-3">`;
-            problem.steps.forEach(step => {
-                stepsHTML += `
-                    <div class="bg-white/80 dark:bg-slate-800/80 p-3 rounded-lg border-l-4 border-amber-500 shadow-xs">
-                        <p class="font-bold text-amber-700 dark:text-amber-400 text-xs sm:text-sm mb-1.5">${step.title}</p>
-                        <div class="space-y-1 font-mono text-xs sm:text-sm pl-2">
-                `;
-                step.lines.forEach((line, idx) => {
-                    const isLastLine = (step === problem.steps[problem.steps.length - 1]) && (idx === step.lines.length - 1);
-                    if (isLastLine) {
-                        stepsHTML += `<div class="text-sm sm:text-base font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/80 px-2.5 py-1 rounded inline-block border border-emerald-400 dark:border-emerald-700 mt-1">${line}</div>`;
-                    } else {
-                        stepsHTML += `<div class="text-slate-800 dark:text-slate-200">${line}</div>`;
-                    }
-                });
-                stepsHTML += `
-                        </div>
-                    </div>
-                `;
-            });
-            stepsHTML += `</div>`;
-
-            const expectedText = problem.type === 'checkbox' 
-                ? problem.answer.map(i => problem.options[i]).join(", ")
-                : problem.answer;
+            examUserStates[id] = isCorrect;
+            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'dark:bg-emerald-950/60', 'dark:text-emerald-300', 'bg-rose-100', 'text-rose-800', 'dark:bg-rose-950/60', 'dark:text-rose-300');
 
             if (isCorrect) {
-                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-emerald-500/10 dark:bg-emerald-950/40 border-emerald-500 text-slate-800 dark:text-slate-200";
-                feedbackEl.innerHTML = `
-                    <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm flex items-center gap-2 mb-1">
-                        <i class="fa-solid fa-circle-check text-base"></i> ¡Respuesta Correcta! (+1 Punto)
-                    </div>
-                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-emerald-500/20 pb-1 mb-2">
-                        Procedimiento ejecutado correctamente:
-                    </div>
-                    ${stepsHTML}
-                `;
+                feedback.classList.add('bg-emerald-100', 'text-emerald-800', 'dark:bg-emerald-950/60', 'dark:text-emerald-300');
+                feedback.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> ¡Correcto! Excelente trabajo.';
             } else {
-                feedbackEl.className = "mt-3 p-4 rounded-lg text-xs sm:text-sm border-l-4 bg-rose-500/10 dark:bg-rose-950/40 border-rose-500 text-slate-800 dark:text-slate-200";
-                feedbackEl.innerHTML = `
-                    <div class="font-bold text-rose-600 dark:text-rose-400 text-sm flex items-center gap-2 mb-1">
-                        <i class="fa-solid fa-circle-xmark text-base"></i> Respuesta Incorrecta (Seleccionaste: ${userDisplayVal})
-                    </div>
-                    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400 border-b border-rose-500/20 pb-1 mb-2">
-                        Procedimiento detallado paso a paso (Selección esperada = <strong>${expectedText}</strong>):
-                    </div>
-                    ${stepsHTML}
-                `;
+                feedback.classList.add('bg-rose-100', 'text-rose-800', 'dark:bg-rose-950/60', 'dark:text-rose-300');
+                feedback.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Incorrecto. Revisa el procedimiento.';
             }
+
+            solution.classList.remove('hidden');
+            updateScoreboard();
 
             if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([feedbackEl]).catch(err => console.error(err));
+                window.MathJax.typesetPromise([solution]).catch(err => console.error(err));
             }
-
-            updateScoreboard();
         }
 
         function updateScoreboard() {
-            const total = examProblems.length;
-            const answeredKeys = Object.keys(examUserStates);
-            const answeredCount = answeredKeys.length;
-
+            const answeredCount = Object.keys(examUserStates).length;
             let correctCount = 0;
-            let incorrectCount = 0;
 
-            answeredKeys.forEach(k => {
-                if (examUserStates[k].correct) {
-                    correctCount++;
-                } else {
-                    incorrectCount++;
-                }
+            Object.values(examUserStates).forEach(val => {
+                if (val) correctCount++;
             });
 
-            const grade = (correctCount / total) * 10;
+            const incorrectCount = answeredCount - correctCount;
+            const grade = (correctCount / examProblems.length) * 10;
 
             document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
-            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${examProblems.length}`;
             document.getElementById('score-correct').innerText = correctCount;
             document.getElementById('score-incorrect').innerText = incorrectCount;
         }
 
         function resetExam() {
             examUserStates = {};
-            renderExam();
             updateScoreboard();
+            renderExam();
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
         }
 
         // INICIALIZACIÓN
@@ -1228,12 +1146,9 @@
             renderGuiaGeneric('guia1', exercisesGuia1, 'guia1-container', 'g1');
             renderGuiaGeneric('guia2', exercisesGuia2, 'guia2-container', 'g2');
             renderExam();
-            updateScoreboard();
 
-            if (window.MathJax && window.MathJax.startup) {
-                window.MathJax.startup.promise.then(() => {
-                    window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
-                });
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
             }
         });
     </script>
