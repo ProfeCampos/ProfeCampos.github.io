@@ -1,155 +1,430 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sección en Construcción | CECyTEM</title>
+    <title>Unidad 4: Números Racionales y Fracciones | Profe Campos</title>
     
-    <!-- Favicons -->
+    <!-- Ícono para la pestaña del navegador -->
     <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
-    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-        }
-    </script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuración para habilitar MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* MODO CLARO POR DEFECTO */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #004085;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --card-sub-bg: #f1f3f5;
+            --card-sub-hover: #e9ecef;
+            --text: #333333;
+            --text-muted: #666666;
+            --nav-bg: #0f2a4a;
+            --header-bg: #0056b3;
+            --info-bg: #e3f2fd;
+            --info-border: #1976d2;
+            --border-color: #e9ecef;
+        }
+
+        /* MODO OSCURO */
+        body.dark-theme {
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --bg: #080d1a;
+            --card-bg: #1e293b;
+            --card-sub-bg: #0f172a;
+            --card-sub-hover: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --nav-bg: #030712;
+            --header-bg: #0f172a;
+            --info-bg: #0f172a;
+            --info-border: #38bdf8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Barra de navegación superior */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 10px 20px;
+            text-align: left;
+            transition: background-color 0.3s;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Cabecera Adaptable */
+        header {
+            background: var(--header-bg);
+            color: white;
+            padding: 25px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: background-color 0.3s;
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-titles {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .header-titles h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .header-titles h2 {
+            margin: 4px 0 0;
+            font-weight: 800;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            color: #e0f2fe;
+        }
+
+        .header-titles p {
+            margin: 8px 0 0;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .logo {
+            max-height: 115px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.03);
+        }
+
+        .header-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-control {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-control:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: translateY(-1px);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        section {
+            background: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            transition: background-color 0.3s;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .info-box {
+            background-color: var(--info-bg);
+            border-left: 5px solid var(--info-border);
+            padding: 15px 20px;
+            border-radius: 6px;
+        }
+
+        .info-box h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Tarjetas de Temas */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: var(--card-sub-bg);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary);
+            padding: 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background: var(--card-sub-hover);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            color: var(--primary);
+            font-size: 1.15rem;
+        }
+
+        .card p {
+            margin: 0 0 15px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .btn-enter {
+            align-self: flex-start;
+            background-color: var(--primary);
+            color: #ffffff !important;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover .btn-enter {
+            background-color: var(--primary-dark);
+            transform: translateX(3px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 650px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                max-height: 85px;
+            }
+
+            .header-titles h1 {
+                font-size: 1.5rem;
+            }
+
+            .header-titles h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300">
+<body>
 
-    <!-- Encabezado Dinámico -->
-    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto space-y-4">
+    <!-- Cargar tema guardado si existe (Por defecto abre en MODO CLARO) -->
+    <script>
+        if (localStorage.getItem('theme-pm1') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    </script>
+
+    <!-- Navegación para regresar al índice general -->
+    <nav>
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Volver al Programa General de Matemáticas</a>
+    </nav>
+
+    <!-- Encabezado -->
+    <header>
+        <div class="header-container">
+            <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="logo">
             
-            <!-- Volver al Temario Principal -->
-            <div class="flex justify-start">
-                <a href="../index.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
-                    ←← Volver al Temario Principal
-                </a>
-            </div>
+            <div class="header-titles">
+                <h1>Unidad 4: Números Racionales y Fracciones</h1>
+                <h2>Pensamiento Matemático 1</h2>
+                <p>CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz</p>
 
-            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
-                
-                <!-- Logo Izquierdo: CECyTEM -->
-                <div class="flex-shrink-0">
-                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
-                </div>
-
-                <!-- Bloque Central: Titulación y Conmutador de Modo -->
-                <div class="text-center space-y-1 flex-grow">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
-                        Plataforma Interactiva de Matemáticas
-                    </h1>
-                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
-                        Contenido en Proceso de Desarrollo
-                    </p>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
-                    </p>
-
-                    <!-- Botón Modo Claro/Oscuro con ícono dinámico Sol/Luna -->
-                    <div class="pt-3 flex justify-center">
-                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
-                            <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
-                            <span id="theme-text">Modo Claro</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Logo Derecho: Profe Campos -->
-                <div class="flex-shrink-0">
-                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                <!-- Botón de Modo Claro/Oscuro -->
+                <div class="header-controls">
+                    <button id="theme-toggle-btn" onclick="toggleTheme()" class="btn-control" aria-label="Cambiar tema de color">
+                        <i id="theme-icon" class="fa-solid fa-moon"></i>
+                        <span id="theme-text">Modo Oscuro</span>
+                    </button>
                 </div>
             </div>
 
+            <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Personal Profe Campos" class="logo">
         </div>
     </header>
 
-    <!-- Contenido Principal: Tarjeta "En Construcción" -->
-    <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center">
+    <main>
 
-        <div class="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-8 sm:p-12 shadow-xl text-center space-y-6 w-full transition-colors">
-            
-            <!-- Icono Animado de Construcción -->
-            <div class="relative inline-block">
-                <div class="w-24 h-24 sm:w-28 sm:h-28 bg-amber-500/10 dark:bg-amber-500/20 rounded-full flex items-center justify-center mx-auto border border-amber-500/30">
-                    <i class="fa-solid fa-helmet-safety text-5xl sm:text-6xl text-amber-500 animate-bounce"></i>
-                </div>
-                <span class="absolute -bottom-1 -right-1 bg-teal-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow">
-                    Próximamente
-                </span>
+        <!-- Propósito de la Unidad -->
+        <section>
+            <div class="info-box">
+                <h3>🎯 Propósito General de la Unidad</h3>
+                <p style="margin:0;">Comprender el concepto de número racional en sus diferentes representaciones y aplicar eficientemente las operaciones básicas con fracciones para analizar y resolver problemas del entorno.</p>
             </div>
+        </section>
 
-            <!-- Título y Descripción -->
-            <div class="space-y-2">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                    ¡Esta lección se está cocinando! 🏗️
-                </h2>
-                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl mx-auto leading-relaxed">
-                    Estamos preparando el material teórico, los mapas conceptuales interactivos y la batería de ejercicios evaluables para este tema.
-                </p>
-            </div>
+        <!-- Selección de Temas -->
+        <section>
+            <h2>Temas de la Unidad 4</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Selecciona el tema que deseas estudiar:</p>
 
-            <!-- Tarjeta de lo que incluirá este módulo -->
-            <div class="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/60 rounded-xl p-5 text-left space-y-3 max-w-lg mx-auto">
-                <h3 class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-list-check"></i> ¿Qué incluirá esta sección?
-                </h3>
-                <ul class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-2">
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
-                        <span>Esquemas y diagramas dinámicos paso a paso.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
-                        <span>Ejemplos resueltos con notación matemática formal.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
-                        <span>Examen interactivo con retroalimentación inmediata.</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Botones de Acción -->
-            <div class="pt-4 flex flex-col sm:flex-row justify-center gap-3">
-                <a href="../index.html" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrow-left"></i> Volver al Temario Principal
+            <div class="grid">
+                
+                <!-- Tema 4.1 -->
+                <a href="tema4-1.html" class="card">
+                    <div>
+                        <h3>4.1 Concepto y Clasificación</h3>
+                        <p>Definición de fracciones, partes de una fracción y clasificación en propias, impropias y mixtas.</p>
+                    </div>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
                 </a>
-            </div>
 
-        </div>
+                <!-- Tema 4.2 -->
+                <a href="tema4-2.html" class="card">
+                    <div>
+                        <h3>4.2 Fracciones Equivalentes</h3>
+                        <p>Obtención de fracciones equivalentes por amplificación, simplificación y conversión a números decimales.</p>
+                    </div>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <!-- Tema 4.3 -->
+                <a href="tema4-3_updated_2.html" class="card">
+                    <div>
+                        <h3>4.3 Operaciones con Fracciones</h3>
+                        <p>Suma, resta y métodos estructurados utilizando el mínimo común múltiplo (mcm) para distinto denominador.</p>
+                    </div>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <!-- Tema 4.4 -->
+                <a href="tema4-4.html" class="card">
+                    <div>
+                        <h3>4.4 Multiplicación y División</h3>
+                        <p>Algoritmos de productos y cocientes de números fraccionarios y aplicación de la regla de los signos.</p>
+                    </div>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+                <!-- Tema 4.5 -->
+                <a href="tema4-5.html" class="card">
+                    <div>
+                        <h3>4.5 Problemas de Aplicación</h3>
+                        <p>Análisis y resolución de problemas cotidianos implementando modelos matemáticos con números racionales.</p>
+                    </div>
+                    <span class="btn-enter">Ver Lección <i class="fa-solid fa-chevron-right"></i></span>
+                </a>
+
+            </div>
+        </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors">
-        CECyTEM 05 Guacamayas &copy; Profe Campos — Plataforma Educativa
+    <footer>
+        <p>&copy; Pensamiento Matemático 1 — M.C. Edgar Campos Díaz | CECyTEM 05 Guacamayas</p>
     </footer>
 
-    <!-- JavaScript Logic -->
+    <!-- JavaScript para Modo Oscuro -->
     <script>
-        // Conmutador de Modo Claro / Oscuro con ícono Sol / Luna
         function toggleTheme() {
-            const html = document.documentElement;
+            const body = document.body;
             const icon = document.getElementById('theme-icon');
             const text = document.getElementById('theme-text');
 
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
-                text.innerText = 'Modo Oscuro';
-            } else {
-                html.classList.add('dark');
-                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
-                text.innerText = 'Modo Claro';
-            }
+            const isDark = body.classList.toggle('dark-theme');
+
+            icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            text.innerText = isDark ? 'Modo Claro' : 'Modo Oscuro';
+            localStorage.setItem('theme-pm1', isDark ? 'dark' : 'light');
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sincronizar el botón si el usuario tenía activado el modo oscuro previamente
+            if (document.body.classList.contains('dark-theme')) {
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+                document.getElementById('theme-text').innerText = 'Modo Claro';
+            }
+        });
     </script>
 </body>
 </html>
