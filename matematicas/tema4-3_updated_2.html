@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección 4.3: Operaciones con fracciones | Guía Didáctica y Simulador</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: max-height 0.35s ease-out, opacity 0.35s ease-out, transform 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border-top-width: 0 !important;
+            border-bottom-width: 0 !important;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 1200px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.5rem !important;
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+            border-top-width: 1px !important;
+            border-bottom-width: 1px !important;
+        }
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+        .math-table-container {
+            display: flex;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+        .math-table-container table {
+            border-collapse: collapse;
+        }
+        .math-table-container td {
+            padding: 0 8px;
+            text-align: center;
+        }
+        .border-left {
+            border-left: 2px solid currentColor;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <div class="flex justify-start">
+                <a href="unidad4.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver a la Unidad 4
+                </a>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: 4.3 Operaciones con fracciones
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        4.3.1 Suma y Resta de Fracciones
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-guia1" onclick="switchTab('guia1')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Guía Didáctica I: Suma y Resta
+                </button>
+                <button id="btn-tab-guia2" onclick="switchTab('guia2')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica II: Problemas de Aplicación
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Haz clic en <strong>"Ver Paso"</strong> o <strong>"Ver Todo"</strong> para desplegar la explicación detallada de cada procedimiento tal como lo realizarías en tu cuaderno.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- GUÍA DIDÁCTICA I -->
+        <section id="tab-guia1" class="space-y-6">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-plus-minus text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Operaciones con Fracciones con diferente denominador
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>Sigue meticulosamente los pasos estandarizados para operar fracciones como en tu libreta:</p>
+                    <div class="p-4 bg-teal-50 dark:bg-teal-950/40 border-l-4 border-teal-500 rounded-r-lg space-y-2">
+                        <ul class="list-decimal list-inside text-xs sm:text-sm text-teal-900 dark:text-teal-200 space-y-1.5 font-medium pl-2">
+                            <li><strong>Paso 1: Convertir mixtas a impropias</strong> (Si aplica).</li>
+                            <li><strong>Paso 2: Común denominador</strong>, extrayendo el <em>mínimo común múltiplo (mcm)</em> de todos los denominadores mediante tabulación.</li>
+                            <li><strong>Paso 3: Dividir y Multiplicar</strong> el mcm entre cada denominador y multiplicar por su numerador correspondiente.</li>
+                            <li><strong>Paso 4: Simplificación con MCD</strong>, obteniendo la mínima expresión posible con su respectiva tabla.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia1-container"></div>
+        </section>
+
+        <!-- GUÍA DIDÁCTICA II -->
+        <section id="tab-guia2" class="space-y-6 hidden">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-briefcase text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Problemas de Aplicación
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>En problemas de aplicación, planteamos la operación matemáticamente y luego aplicamos el mismo algoritmo tabular de resolución.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia2-container"></div>
+        </section>
+
+        <!-- SIMULADOR EXAMEN -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Simulador de Examen Nivel Avanzado
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve en tu libreta paso a paso, simplifica y escribe tu resultado como fracción impropia (ej: 7/4) o entero.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container"></div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Sección 4.3 Operaciones con fracciones &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <script>
+        const exercisesGuia1 = [
+            {
+                id: 1,
+                title: "Ejemplo 1: Operaciones básicas combinadas",
+                problem: "$$\\frac{4}{5} + \\frac{3}{4} - \\frac{7}{20}$$",
+                steps: [
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de los denominadores $5, 4$ y $20$.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 5 & 4 & 20 & 4 \\\\ 5 & 1 & 5 & 5 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = (4)(5) = 20$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "Dividimos $20$ entre cada denominador y multiplicamos por su numerador.<br><br>$$ \\frac{(20\\div5)(4) + (20\\div4)(3) - (20\\div20)(7)}{20} $$ <br>$$ = \\frac{16 + 15 - 7}{20} = \\frac{24}{20} $$"
+                    },
+                    {
+                        title: "Simplificamos con MCD",
+                        content: "Simplificamos la fracción sacando mitad sucesiva:<br><div class='math-table-container'>$$\\begin{array}{cc|c} 24 & 20 & 2 \\\\ 12 & 10 & 2 \\\\ \\boxed{6} & \\boxed{5} & \\end{array}$$</div><br>Solución Final: $$ \\frac{24}{20} = \\frac{6}{5} = 1\\frac{1}{5} $$"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2: Operaciones con mixtas",
+                problem: "$$2\\frac{1}{3} + 3\\frac{1}{4} - 1\\frac{5}{6} + 1\\frac{1}{2}$$",
+                steps: [
+                    {
+                        title: "Convertir mixtas a impropias",
+                        content: "$$ 2\\frac{1}{3} = \\frac{7}{3}, \\quad 3\\frac{1}{4} = \\frac{13}{4}, \\quad 1\\frac{5}{6} = \\frac{11}{6}, \\quad 1\\frac{1}{2} = \\frac{3}{2} $$<br>La operación queda: $$\\frac{7}{3} + \\frac{13}{4} - \\frac{11}{6} + \\frac{3}{2}$$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de los denominadores $3, 4, 6, 2$.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 3 & 4 & 6 & 2 & 2 \\\\ 3 & 2 & 3 & 1 & 2 \\\\ 3 & 1 & 3 & 1 & 3 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = (2)(2)(3) = 12$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{(12\\div3)(7) + (12\\div4)(13) - (12\\div6)(11) + (12\\div2)(3)}{12} $$<br>$$ = \\frac{28 + 39 - 22 + 18}{12} = \\frac{63}{12} $$"
+                    },
+                    {
+                        title: "Simplificación con MCD",
+                        content: "<div class='math-table-container'>$$\\begin{array}{cc|c} 63 & 12 & 3 \\\\ \\boxed{21} & \\boxed{4} & \\end{array}$$</div><br>Solución Final: $$ \\frac{63}{12} = \\frac{21}{4} = 5\\frac{1}{4} $$"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3: Denominadores grandes",
+                problem: "$$\\frac{1}{5} + \\frac{2}{3} + \\frac{1}{4} - \\frac{1}{2}$$",
+                steps: [
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $5, 3, 4, 2$.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 5 & 3 & 4 & 2 & 2 \\\\ 5 & 3 & 2 & 1 & 2 \\\\ 5 & 3 & 1 & 1 & 3 \\\\ 5 & 1 & 1 & 1 & 5 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 60$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{(60\\div5)(1) + (60\\div3)(2) + (60\\div4)(1) - (60\\div2)(1)}{60} $$<br>$$ = \\frac{12 + 40 + 15 - 30}{60} = \\frac{37}{60} $$"
+                    },
+                    {
+                        title: "Simplificación con MCD",
+                        content: "La fracción $\\frac{37}{60}$ es irreducible porque $37$ es primo. Solución Final: $$ \\frac{37}{60} $$"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4: Operación con entero",
+                problem: "$$4 + \\frac{3}{5} - \\frac{1}{2} + \\frac{5}{4}$$",
+                steps: [
+                    {
+                        title: "Convertir entero y Común denominador",
+                        content: "Expresamos $4$ como $\\frac{4}{1}$. Obtenemos mcm de $1, 5, 2, 4$.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 1 & 5 & 2 & 4 & 2 \\\\ 1 & 5 & 1 & 2 & 2 \\\\ 1 & 5 & 1 & 1 & 5 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 20$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{(20\\div1)(4) + (20\\div5)(3) - (20\\div2)(1) + (20\\div4)(5)}{20} $$<br>$$ = \\frac{80 + 12 - 10 + 25}{20} = \\frac{107}{20} $$"
+                    },
+                    {
+                        title: "Simplificación con MCD",
+                        content: "$107$ y $20$ no tienen divisores comunes. Solución Final: $$ \\frac{107}{20} = 5\\frac{7}{20} $$"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5: Restas sucesivas",
+                problem: "$$2\\frac{1}{2} - \\frac{3}{4} - \\frac{1}{8} - 1\\frac{1}{16}$$",
+                steps: [
+                    {
+                        title: "Convertir mixtas a impropias",
+                        content: "$$ 2\\frac{1}{2} = \\frac{5}{2}, \\quad 1\\frac{1}{16} = \\frac{17}{16} $$<br>Operación: $$\\frac{5}{2} - \\frac{3}{4} - \\frac{1}{8} - \\frac{17}{16}$$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $2, 4, 8, 16$.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 2 & 4 & 8 & 16 & 2 \\\\ 1 & 2 & 4 & 8 & 2 \\\\ 1 & 1 & 2 & 4 & 2 \\\\ 1 & 1 & 1 & 2 & 2 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 16$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{8(5) - 4(3) - 2(1) - 1(17)}{16} $$<br>$$ = \\frac{40 - 12 - 2 - 17}{16} = \\frac{9}{16} $$"
+                    },
+                    {
+                        title: "Simplificación",
+                        content: "La fracción $\\frac{9}{16}$ es irreducible. Solución Final: $$\\frac{9}{16}$$"
+                    }
+                ]
+            }
+        ];
+
+        const exercisesGuia2 = [
+            {
+                id: 1,
+                title: "Problema 1: Consumo de Insumos",
+                problem: "Una panadería consume sacos de harina: Lunes $\\frac{3}{4}$, Martes $\\frac{5}{6}$, Miércoles $\\frac{7}{12}$. ¿Cuántos sacos consumió en total?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Se requiere sumar las cantidades consumidas: $$\\frac{3}{4} + \\frac{5}{6} + \\frac{7}{12}$$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $4, 6, 12$.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 4 & 6 & 12 & 2 \\\\ 2 & 3 & 6 & 2 \\\\ 1 & 3 & 3 & 3 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 12$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{(12\\div4)(3) + (12\\div6)(5) + (12\\div12)(7)}{12} $$<br>$$ = \\frac{9 + 10 + 7}{12} = \\frac{26}{12} $$"
+                    },
+                    {
+                        title: "Simplificamos con MCD",
+                        content: "<div class='math-table-container'>$$\\begin{array}{cc|c} 26 & 12 & 2 \\\\ \\boxed{13} & \\boxed{6} & \\end{array}$$</div><br>Solución Final: $$ \\frac{26}{12} = \\frac{13}{6} = 2\\frac{1}{6} \\text{ sacos}$$"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Problema 2: Terreno",
+                problem: "Un granjero vende $\\frac{1}{3}$ de su terreno y renta $\\frac{1}{4}$. El resto lo cultiva. ¿Qué porción del terreno cultiva?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "El terreno total es $1$. Restamos lo vendido y rentado: $$1 - \\frac{1}{3} - \\frac{1}{4} = \\frac{1}{1} - \\frac{1}{3} - \\frac{1}{4}$$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $1, 3, 4$.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 1 & 3 & 4 & 2 \\\\ 1 & 3 & 2 & 2 \\\\ 1 & 3 & 1 & 3 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 12$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{12(1) - 4(1) - 3(1)}{12} = \\frac{12 - 4 - 3}{12} = \\frac{5}{12} $$"
+                    },
+                    {
+                        title: "Simplificación",
+                        content: "Irreducible. Solución Final: $\\frac{5}{12}$"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Problema 3: Cortes de carpintería",
+                problem: "Una tira mide $45$ pulgadas. Se cortan piezas de $3\\frac{5}{8}$ y $2\\frac{1}{4}$. ¿Qué longitud sobra?",
+                steps: [
+                    {
+                        title: "Convertir mixtas y Plantear",
+                        content: "$$ 45 - 3\\frac{5}{8} - 2\\frac{1}{4} = \\frac{45}{1} - \\frac{29}{8} - \\frac{9}{4} $$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $1, 8, 4$.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 1 & 8 & 4 & 2 \\\\ 1 & 4 & 2 & 2 \\\\ 1 & 2 & 1 & 2 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 8$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{8(45) - 1(29) - 2(9)}{8} = \\frac{360 - 29 - 18}{8} = \\frac{313}{8} $$"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "Solución Final: $\\frac{313}{8}$ pulgadas."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Problema 4: Distancia de carrera",
+                problem: "Un atleta recorre $\\frac{4}{7}$ de la pista y luego $\\frac{3}{14}$. ¿Cuánto le falta para completar la vuelta (1 entero)?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "$$ 1 - \\frac{4}{7} - \\frac{3}{14} = \\frac{1}{1} - \\frac{4}{7} - \\frac{3}{14} $$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $1, 7, 14$.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 1 & 7 & 14 & 2 \\\\ 1 & 7 & 7 & 7 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 14$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{14(1) - 2(4) - 1(3)}{14} = \\frac{14 - 8 - 3}{14} = \\frac{3}{14} $$"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "Solución Final: $\\frac{3}{14}$ de pista."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Problema 5: Mezcla de pintura",
+                problem: "Se mezclan $1\\frac{1}{2}$ litros de pintura azul, $\\frac{3}{4}$ litros de blanca y $2\\frac{1}{8}$ litros de amarilla. ¿Cuántos litros de mezcla resultan?",
+                steps: [
+                    {
+                        title: "Planteamiento y conversión",
+                        content: "$$ \\frac{3}{2} + \\frac{3}{4} + \\frac{17}{8} $$"
+                    },
+                    {
+                        title: "Común denominador",
+                        content: "Obtenemos el mcm de $2, 4, 8$.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 2 & 4 & 8 & 2 \\\\ 1 & 2 & 4 & 2 \\\\ 1 & 1 & 2 & 2 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 8$$"
+                    },
+                    {
+                        title: "Dividir y Multiplicar",
+                        content: "$$ \\frac{4(3) + 2(3) + 1(17)}{8} = \\frac{12 + 6 + 17}{8} = \\frac{35}{8} $$"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "Solución Final: $\\frac{35}{8} = 4\\frac{3}{8}$ litros."
+                    }
+                ]
+            }
+        ];
+
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Operaciones Mixtas)",
+                problem: "Efectúa la operación: $3\\frac{1}{6} - 1\\frac{1}{2} + \\frac{1}{3}$",
+                type: "text",
+                answer: "2",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Convertir a impropias: $\\frac{19}{6} - \\frac{3}{2} + \\frac{1}{3}$", 
+                        "2. Obtenemos el mcm de 6, 2, 3.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 6 & 2 & 3 & 2 \\\\ 3 & 1 & 3 & 3 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 6$$", 
+                        "3. $\\frac{1(19) - 3(3) + 2(1)}{6} = \\frac{19 - 9 + 2}{6} = \\frac{12}{6}$", 
+                        "4. Simplificando: $2$"] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (Operaciones Combinadas 4 términos)",
+                problem: "Resuelve: $\\frac{3}{4} + \\frac{5}{6} - \\frac{1}{10} + \\frac{1}{2}$",
+                type: "text",
+                answer: "119/60",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Obtenemos el mcm de 4, 6, 10, 2.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 4 & 6 & 10 & 2 & 2 \\\\ 2 & 3 & 5 & 1 & 2 \\\\ 1 & 3 & 5 & 1 & 3 \\\\ 1 & 1 & 5 & 1 & 5 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 60$$", 
+                        "2. $\\frac{15(3) + 10(5) - 6(1) + 30(1)}{60} = \\frac{45 + 50 - 6 + 30}{60}$", 
+                        "3. Resultado: $\\frac{119}{60}$"] }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Combinación con Enteros)",
+                problem: "Resuelve: $4\\frac{2}{3} - 3\\frac{1}{6} + 2$",
+                type: "text",
+                answer: "7/2",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Convertimos a impropias y expresamos el entero: $\\frac{14}{3} - \\frac{19}{6} + \\frac{2}{1}$", 
+                        "2. Obtenemos el mcm de 3, 6, 1.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 3 & 6 & 1 & 2 \\\\ 3 & 3 & 1 & 3 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 6$$", 
+                        "3. $\\frac{2(14) - 1(19) + 6(2)}{6} = \\frac{28 - 19 + 12}{6} = \\frac{21}{6}$", 
+                        "4. Simplificando (dividir entre 3): $\\frac{7}{2}$"] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Operaciones Combinadas)",
+                problem: "Resuelve: $3 + \\frac{2}{5} - \\frac{1}{4} + \\frac{7}{2}$",
+                type: "text",
+                answer: "133/20",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Obtenemos el mcm de 1, 5, 4, 2.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 1 & 5 & 4 & 2 & 2 \\\\ 1 & 5 & 2 & 1 & 2 \\\\ 1 & 5 & 1 & 1 & 5 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 20$$", 
+                        "2. $\\frac{20(3) + 4(2) - 5(1) + 10(7)}{20} = \\frac{60 + 8 - 5 + 70}{20}$", 
+                        "3. Resultado: $\\frac{133}{20}$"] }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Larga)",
+                problem: "Resuelve: $\\frac{1}{6} + \\frac{1}{5} + \\frac{1}{3} + \\frac{1}{4} - \\frac{1}{2}$",
+                type: "text",
+                answer: "9/20",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Obtenemos el mcm de 6, 5, 3, 4, 2.<br><div class='math-table-container'>$$\\begin{array}{ccccc|c} 6 & 5 & 3 & 4 & 2 & 2 \\\\ 3 & 5 & 3 & 2 & 1 & 2 \\\\ 3 & 5 & 3 & 1 & 1 & 3 \\\\ 1 & 5 & 1 & 1 & 1 & 5 \\\\ 1 & 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 60$$", 
+                        "2. $\\frac{10+12+20+15-30}{60} = \\frac{27}{60}$", 
+                        "3. Simplificando (dividir entre 3): $\\frac{9}{20}$"] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Fracciones Sucesivas)",
+                problem: "Resuelve: $1\\frac{3}{4} - \\frac{1}{2} - \\frac{1}{16} - \\frac{1}{32} - 1\\frac{1}{8}$",
+                type: "text",
+                answer: "1/32",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. $\\frac{7}{4} - \\frac{1}{2} - \\frac{1}{16} - \\frac{1}{32} - \\frac{9}{8}$", 
+                        "2. Obtenemos el mcm de 4, 2, 16, 32, 8.<br><div class='math-table-container'>$$\\begin{array}{ccccc|c} 4 & 2 & 16 & 32 & 8 & 2 \\\\ 2 & 1 & 8 & 16 & 4 & 2 \\\\ 1 & 1 & 4 & 8 & 2 & 2 \\\\ 1 & 1 & 2 & 4 & 1 & 2 \\\\ 1 & 1 & 1 & 2 & 1 & 2 \\\\ 1 & 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 32$$", 
+                        "3. $\\frac{56 - 16 - 2 - 1 - 36}{32} = \\frac{1}{32}$"] }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Aplicación - Depósito)",
+                problem: "Un depósito contiene agua hasta $\\frac{3}{4}$ de su capacidad. Se ocupa una cantidad equivalente a $\\frac{1}{2}$ de la capacidad total y luego se le agregan $\\frac{1}{8}$. ¿Qué fracción de agua tiene el depósito ahora?",
+                type: "text",
+                answer: "3/8",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Operación: $\\frac{3}{4} - \\frac{1}{2} + \\frac{1}{8}$", 
+                        "2. Obtenemos el mcm de 4, 2, 8.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 4 & 2 & 8 & 2 \\\\ 2 & 1 & 4 & 2 \\\\ 1 & 1 & 2 & 2 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 8$$", 
+                        "3. $\\frac{6 - 4 + 1}{8} = \\frac{3}{8}$"] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Aplicación - Tela)",
+                problem: "De un rollo de tela se han cortado porciones de $2\\frac{2}{3}$, $1\\frac{1}{6}$ y $3\\frac{1}{2}$ metros. Si el rollo tenía $10$ metros, ¿qué porción queda? (Ingresa fracción impropia)",
+                type: "text",
+                answer: "8/3",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Operación: $10 - (\\frac{8}{3} + \\frac{7}{6} + \\frac{7}{2})$", 
+                        "2. Suma interna, obtenemos el mcm de 3, 6, 2.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 3 & 6 & 2 & 2 \\\\ 3 & 3 & 1 & 3 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 6$$", 
+                        "3. Suma: $\\frac{16+7+21}{6} = \\frac{44}{6} = \\frac{22}{3}$", 
+                        "4. Resta final: $10 - \\frac{22}{3} = \\frac{30-22}{3} = \\frac{8}{3}$"] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Aplicación - Gastos)",
+                problem: "Inviertes $\\frac{1}{5}$ de tu sueldo en pasajes, $\\frac{1}{4}$ en comida y $\\frac{3}{10}$ en renta. Si ahorras el resto, ¿qué fracción de tu sueldo ahorras?",
+                type: "text",
+                answer: "1/4",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. Total es 1. Restamos gastos: $1 - \\frac{1}{5} - \\frac{1}{4} - \\frac{3}{10}$", 
+                        "2. Obtenemos el mcm de 1, 5, 4, 10.<br><div class='math-table-container'>$$\\begin{array}{cccc|c} 1 & 5 & 4 & 10 & 2 \\\\ 1 & 5 & 2 & 5 & 2 \\\\ 1 & 5 & 1 & 5 & 5 \\\\ 1 & 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 20$$", 
+                        "3. $\\frac{20 - 4 - 5 - 6}{20} = \\frac{5}{20}$", 
+                        "4. Simplificando: $\\frac{1}{4}$"] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Aplicación - Longitudes)",
+                problem: "Tres cuerdas miden $3\\frac{2}{5}$, $2\\frac{3}{10}$ y $4\\frac{1}{2}$ metros. ¿Cuál es la longitud total de las tres juntas? (Ingresa fracción impropia)",
+                type: "text",
+                answer: "51/5",
+                steps: [
+                    { title: "Procedimiento Tabular", lines: [
+                        "1. $\\frac{17}{5} + \\frac{23}{10} + \\frac{9}{2}$", 
+                        "2. Obtenemos el mcm de 5, 10, 2.<br><div class='math-table-container'>$$\\begin{array}{ccc|c} 5 & 10 & 2 & 2 \\\\ 5 & 5 & 1 & 5 \\\\ 1 & 1 & 1 & \\end{array}$$</div><br>$$mcm = 10$$", 
+                        "3. $\\frac{34 + 23 + 45}{10} = \\frac{102}{10}$", 
+                        "4. Simplificando (mitad): $\\frac{51}{5}$"] }
+                ]
+            }
+        ];
+
+        // LOGIC STATES
+        const currentStepStateGuia1 = {};
+        const currentStepStateGuia2 = {};
+        let examUserStates = {};
+
+        function switchTab(tab) {
+            const tabs = ['guia1', 'guia2', 'examen'];
+            tabs.forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('btn-tab-' + t).className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+            });
+
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('btn-tab-' + tab).className = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        function getGuiaContext(section) {
+            if (section === 'guia1') {
+                return { exList: exercisesGuia1, stateDict: currentStepStateGuia1, prefix: 'g1' };
+            } else {
+                return { exList: exercisesGuia2, stateDict: currentStepStateGuia2, prefix: 'g2' };
+            }
+        }
+
+        function nextStepGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            let current = stateDict[id] || 0;
+            
+            if (current < totalSteps) {
+                current++;
+                stateDict[id] = current;
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetStepsGuia(section, id);
+                return;
+            }
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function showAllSteps(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            const totalSteps = ex.steps.length;
+            
+            stateDict[id] = totalSteps;
+            
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            }
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function resetStepsGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            const totalSteps = ex.steps.length;
+            stateDict[id] = 0;
+            
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${i}`);
+                if (stepElem) stepElem.classList.remove('visible');
+            }
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function updateStepUIGuia(section, id, ex, prefix) {
+            const { stateDict } = getGuiaContext(section);
+            const totalSteps = ex.steps.length;
+            const current = stateDict[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-${prefix}-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${prefix}-${id}`);
+            const btnNext = document.getElementById(`btn-next-${prefix}-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${prefix}-${id}`);
+            const btnAll = document.getElementById(`btn-all-${prefix}-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = totalSteps === 1 ? `Ver Paso 1` : `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+                if (btnAll) btnAll.classList.remove('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+                if (btnAll) btnAll.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+                if (btnAll) btnAll.classList.add('hidden');
+            }
+        }
+
+        function renderGuiaGeneric(section, exList, containerId, prefix) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            const { stateDict } = getGuiaContext(section);
+
+            exList.forEach(ex => {
+                stateDict[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    let numLabel = section === 'guia1' ? `Paso ${stepNum}` : `Paso ${stepNum}`;
+                    stepsHTML += `
+                        <div id="step-${prefix}-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> ${numLabel}: ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-2">
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-2.5 px-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 text-center">
+                        <span class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-${prefix}-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-${prefix}-${ex.id}" onclick="nextStepGuia('${section}', ${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-${prefix}-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-${prefix}-${ex.id}">${totalSteps === 1 ? 'Ver Paso 1' : 'Ver Paso 1 de ' + totalSteps}</span>
+                        </button>
+                        <button id="btn-all-${prefix}-${ex.id}" onclick="showAllSteps('${section}', ${ex.id})" class="flex-1 py-2.5 px-4 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>Ver Todo</span>
+                        </button>
+                        <button id="btn-reset-${prefix}-${ex.id}" onclick="resetStepsGuia('${section}', ${ex.id})" class="hidden py-2.5 px-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-semibold text-sm transition-all shadow-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // SIMULADOR
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            examProblems.forEach((p) => {
+                examUserStates[p.id] = { answered: false, isCorrect: false };
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between";
+
+                let inputHTML = `
+                    <div class="mt-3">
+                        <input type="text" id="exam-input-${p.id}" placeholder="Ej: 7/4 o 2" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                `;
+
+                let stepsHTML = '';
+                p.steps.forEach((st, idx) => {
+                    stepsHTML += `
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900/90 border-l-4 border-amber-500 rounded-r-lg text-xs sm:text-sm font-medium space-y-1">
+                            <p class="font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">${st.title}</p>
+                            ${st.lines.map(l => `<p class="text-slate-700 dark:text-slate-200">${l}</p>`).join('')}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3">
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature text-amber-500"></i> ${p.title}
+                            </h3>
+                            <span id="exam-badge-${p.id}" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Pendiente</span>
+                        </div>
+
+                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-2">${p.problem}</p>
+                        ${inputHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <button id="exam-btn-${p.id}" onclick="checkExamAnswer(${p.id})" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold rounded-lg text-sm transition-all shadow-sm flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Calificar Reactivo</span>
+                        </button>
+
+                        <div id="exam-feedback-${p.id}" class="hidden p-3 rounded-lg text-xs sm:text-sm font-bold"></div>
+
+                        <div id="exam-solution-${p.id}" class="hidden space-y-2 mt-2 overflow-x-auto">
+                            ${stepsHTML}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkExamAnswer(id) {
+            const p = examProblems.find(item => item.id === id);
+            if (!p) return;
+
+            const badge = document.getElementById(`exam-badge-${id}`);
+            const btn = document.getElementById(`exam-btn-${id}`);
+            const feedback = document.getElementById(`exam-feedback-${id}`);
+            const solution = document.getElementById(`exam-solution-${id}`);
+
+            let userVal = null;
+            let isCorrect = false;
+
+            const input = document.getElementById(`exam-input-${id}`);
+            if (!input || input.value.trim() === '') {
+                alert("Por favor ingresa una respuesta válida.");
+                return;
+            }
+            userVal = input.value.trim().replace(/\s+/g, '');
+            isCorrect = (userVal.toLowerCase() === p.answer.toLowerCase());
+
+            examUserStates[id].answered = true;
+            examUserStates[id].isCorrect = isCorrect;
+
+            btn.disabled = true;
+            btn.className = "w-full py-2.5 bg-slate-400 dark:bg-slate-700 text-slate-200 font-bold rounded-lg text-sm cursor-not-allowed opacity-80 flex justify-center items-center gap-2";
+
+            feedback.classList.remove('hidden');
+            solution.classList.remove('hidden');
+
+            if (isCorrect) {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-400";
+                badge.innerText = "¡Correcto!";
+                feedback.className = "p-3 rounded-lg text-xs sm:text-sm font-bold bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-800";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5 text-base"></i> Excelente. Tu respuesta es totalmente correcta.`;
+            } else {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-400";
+                badge.innerText = "Incorrecto";
+                feedback.className = "p-3 rounded-lg text-xs sm:text-sm font-bold bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-200 border border-rose-300 dark:border-rose-800";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5 text-base"></i> Respuesta incorrecta. Revisa el procedimiento solución adjunto.`;
+            }
+
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([solution]).catch(err => console.error(err));
+            }
+        }
+
+        function updateScoreboard() {
+            let total = examProblems.length;
+            let answeredCount = 0;
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            Object.keys(examUserStates).forEach(k => {
+                const st = examUserStates[k];
+                if (st.answered) {
+                    answeredCount++;
+                    if (st.isCorrect) correctCount++;
+                    else incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = `${correctCount}`;
+            document.getElementById('score-incorrect').innerText = `${incorrectCount}`;
+        }
+
+        function resetExam() {
+            renderExam();
+            updateScoreboard();
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderGuiaGeneric('guia1', exercisesGuia1, 'guia1-container', 'g1');
+            renderGuiaGeneric('guia2', exercisesGuia2, 'guia2-container', 'g2');
+            renderExam();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        });
+    </script>
+</body>
+</html>
