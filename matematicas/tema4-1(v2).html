@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concepto de Unidad y Fracción | Guía Didáctica y Simulador</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: max-height 0.35s ease-out, opacity 0.35s ease-out, transform 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border-top-width: 0 !important;
+            border-bottom-width: 0 !important;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 1200px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.5rem !important;
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+            border-top-width: 1px !important;
+            border-bottom-width: 1px !important;
+        }
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="unidad4.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver a la Unidad 4
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: Concepto de unidad y fracción
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva y Simulador de Examen (Unidad 4)
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Navegación por Pestañas -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-seccion1" onclick="switchTab('seccion1')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Sección 1: Representación Gráfica
+                </button>
+                <button id="btn-tab-guia1" onclick="switchTab('guia1')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica I: Clasificación y Aplicación
+                </button>
+                <button id="btn-tab-guia2" onclick="switchTab('guia2')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica II: Conversión de Fracciones
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Haz clic en <strong>"Ver Paso"</strong> para desplegar la explicación detallada y representación gráfica de cada procedimiento. Resuelve los ejercicios en tu libreta antes de verificar la solución final.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- SECCIÓN 1: REPRESENTACIÓN GRÁFICA -->
+        <section id="tab-seccion1" class="space-y-6">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-chart-pie text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Concepto de Fracción Común y Representación Gráfica
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>
+                        Una <strong>fracción común</strong> es un número de la forma $\frac{a}{b}$ donde $a, b \in \mathbb{Z}$ y $b \neq 0$. El número $a$ es el <strong>numerador</strong> e indica el número de partes congruentes que se toman de la unidad; el número $b$ es el <strong>denominador</strong> e indica el número total de partes iguales en que se divide dicha unidad.
+                    </p>
+                    <div class="p-4 bg-teal-50 dark:bg-teal-950/40 border-l-4 border-teal-500 rounded-r-lg space-y-2">
+                        <h4 class="font-bold text-teal-800 dark:text-teal-300 text-sm uppercase tracking-wide">
+                            <i class="fa-solid fa-shapes mr-1"></i> Principios de la Representación Gráfica:
+                        </h4>
+                        <ul class="list-disc list-inside text-xs sm:text-sm text-teal-900 dark:text-teal-200 space-y-1 font-medium">
+                            <li><strong>Fracciones propias ($\frac{a}{b} < 1$):</strong> Requieren una sola unidad dividida en $b$ partes, de las cuales se sombrean $a$ partes.</li>
+                            <li><strong>Fracciones impropias ($\frac{a}{b} \ge 1$):</strong> Requieren dos o más unidades congruentes, divididas cada una en $b$ partes iguales hasta completar las $a$ partes tomadas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2 border-b-2 border-teal-500/40 pb-2">
+                <i class="fa-solid fa-draw-polygon text-teal-600 dark:text-teal-400 text-xl"></i>
+                <h3 class="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">
+                    Ejemplos de Representación Gráfica (Basados en el Ejercicio 25)
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="seccion1-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: GUÍA DIDÁCTICA I (CLASIFICACIÓN Y PROBLEMAS) -->
+        <section id="tab-guia1" class="space-y-6 hidden">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-layer-group text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Fracciones Propias y Fracciones Impropias
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>
+                        Las fracciones comunes se clasifican de acuerdo a la relación entre su numerador y su denominador:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 rounded-r-lg">
+                            <h4 class="font-bold text-emerald-800 dark:text-emerald-300 text-sm uppercase tracking-wide">
+                                <i class="fa-solid fa-circle-check mr-1"></i> Fracción Propia
+                            </h4>
+                            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1">
+                                Su valor numérico es menor que la unidad ($\vert{}a/b\vert{} < 1$). Ocurre cuando el numerador es strictly menor que el denominador ($a < b$).
+                            </p>
+                        </div>
+                        <div class="p-4 bg-amber-50 dark:bg-amber-950/40 border-l-4 border-amber-500 rounded-r-lg">
+                            <h4 class="font-bold text-amber-800 dark:text-amber-300 text-sm uppercase tracking-wide">
+                                <i class="fa-solid fa-circle-exclamation mr-1"></i> Fracción Impropia
+                            </h4>
+                            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1">
+                                Su valor numérico es mayor o igual que la unidad ($\vert{}a/b\vert{} \ge 1$). Ocurre cuando el numerador es mayor o igual que el denominador ($a \ge b$).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 border-b-2 border-teal-500/40 pb-2">
+                <i class="fa-solid fa-list-check text-teal-600 dark:text-teal-400 text-xl"></i>
+                <h3 class="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">
+                    Ejercicios de Identificación (Ej. 27) y Problemas de Aplicación (Ej. 26)
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia1-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: GUÍA DIDÁCTICA II (CONVERSIÓN DE FRACCIONES) -->
+        <section id="tab-guia2" class="space-y-6 hidden">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-right-left text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Conversiones de Fracciones Impropia a Mixta y Viceversa
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 bg-teal-50 dark:bg-teal-950/40 border-l-4 border-teal-500 rounded-r-lg">
+                            <h4 class="font-bold text-teal-800 dark:text-teal-300 text-sm uppercase tracking-wide">
+                                1. Impropia a Mixta
+                            </h4>
+                            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1">
+                                Se divide el numerador entre el denominador. El cociente representa los enteros ($C$), el residuo es el nuevo numerador ($R$) y se conserva el denominador ($D$):
+                                <br><span class="font-bold text-center block my-1">$$\frac{N}{D} = C \frac{R}{D}$$</span>
+                            </p>
+                        </div>
+                        <div class="p-4 bg-indigo-50 dark:bg-indigo-950/40 border-l-4 border-indigo-500 rounded-r-lg">
+                            <h4 class="font-bold text-indigo-800 dark:text-indigo-300 text-sm uppercase tracking-wide">
+                                2. Mixta a Impropia
+                            </h4>
+                            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1">
+                                Se multiplica el número entero por el denominador, se le suma el numerador y se mantiene el mismo denominador:
+                                <br><span class="font-bold text-center block my-1">$$C \frac{R}{D} = \frac{(C \cdot D) + R}{D}$$</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 border-b-2 border-teal-500/40 pb-2">
+                <i class="fa-solid fa-calculator text-teal-600 dark:text-teal-400 text-xl"></i>
+                <h3 class="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">
+                    Ejemplos de Conversión (Basados en el Ejercicio 28)
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia2-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: SIMULADOR DE EXAMEN INTERACTIVO -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Simulador de Examen Interactivo
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve minuciosamente en tu libreta, ingresa tu respuesta y verifica la solución.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Concepto de Unidad y Fracción &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DATA SECCIÓN 1: REPRESENTACIÓN GRÁFICA (EJERCICIO 25)
+        const exercisesRepGrafica = [
+            {
+                id: 1,
+                title: "Ejemplo 1: Representación de una Fracción Propia",
+                problem: "Representa gráficamente la fracción común $\\frac{7}{12}$ e indica sus elementos.",
+                steps: [
+                    {
+                        title: "Análisis de numerador y denominador",
+                        content: "En la fracción $\\frac{7}{12}$:<br>• **Denominador ($12$):** Indica que la unidad se divide en $12$ partes iguales.<br>• **Numerador ($7$):** Indica que se deben tomar (sombrear) $7$ de esas partes.<br>Dado que $7 < 12$, es una fracción propia y requiere una sola unidad."
+                    },
+                    {
+                        title: "Construcción del modelo gráfico",
+                        content: "Dibujamos un rectángulo congruente dividido en $12$ cuadrantes y sombreamos $7$ de ellos:<br>" +
+                                 "<div class=\"my-4 flex justify-center\">" +
+                                 "<div class=\"grid grid-cols-6 gap-1 p-2 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-400 max-w-xs w-full\">" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">1</div>" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">2</div>" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">3</div>" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">4</div>" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">5</div>" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">6</div>" +
+                                 "<div class=\"h-10 bg-teal-500 rounded border border-teal-600 flex items-center justify-center font-bold text-white text-xs\">7</div>" +
+                                 "<div class=\"h-10 bg-white dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\">8</div>" +
+                                 "<div class=\"h-10 bg-white dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\">9</div>" +
+                                 "<div class=\"h-10 bg-white dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\">10</div>" +
+                                 "<div class=\"h-10 bg-white dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\">11</div>" +
+                                 "<div class=\"h-10 bg-white dark:bg-slate-800 rounded border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\">12</div>" +
+                                 "</div></div>"
+                    }
+                ],
+                result: "$$\\text{Fracción sombreada: } \\frac{7}{12}$$"
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2: Representación de una Fracción Impropia",
+                problem: "Representa gráficamente la fracción impropia $\\frac{13}{8}$.",
+                steps: [
+                    {
+                        title: "Análisis de unidades requeridas",
+                        content: "Como el numerador ($13$) es mayor que el denominador ($8$), se requiere más de una unidad completa.<br>$$\\frac{13}{8} = 1 + \\frac{5}{8} = 1 \\frac{5}{8}$$<br>Se necesitan $2$ unidades divididas en $8$ partes iguales cada una."
+                    },
+                    {
+                        title: "Generación del gráfico continuo",
+                        content: "Sombreamos $8$ partes de la primera unidad ($1$ entero completo) y $5$ partes de la segunda unidad:<br>" +
+                                 "<div class=\"my-4 flex flex-col sm:flex-row items-center justify-center gap-4\">" +
+                                 "<div class=\"space-y-1 text-center\"><span class=\"text-xs font-bold text-teal-600 dark:text-teal-400\">Unidad 1 (8/8 = 1)</span>" +
+                                 "<div class=\"grid grid-cols-4 gap-1 p-2 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-400 w-36\">" +
+                                 "<div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div>" +
+                                 "<div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div>" +
+                                 "</div></div>" +
+                                 "<div class=\"text-xl font-bold text-slate-400\">+</div>" +
+                                 "<div class=\"space-y-1 text-center\"><span class=\"text-xs font-bold text-teal-600 dark:text-teal-400\">Unidad 2 (5/8)</span>" +
+                                 "<div class=\"grid grid-cols-4 gap-1 p-2 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-400 w-36\">" +
+                                 "<div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-teal-500 rounded\"></div>" +
+                                 "<div class=\"h-7 bg-teal-500 rounded\"></div><div class=\"h-7 bg-white dark:bg-slate-800 rounded\"></div><div class=\"h-7 bg-white dark:bg-slate-800 rounded\"></div><div class=\"h-7 bg-white dark:bg-slate-800 rounded\"></div>" +
+                                 "</div></div>" +
+                                 "</div>"
+                    }
+                ],
+                result: "$$\\frac{13}{8} = 1 \\frac{5}{8}$$"
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3: Identificación Gráfica sobre Matriz Cuadrada",
+                problem: "Determina la fracción representada por la región sombreada en la siguiente cuadrícula de $4 \\times 4$ ($16$ partes en total):",
+                steps: [
+                    {
+                        title: "Conteo total de partes congruentes y cuadrantes sombreados",
+                        content: "La matriz consta de $4 \\times 4 = 16$ divisiones congruentes. Se encuentran sombreados $9$ cuadrantes:<br>" +
+                                 "<div class=\"my-4 flex justify-center\">" +
+                                 "<div class=\"grid grid-cols-4 gap-1.5 p-2 bg-slate-300 dark:bg-slate-700 rounded-lg border border-slate-400 w-44\">" +
+                                 "<div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-amber-500 rounded\"></div>" +
+                                 "<div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div>" +
+                                 "<div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-amber-500 rounded\"></div><div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div><div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div>" +
+                                 "<div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div><div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div><div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div><div class=\"h-8 bg-white dark:bg-slate-800 rounded\"></div>" +
+                                 "</div></div>"
+                    }
+                ],
+                result: "$$\\text{Fracción obtenida: } \\frac{9}{16}$$"
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4: Representación de la Fracción Mixta $2 \\frac{5}{6}$",
+                problem: "Representa gráficamente la fracción mixta $2 \\frac{5}{6}$ utilizando unidades rectangulares divididas en partes iguales.",
+                steps: [
+                    {
+                        title: "Interpretación de los componentes",
+                        content: "• Enteros: $2$ unidades rectangulares completas sombreadas ($6/6 + 6/6$).<br>• Fracción propia: $\\frac{5}{6}$ de una tercera unidad.<br>Cada unidad rectangular se divide en $6$ partes cuadradas idénticas."
+                    },
+                    {
+                        title: "Representación gráfica rectangular",
+                        content: "<div class=\"my-4 flex flex-wrap justify-center items-center gap-3\">" +
+                                 "<div class=\"space-y-1 text-center\"><span class=\"text-xs font-bold text-emerald-600 dark:text-emerald-400\">Unidad 1 (6/6)</span>" +
+                                 "<div class=\"grid grid-cols-3 gap-1 p-2 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-400 w-28\">" +
+                                 "<div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div>" +
+                                 "<div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div>" +
+                                 "</div></div>" +
+                                 "<div class=\"space-y-1 text-center\"><span class=\"text-xs font-bold text-emerald-600 dark:text-emerald-400\">Unidad 2 (6/6)</span>" +
+                                 "<div class=\"grid grid-cols-3 gap-1 p-2 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-400 w-28\">" +
+                                 "<div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div>" +
+                                 "<div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div>" +
+                                 "</div></div>" +
+                                 "<div class=\"space-y-1 text-center\"><span class=\"text-xs font-bold text-emerald-600 dark:text-emerald-400\">Unidad 3 (5/6)</span>" +
+                                 "<div class=\"grid grid-cols-3 gap-1 p-2 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-400 w-28\">" +
+                                 "<div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div>" +
+                                 "<div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-emerald-500 rounded\"></div><div class=\"h-6 bg-white dark:bg-slate-800 rounded border\"></div>" +
+                                 "</div></div>" +
+                                 "</div>"
+                    }
+                ],
+                result: "$$2 \\frac{5}{6} = \\frac{17}{6}$$"
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5: Representación de un Conjunto Discreto de Elementos",
+                problem: "Un grupo industrial posee un lote de $20$ contenedores idénticos, de los cuales $13$ se encuentran llenos a su máxima capacidad. Representa gráficamente esta situación e indica la fracción correspondiente.",
+                steps: [
+                    {
+                        title: "Identificación de unidades discretas y relación parte-todo",
+                        content: "• **Denominador ($20$):** Total de contenedores en el conjunto.<br>• **Numerador ($13$):** Contenedores que se encuentran ocupados.<br>La fracción correspondiente es $\\frac{13}{20}$."
+                    },
+                    {
+                        title: "Representación visual del lote industrial",
+                        content: "A continuación se muestran los $20$ contenedores dispuestos en un arreglo rectangular ($4 \\times 5$), resaltando los $13$ contenedores ocupados:<br>" +
+                                 "<div class=\"my-4 flex justify-center\">" +
+                                 "<div class=\"grid grid-cols-5 gap-2 p-3 bg-slate-200 dark:bg-slate-700 rounded-xl border border-slate-400 max-w-sm w-full\">" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-teal-500 rounded-lg border border-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-xs\"><i class=\"fa-solid fa-box\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "<div class=\"h-9 bg-white dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-400 text-xs\"><i class=\"fa-regular fa-square\"></i></div>" +
+                                 "</div></div>"
+                    }
+                ],
+                result: "$$\\text{Fracción del lote ocupado: } \\frac{13}{20}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 2: GUÍA DIDÁCTICA I (CLASIFICACIÓN Y PROBLEMAS)
+        const exercisesGuia1 = [
+            {
+                id: 1,
+                title: "Identificación 1: Fracción Impropia",
+                problem: "Clasifica la fracción $\\frac{145}{18}$ y determina su relación respecto a la unidad.",
+                steps: [
+                    { title: "Comparación de términos", content: "Numerador $N = 145$, Denominador $D = 18$. Dado que $145 > 18$, el numerador supera al denominador." },
+                    { title: "Clasificación formal", content: "Es una **Fracción Impropia**. Su valor numérico es mayor que $1$ ($145 \\div 18 = 8.055... = 8 \\frac{1}{18}$)." }
+                ],
+                result: "$$\\frac{145}{18} \\longrightarrow \\text{Fracción Impropia } (> 1)$$"
+            },
+            {
+                id: 2,
+                title: "Identificación 2: Fracción Propia",
+                problem: "Clasifica la fracción $\\frac{47}{96}$ e indica sus propiedades.",
+                steps: [
+                    { title: "Comparación de términos", content: "Numerador $N = 47$, Denominador $D = 96$. Vemos que $47 < 96$." },
+                    { title: "Clasificación formal", content: "Al ser el numerador menor que el denominador, es una **Fracción Propia** ($< 1$)." }
+                ],
+                result: "$$\\frac{47}{96} \\longrightarrow \\text{Fracción Propia } (< 1)$$"
+            },
+            {
+                id: 3,
+                title: "Identificación 3: Fracción Impropia Entera (Aparente)",
+                problem: "Clasifica la fracción $\\frac{216}{24}$.",
+                steps: [
+                    { title: "Análisis del cociente", content: "Numerador $N = 216$, Denominador $D = 24$. Como $216 > 24$, es una fracción impropia." },
+                    { title: "Verificación de divisibilidad exacta", content: "Efectuamos la división: $216 \\div 24 = 9$ sin residuo. Por tanto, es una **Fracción Impropia Entera**." }
+                ],
+                result: "$$\\frac{216}{24} = 9 \\longrightarrow \\text{Fracción Impropia Entera}$$"
+            },
+            {
+                id: 4,
+                title: "Identificación 4: Fracción Propia Cercana a la Unidad",
+                problem: "Clasifica la fracción $\\frac{189}{205}$.",
+                steps: [
+                    { title: "Comparación de términos", content: "Numerador $189 < 205$ Denominador. Es una **Fracción Propia**, con valor cercano a $1$ ($0.9219$)." }
+                ],
+                result: "$$\\frac{189}{205} \\longrightarrow \\text{Fracción Propia}$$"
+            },
+            {
+                id: 5,
+                title: "Identificación 5: Fracción Impropia Aparente",
+                problem: "Clasifica la fracción $\\frac{343}{49}$.",
+                steps: [
+                    { title: "Análisis numérico y división", content: "Numerador $343 > 49$. Efectuando la división: $343 \\div 49 = 7$ exactos. Es una **Fracción Impropia Entera**." }
+                ],
+                result: "$$\\frac{343}{49} = 7 \\longrightarrow \\text{Fracción Impropia Entera}$$"
+            },
+            {
+                id: 6,
+                title: "Problema 1 (Aplicación): Capacidad de un Estanque",
+                problem: "Un depósito de agua tiene una capacidad total de $2,400\\text{ litros}$. Si actualmente contiene $\\frac{11}{16}$ de su capacidad total, ¿cuántos litros de agua contiene y cuántos faltan para llenarlo?",
+                steps: [
+                    { title: "Calcular el volumen contenido", content: "Multiplicamos la capacidad total por la fracción ocupada:<br>$$\\text{Volumen contenido} = 2,400 \\times \\frac{11}{16} = (2,400 \\div 16) \\times 11 = 150 \\times 11 = 1,650\\text{ litros}$$" },
+                    { title: "Calcular el volumen restante", content: "Restamos el volumen contenido del total:<br>$$\\text{Faltante} = 2,400 - 1,650 = 750\\text{ litros}$$" }
+                ],
+                result: "$$\\text{Contiene: } 1,650\\text{ L} \\quad | \\quad \\text{Faltan: } 750\\text{ L}$$"
+            },
+            {
+                id: 7,
+                title: "Problema 2 (Aplicación): Ejecución Presupuestal",
+                problem: "Un municipio aprobó un presupuesto de $\\$540,000$ para obras públicas. Durante el primer trimestre se ejercieron $\\frac{7}{12}$ de dicho presupuesto. ¿Cuánto dinero se ha gastado y cuánto queda disponible?",
+                steps: [
+                    { title: "Cálculo del gasto ejercido", content: "$$\\text{Gasto} = 540,000 \\times \\frac{7}{12} = (540,000 \\div 12) \\times 7 = 45,000 \\times 7 = \\$315,000$$" },
+                    { title: "Cálculo del saldo restante", content: "$$\\text{Disponible} = 540,000 - 315,000 = \\$225,000$$" }
+                ],
+                result: "$$\\text{Gastado: } \\$315,000 \\quad | \\quad \\text{Disponible: } \\$225,000$$"
+            },
+            {
+                id: 8,
+                title: "Problema 3 (Aplicación): Distribución de Alumnos",
+                problem: "En un plantel escolar hay $840$ estudiantes. Si $\\frac{3}{8}$ pertenecen al primer grado y $\\frac{2}{5}$ al segundo grado, ¿cuántos alumnos hay en total entre ambos grados y cuántos están en otros semestres?",
+                steps: [
+                    { title: "Alumnos de primer y segundo grado", content: "• 1º Grado: $840 \\times \\frac{3}{8} = 105 \\times 3 = 315\\text{ alumnos}$<br>• 2º Grado: $840 \\times \\frac{2}{5} = 168 \\times 2 = 336\\text{ alumnos}$" },
+                    { title: "Suma total y residuo", content: "Total entre 1º y 2º: $315 + 336 = 651$ alumnos.<br>Otros semestres: $840 - 651 = 189$ alumnos." }
+                ],
+                result: "$$\\text{En 1º y 2º: } 651\\text{ alumnos} \\quad | \\quad \\text{Otros grados: } 189\\text{ alumnos}$$"
+            },
+            {
+                id: 9,
+                title: "Problema 4 (Aplicación): Recorrido de un Transporte",
+                problem: "Un camión de carga debe recorrer una ruta de $720\\text{ km}$. En el primer tramo avanza $\\frac{5}{9}$ del trayecto total y en el segundo tramo avanza $\\frac{1}{4}$ del total. ¿Cuántos kilómetros le faltan aún por recorrer?",
+                steps: [
+                    { title: "Cálculo de tramos recorridos", content: "• Tramo 1: $720 \\times \\frac{5}{9} = 400\\text{ km}$<br>• Tramo 2: $720 \\times \\frac{1}{4} = 180\\text{ km}$" },
+                    { title: "Distancia restante", content: "Total recorrido $= 400 + 180 = 580\\text{ km}$.<br>Faltante $= 720 - 580 = 140\\text{ km}$." }
+                ],
+                result: "$$\\text{Distancia faltante: } 140\\text{ km}$$"
+            },
+            {
+                id: 10,
+                title: "Problema 5 (Aplicación): Producción e Inspección de Calidad",
+                problem: "Una planta industrial produce un lote de $3,600$ refacciones. Se detecta que $\\frac{1}{20}$ del lote presenta fallas y $\\frac{3}{8}$ se destina a exportación. ¿Cuántas piezas defectuosas hay y cuántas piezas aprobadas quedan para venta nacional?",
+                steps: [
+                    { title: "Cálculo de partes del lote", content: "• Defectuosas: $3,600 \\times \\frac{1}{20} = 180\\text{ piezas}$<br>• Exportación: $3,600 \\times \\frac{3}{8} = 1,350\\text{ piezas}$" },
+                    { title: "Piezas para mercado nacional", content: "$$\\text{Nacional} = 3,600 - 180 - 1,350 = 2,070\\text{ piezas}$$" }
+                ],
+                result: "$$\\text{Defectuosas: } 180 \\quad | \\quad \\text{Venta Nacional: } 2,070\\text{ piezas}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 3: GUÍA DIDÁCTICA II (CONVERSIÓN DE FRACCIONES)
+        const exercisesGuia2 = [
+            {
+                id: 1,
+                title: "Conversión 1: Impropia a Mixta",
+                problem: "Convierte la fracción impropia $\\frac{187}{12}$ en una fracción mixta.",
+                steps: [
+                    {
+                        title: "Algoritmo de la división con casita",
+                        content: "Efectuamos la división del numerador $187$ entre el denominador $12$:<br>" +
+                                 "<div class=\"my-2 flex justify-center text-base sm:text-lg font-mono font-bold\">" +
+                                 "$$\\begin{array}{r} 15 \\\\ 12 \\enclose{longdiv}{187} \\\\ \\underline{-12\\phantom{0}} \\\\ 67 \\\\ \\underline{-60} \\\\ 7 \\end{array}$$" +
+                                 "</div>" +
+                                 "• **Cociente ($C$):** $15$ (enteros)<br>• **Residuo ($R$):** $7$ (nuevo numerador)<br>• **Denominador ($D$):** $12$"
+                    }
+                ],
+                result: "$$\\frac{187}{12} = 15 \\frac{7}{12}$$"
+            },
+            {
+                id: 2,
+                title: "Conversión 2: Impropia a Mixta",
+                problem: "Transforma $\\frac{349}{16}$ a número mixto.",
+                steps: [
+                    {
+                        title: "Algoritmo de la división con casita",
+                        content: "Efectuamos la división del numerador $349$ entre el denominador $16$:<br>" +
+                                 "<div class=\"my-2 flex justify-center text-base sm:text-lg font-mono font-bold\">" +
+                                 "$$\\begin{array}{r} 21 \\\\ 16 \\enclose{longdiv}{349} \\\\ \\underline{-32\\phantom{0}} \\\\ 29 \\\\ \\underline{-16} \\\\ 13 \\end{array}$$" +
+                                 "</div>" +
+                                 "• **Cociente ($C$):** $21$ enteros<br>• **Residuo ($R$):** $13$<br>• **Denominador ($D$):** $16$"
+                    }
+                ],
+                result: "$$\\frac{349}{16} = 21 \\frac{13}{16}$$"
+            },
+            {
+                id: 3,
+                title: "Conversión 3: Impropia a Mixta",
+                problem: "Expresa $\\frac{523}{25}$ como fracción mixta.",
+                steps: [
+                    {
+                        title: "Algoritmo de la división con casita",
+                        content: "Dividimos el numerador $523$ entre el denominador $25$:<br>" +
+                                 "<div class=\"my-2 flex justify-center text-base sm:text-lg font-mono font-bold\">" +
+                                 "$$\\begin{array}{r} 20 \\\\ 25 \\enclose{longdiv}{523} \\\\ \\underline{-50\\phantom{0}} \\\\ 23 \\\\ \\underline{-00} \\\\ 23 \\end{array}$$" +
+                                 "</div>" +
+                                 "• **Cociente ($C$):** $20$ enteros<br>• **Residuo ($R$):** $23$<br>• **Denominador ($D$):** $25$"
+                    }
+                ],
+                result: "$$\\frac{523}{25} = 20 \\frac{23}{25}$$"
+            },
+            {
+                id: 4,
+                title: "Conversión 4: Impropia a Mixta",
+                problem: "Convierte $\\frac{789}{32}$ a fracción mixta.",
+                steps: [
+                    {
+                        title: "Algoritmo de la división con casita",
+                        content: "Dividimos el numerador $789$ entre el denominador $32$:<br>" +
+                                 "<div class=\"my-2 flex justify-center text-base sm:text-lg font-mono font-bold\">" +
+                                 "$$\\begin{array}{r} 24 \\\\ 32 \\enclose{longdiv}{789} \\\\ \\underline{-64\\phantom{0}} \\\\ 149 \\\\ \\underline{-128} \\\\ 21 \\end{array}$$" +
+                                 "</div>" +
+                                 "• **Cociente ($C$):** $24$ enteros<br>• **Residuo ($R$):** $21$<br>• **Denominador ($D$):** $32$"
+                    }
+                ],
+                result: "$$\\frac{789}{32} = 24 \\frac{21}{32}$$"
+            },
+            {
+                id: 5,
+                title: "Conversión 5: Impropia a Mixta de Gran Escala",
+                problem: "Convierte $\\frac{1,247}{45}$ a número mixto.",
+                steps: [
+                    {
+                        title: "Algoritmo de la división con casita",
+                        content: "Dividimos el numerador $1,247$ entre el denominador $45$:<br>" +
+                                 "<div class=\"my-2 flex justify-center text-base sm:text-lg font-mono font-bold\">" +
+                                 "$$\\begin{array}{r} 27 \\\\ 45 \\enclose{longdiv}{1247} \\\\ \\underline{-90\\phantom{0}} \\\\ 347 \\\\ \\underline{-315} \\\\ 32 \\end{array}$$" +
+                                 "</div>" +
+                                 "• **Cociente ($C$):** $27$ enteros<br>• **Residuo ($R$):** $32$<br>• **Denominador ($D$):** $45$"
+                    }
+                ],
+                result: "$$\\frac{1,247}{45} = 27 \\frac{32}{45}$$"
+            },
+            {
+                id: 6,
+                title: "Conversión 6: Mixta a Impropia",
+                problem: "Convierte la fracción mixta $14 \\frac{7}{9}$ en fracción impropia.",
+                steps: [
+                    {
+                        title: "Aplicación del algoritmo de conversión",
+                        content: "Multiplicamos la parte entera por el denominador y sumamos el numerador:<br>$$\\text{Nuevo Numerador} = (14 \\times 9) + 7 = 126 + 7 = 133$$<br>Se mantiene el denominador $9$."
+                    }
+                ],
+                result: "$$14 \\frac{7}{9} = \\frac{133}{9}$$"
+            },
+            {
+                id: 7,
+                title: "Conversión 7: Mixta a Impropia",
+                problem: "Transforma $23 \\frac{8}{13}$ a fracción impropia.",
+                steps: [
+                    {
+                        title: "Cálculo del nuevo numerador", content: "Calculamos: $$\\text{Nuevo Numerador} = (23 \\times 13) + 8 = 299 + 8 = 307$$<br>Se mantiene el mismo denominador $13$."
+                    }
+                ],
+                result: "$$23 \\frac{8}{13} = \\frac{307}{13}$$"
+            },
+            {
+                id: 8,
+                title: "Conversión 8: Mixta a Impropia",
+                problem: "Convierte $19 \\frac{11}{18}$ a fracción impropia.",
+                steps: [
+                    {
+                        title: "Cálculo del nuevo numerador", content: "Calculamos: $$\\text{Nuevo Numerador} = (19 \\times 18) + 11 = 342 + 11 = 353$$<br>Se conserva el denominador $18$."
+                    }
+                ],
+                result: "$$19 \\frac{11}{18} = \\frac{353}{18}$$"
+            },
+            {
+                id: 9,
+                title: "Conversión 9: Mixta a Impropia",
+                problem: "Expresa $32 \\frac{14}{25}$ en forma de fracción impropia.",
+                steps: [
+                    {
+                        title: "Cálculo del nuevo numerador", content: "Calculamos: $$\\text{Nuevo Numerador} = (32 \\times 25) + 14 = 800 + 14 = 814$$<br>Se mantiene el denominador $25$."
+                    }
+                ],
+                result: "$$32 \\frac{14}{25} = \\frac{814}{25}$$"
+            },
+            {
+                id: 10,
+                title: "Conversión 10: Mixta a Impropia",
+                problem: "Convierte $45 \\frac{7}{12}$ a fracción impropia.",
+                steps: [
+                    {
+                        title: "Cálculo del nuevo numerador", content: "Calculamos: $$\\text{Nuevo Numerador} = (45 \\times 12) + 7 = 540 + 7 = 547$$<br>Se conserva el denominador $12$."
+                    }
+                ],
+                result: "$$45 \\frac{7}{12} = \\frac{547}{12}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 4: SIMULADOR DE EXAMEN INTERACTIVO
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Representación y Simplificación)",
+                problem: "Un esquema dividido en $24$ partes congruentes tiene $15$ partes sombreadas. ¿Cuál es la fracción común irreducible que representa dicha región?",
+                answer: "5/8",
+                type: "text",
+                steps: [
+                    { title: "1.- Plantear la relación y simplificar.", lines: ["$\\text{Fracción} = \\frac{15}{24}$", "Dividiendo numerador y denominador entre $3$:", "$\\frac{15 \\div 3}{24 \\div 3} = \\frac{5}{8}$"] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (Identificación de Fracción)",
+                problem: "La fracción $\\frac{189}{205}$ es una fracción de tipo:",
+                type: "choice",
+                options: ["Propia", "Impropia", "Entera o aparente", "Mixta"],
+                answer: 0,
+                steps: [
+                    { title: "1.- Comparar términos.", lines: ["$189 < 205 \\longrightarrow$ El numerador es menor que el denominador.", "Por definición, es una **Fracción Propia**."] }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Aplicación - Volumen Faltante)",
+                problem: "Un tanque de almacenamiento de $3,600\\text{ litros}$ se encuentra lleno a $\\frac{7}{12}$ de su capacidad total. ¿Cuántos litros de agua FALTAN para llenarlo completamente?",
+                answer: 1500,
+                type: "number",
+                steps: [
+                    { title: "1.- Fracción faltante y cálculo directo.", lines: ["Fracción que falta: $1 - \\frac{7}{12} = \\frac{5}{12}$", "Litros faltantes: $3,600 \\times \\frac{5}{12} = 300 \\times 5 = 1,500\\text{ L}$."] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Aplicación - Presupuesto Disponibilidad)",
+                problem: "Una empresa gastó $\\frac{5}{8}$ de su presupuesto anual de $\\$480,000$. ¿Qué cantidad en pesos le queda disponible?",
+                answer: 180000,
+                type: "number",
+                steps: [
+                    { title: "1.- Calcular saldo restante.", lines: ["Fracción disponible: $\\frac{3}{8}$", "Disponible: $480,000 \\times \\frac{3}{8} = 60,000 \\times 3 = \\$180,000$."] }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Conversión Impropia a Mixta - Entero)",
+                problem: "¿Cuál es el valor del número ENTERO al convertir la fracción impropia $\\frac{239}{14}$ a fracción mixta?",
+                answer: 17,
+                type: "number",
+                steps: [
+                    { title: "1.- Dividir numerador entre denominador.", lines: ["$239 \\div 14 = 17.071...$", "$17 \\times 14 = 238$, residuo $1$.", "$\\frac{239}{14} = 17 \\frac{1}{14}$. El entero es $17$."] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Conversión Mixta a Impropia - Numerador)",
+                problem: "Al convertir $18 \\frac{9}{11}$ en fracción impropia, ¿cuál es el valor de su NUMERADOR resultante?",
+                answer: 207,
+                type: "number",
+                steps: [
+                    { title: "1.- Aplicar fórmula de conversión.", lines: ["$\\text{Numerador} = (18 \\times 11) + 9$", "$18 \\times 11 = 198$", "$198 + 9 = 207$."] }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Fracción Impropia Entera)",
+                problem: "Calcula el valor entero exacto al que equivale la fracción impropia aparente $\\frac{384}{16}$.",
+                answer: 24,
+                type: "number",
+                steps: [
+                    { title: "1.- División exactitud.", lines: ["$384 \\div 16 = 24$ exactos."] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Aplicación - Recorrido Restante)",
+                problem: "Un ciclista recorre un trayecto de $960\\text{ km}$. El primer día avanza $\\frac{3}{5}$ del total y el segundo día avanza $\\frac{1}{4}$ del total. ¿Cuántos kilómetros le quedan por recorrer?",
+                answer: 144,
+                type: "number",
+                steps: [
+                    { title: "1.- Suma de fracciones recorridas.", lines: ["$\\frac{3}{5} + \\frac{1}{4} = \\frac{12 + 5}{20} = \\frac{17}{20}$", "Fracción restante: $1 - \\frac{17}{20} = \\frac{3}{20}$", "Distancia restante: $960 \\times \\frac{3}{20} = 48 \\times 3 = 144\\text{ km}$."] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Conversión Impropia a Mixta - Residuo)",
+                problem: "Al convertir $\\frac{547}{18}$ en fracción mixta $C \\frac{R}{D}$, ¿cuál es el valor del RESIDUO ($R$)?",
+                answer: 7,
+                type: "number",
+                steps: [
+                    { title: "1.- Efectuar la división entera.", lines: ["$547 \\div 18 = 30$ con residuo $7$.", "($30 \\times 18 = 540$, $547 - 540 = 7$).", "El residuo es $7$."] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Conversión Mixta a Impropia)",
+                problem: "Calcula el NUMERADOR equivalente al transformar la fracción mixta $25 \\frac{13}{16}$ a impropia.",
+                answer: 413,
+                type: "number",
+                steps: [
+                    { title: "1.- Algoritmo de multiplicación y adición.", lines: ["$\\text{Numerador} = (25 \\times 16) + 13 = 400 + 13 = 413$."] }
+                ]
+            }
+        ];
+
+        // ESTADOS DE PASOS Y EXAMEN
+        const currentStepStateSeccion1 = {};
+        const currentStepStateGuia1 = {};
+        const currentStepStateGuia2 = {};
+        let examUserStates = {};
+
+        // CAMBIO DE PESTAÑAS
+        function switchTab(tab) {
+            const seccion1Tab = document.getElementById('tab-seccion1');
+            const guia1Tab = document.getElementById('tab-guia1');
+            const guia2Tab = document.getElementById('tab-guia2');
+            const examenTab = document.getElementById('tab-examen');
+
+            const btnSeccion1 = document.getElementById('btn-tab-seccion1');
+            const btnGuia1 = document.getElementById('btn-tab-guia1');
+            const btnGuia2 = document.getElementById('btn-tab-guia2');
+            const btnExamen = document.getElementById('btn-tab-examen');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            seccion1Tab.classList.add('hidden');
+            guia1Tab.classList.add('hidden');
+            guia2Tab.classList.add('hidden');
+            examenTab.classList.add('hidden');
+
+            btnSeccion1.className = inactiveClass;
+            btnGuia1.className = inactiveClass;
+            btnGuia2.className = inactiveClass;
+            btnExamen.className = inactiveClass;
+
+            if (tab === 'seccion1') {
+                seccion1Tab.classList.remove('hidden');
+                btnSeccion1.className = activeClass;
+            } else if (tab === 'guia1') {
+                guia1Tab.classList.remove('hidden');
+                btnGuia1.className = activeClass;
+            } else if (tab === 'guia2') {
+                guia2Tab.classList.remove('hidden');
+                btnGuia2.className = activeClass;
+            } else {
+                examenTab.classList.remove('hidden');
+                btnExamen.className = activeClass;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // MODO CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        function getGuiaContext(section) {
+            if (section === 'seccion1' || section === 1 || section === '1') {
+                return { exList: exercisesRepGrafica, stateDict: currentStepStateSeccion1, prefix: 's1' };
+            } else if (section === 'guia1') {
+                return { exList: exercisesGuia1, stateDict: currentStepStateGuia1, prefix: 'g1' };
+            } else {
+                return { exList: exercisesGuia2, stateDict: currentStepStateGuia2, prefix: 'g2' };
+            }
+        }
+
+        // CONTROL DE PASOS DE GUÍAS Y SECCIÓN 1
+        function nextStepGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            let current = stateDict[id] || 0;
+            
+            if (current < maxStage) {
+                current++;
+                stateDict[id] = current;
+                
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetStepsGuia(section, id);
+                return;
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function resetStepsGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            stateDict[id] = 0;
+            
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.remove('visible');
+                }
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function updateStepUIGuia(section, id, ex, prefix) {
+            const { stateDict } = getGuiaContext(section);
+
+            const totalSteps = ex.steps.length;
+            const current = stateDict[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-${prefix}-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${prefix}-${id}`);
+            const btnNext = document.getElementById(`btn-next-${prefix}-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${prefix}-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = totalSteps === 1 ? `Ver Paso 1` : `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else if (current === totalSteps) {
+                btnText.innerText = `Ver Resultado Final`;
+                btnIcon.className = "fa-solid fa-trophy";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            }
+        }
+
+        function renderGuiaGeneric(section, exList, containerId, prefix) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            const { stateDict } = getGuiaContext(section);
+
+            exList.forEach(ex => {
+                stateDict[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    stepsHTML += `
+                        <div id="step-${prefix}-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> Paso ${stepNum}: ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const resultStepNum = totalSteps + 1;
+                stepsHTML += `
+                    <div id="step-${prefix}-${ex.id}-${resultStepNum}" class="step-item bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 border-y border-r border-emerald-300 dark:border-emerald-800 p-3.5 rounded-r-lg text-center shadow-xs">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-1">
+                            <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> Solución Final
+                        </span>
+                        <div class="result-box-notebook text-base sm:text-lg text-emerald-900 dark:text-emerald-200 mt-1">
+                            ${ex.result}
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-2">
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-2.5 px-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 text-center">
+                        <span class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-${prefix}-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-${prefix}-${ex.id}" onclick="nextStepGuia('${section}', ${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-${prefix}-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-${prefix}-${ex.id}">${totalSteps === 1 ? 'Ver Paso 1' : 'Ver Paso 1 de ' + totalSteps}</span>
+                        </button>
+                        <button id="btn-reset-${prefix}-${ex.id}" onclick="resetStepsGuia('${section}', ${ex.id})" class="hidden py-2.5 px-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-semibold text-sm transition-all shadow-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // SIMULADOR DE EXAMEN
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            examProblems.forEach((p) => {
+                examUserStates[p.id] = { answered: false, isCorrect: false };
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between";
+
+                let inputHTML = '';
+                if (p.type === 'choice') {
+                    inputHTML = `<div class="space-y-2 mt-3">`;
+                    p.options.forEach((opt, idx) => {
+                        inputHTML += `
+                            <label class="flex items-center gap-3 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-sm font-semibold transition-all">
+                                <input type="radio" name="exam-opt-${p.id}" value="${idx}" class="w-4 h-4 text-teal-600 focus:ring-teal-500">
+                                <span class="text-slate-800 dark:text-slate-200">${opt}</span>
+                            </label>
+                        `;
+                    });
+                    inputHTML += `</div>`;
+                } else if (p.type === 'text') {
+                    inputHTML = `
+                        <div class="mt-3">
+                            <input type="text" id="exam-input-${p.id}" placeholder="Ejemplo: 5/8" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        </div>
+                    `;
+                } else {
+                    inputHTML = `
+                        <div class="mt-3">
+                            <input type="number" id="exam-input-${p.id}" placeholder="Ingresa tu respuesta numérica" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        </div>
+                    `;
+                }
+
+                let stepsHTML = '';
+                p.steps.forEach((st, idx) => {
+                    stepsHTML += `
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900/90 border-l-4 border-amber-500 rounded-r-lg text-xs sm:text-sm font-medium space-y-1">
+                            <p class="font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">${st.title}</p>
+                            ${st.lines.map(l => `<p class="text-slate-700 dark:text-slate-200">${l}</p>`).join('')}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3">
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature text-amber-500"></i> ${p.title}
+                            </h3>
+                            <span id="exam-badge-${p.id}" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Pendiente</span>
+                        </div>
+
+                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-2">${p.problem}</p>
+                        ${inputHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <button id="exam-btn-${p.id}" onclick="checkExamAnswer(${p.id})" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold rounded-lg text-sm transition-all shadow-sm flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Calificar Reactivo</span>
+                        </button>
+
+                        <div id="exam-feedback-${p.id}" class="hidden p-3 rounded-lg text-xs sm:text-sm font-bold"></div>
+
+                        <div id="exam-solution-${p.id}" class="hidden space-y-2 mt-2">
+                            ${stepsHTML}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function checkExamAnswer(id) {
+            const p = examProblems.find(item => item.id === id);
+            if (!p) return;
+
+            const badge = document.getElementById(`exam-badge-${id}`);
+            const btn = document.getElementById(`exam-btn-${id}`);
+            const feedback = document.getElementById(`exam-feedback-${id}`);
+            const solution = document.getElementById(`exam-solution-${id}`);
+
+            let userVal = null;
+            let isCorrect = false;
+
+            if (p.type === 'choice') {
+                const selected = document.querySelector(`input[name="exam-opt-${id}"]:checked`);
+                if (!selected) {
+                    alert("Por favor selecciona una opción antes de calificar.");
+                    return;
+                }
+                userVal = parseInt(selected.value);
+                isCorrect = (userVal === p.answer);
+            } else if (p.type === 'text') {
+                const input = document.getElementById(`exam-input-${id}`);
+                if (!input || input.value.trim() === '') {
+                    alert("Por favor ingresa una respuesta válida.");
+                    return;
+                }
+                userVal = input.value.trim().replace(/\s+/g, '');
+                isCorrect = (userVal.toLowerCase() === p.answer.toLowerCase());
+            } else {
+                const input = document.getElementById(`exam-input-${id}`);
+                if (!input || input.value.trim() === '') {
+                    alert("Por favor ingresa un número.");
+                    return;
+                }
+                userVal = parseFloat(input.value.trim());
+                isCorrect = (Math.abs(userVal - p.answer) < 0.001);
+            }
+
+            examUserStates[id].answered = true;
+            examUserStates[id].isCorrect = isCorrect;
+
+            btn.disabled = true;
+            btn.className = "w-full py-2.5 bg-slate-400 dark:bg-slate-700 text-slate-200 font-bold rounded-lg text-sm cursor-not-allowed opacity-80 flex justify-center items-center gap-2";
+
+            feedback.classList.remove('hidden');
+            solution.classList.remove('hidden');
+
+            if (isCorrect) {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-400";
+                badge.innerText = "¡Correcto!";
+                feedback.className = "p-3 rounded-lg text-xs sm:text-sm font-bold bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-800";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5 text-base"></i> Excelente. Tu respuesta es totalmente correcta.`;
+            } else {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-400";
+                badge.innerText = "Incorrecto";
+                feedback.className = "p-3 rounded-lg text-xs sm:text-sm font-bold bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-200 border border-rose-300 dark:border-rose-800";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5 text-base"></i> Respuesta incorrecta. Revisa el procedimiento solución adjunto.`;
+            }
+
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([solution]).catch(err => console.error(err));
+            }
+        }
+
+        function updateScoreboard() {
+            let total = examProblems.length;
+            let answeredCount = 0;
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            Object.keys(examUserStates).forEach(k => {
+                const st = examUserStates[k];
+                if (st.answered) {
+                    answeredCount++;
+                    if (st.isCorrect) correctCount++;
+                    else incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = `${correctCount}`;
+            document.getElementById('score-incorrect').innerText = `${incorrectCount}`;
+        }
+
+        function resetExam() {
+            renderExam();
+            updateScoreboard();
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // INICIALIZACIÓN
+        document.addEventListener("DOMContentLoaded", () => {
+            renderGuiaGeneric('seccion1', exercisesRepGrafica, 'seccion1-container', 's1');
+            renderGuiaGeneric('guia1', exercisesGuia1, 'guia1-container', 'g1');
+            renderGuiaGeneric('guia2', exercisesGuia2, 'guia2-container', 'g2');
+            renderExam();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        });
+    </script>
+</body>
+</html>
