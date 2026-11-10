@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección 4.3: Operaciones con fracciones | Guía Didáctica y Simulador</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: max-height 0.35s ease-out, opacity 0.35s ease-out, transform 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border-top-width: 0 !important;
+            border-bottom-width: 0 !important;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 2500px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.5rem !important;
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+            border-top-width: 1px !important;
+            border-bottom-width: 1px !important;
+        }
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+        .math-table-container {
+            display: flex;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+        .math-table-container table {
+            border-collapse: collapse;
+        }
+        .math-table-container td {
+            padding: 0 8px;
+            text-align: center;
+        }
+        .border-left {
+            border-left: 2px solid currentColor;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <div class="flex justify-start">
+                <a href="unidad4.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver a la Unidad 4
+                </a>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: 4.3 Operaciones con fracciones
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        4.3.2 Multiplicación y División de Fracciones
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-guia1" onclick="switchTab('guia1')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Guía Didáctica I: Multiplicación y División
+                </button>
+                <button id="btn-tab-guia2" onclick="switchTab('guia2')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica II: Problemas de Aplicación
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Analiza cada sección y haz clic en <strong>"Ver Paso"</strong> o <strong>"Ver Todo"</strong> para desplegar la explicación detallada, incluyendo la simplificación por MCD.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- GUÍA DIDÁCTICA I -->
+        <section id="tab-guia1" class="space-y-6">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                
+                <!-- Tabla Teórica Basada en la Imagen (Modificada con Mixtas) -->
+                <div class="space-y-6">
+                    <!-- Multiplicación de fracciones -->
+                    <div class="bg-teal-50/50 dark:bg-teal-950/20 border border-teal-200 dark:border-teal-800/50 rounded-xl overflow-hidden shadow-sm">
+                        <h3 class="bg-teal-100/70 dark:bg-teal-900/40 text-teal-900 dark:text-teal-200 font-bold text-center py-3 text-lg border-b border-teal-200 dark:border-teal-800/50">
+                            Multiplicación de fracciones
+                        </h3>
+                        <!-- Cambiado a 3 columnas para incluir Mixtas -->
+                        <div class="p-3 sm:p-4 grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-teal-200 dark:divide-teal-800/50">
+                            
+                            <!-- Fracción por fracción -->
+                            <div class="text-center space-y-3">
+                                <div class="flex justify-center items-center gap-2 text-sm sm:text-base text-slate-800 dark:text-slate-200 font-medium">
+                                    <span>Fracción por <br> fracción &rarr;</span>
+                                    <span>$$ \frac{a}{b} \times \frac{c}{d} = \frac{ac}{bd} $$</span>
+                                </div>
+                                <div class="pt-1">
+                                    <span class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">Ejemplo:</span>
+                                    <div class="mt-1 text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                        $$ \frac{4}{5} \times \frac{3}{7} = \frac{12}{35} $$
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entero por fracción -->
+                            <div class="text-center space-y-3 pt-4 md:pt-0">
+                                <div class="flex justify-center items-center gap-2 text-sm sm:text-base text-slate-800 dark:text-slate-200 font-medium">
+                                    <span>Entero por <br> fracción &rarr;</span>
+                                    <span>$$ A \times \frac{B}{C} = \frac{AB}{C} $$</span>
+                                </div>
+                                <div class="pt-1">
+                                    <span class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">Ejemplo:</span>
+                                    <div class="mt-1 text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                        $$ 6 \times \frac{2}{5} = \frac{12}{5} $$
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fracción Mixta -->
+                            <div class="text-center space-y-3 pt-4 md:pt-0">
+                                <div class="flex justify-center items-center gap-2 text-sm sm:text-base text-slate-800 dark:text-slate-200 font-medium">
+                                    <span>Fracción <br> Mixta &rarr;</span>
+                                    <span>$$ A\frac{b}{c} = \frac{Ac+b}{c} $$</span>
+                                </div>
+                                <div class="pt-1">
+                                    <span class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">Ejemplo (Convertir e integrar):</span>
+                                    <div class="mt-1 text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                        $$ 1\frac{1}{2} \times \frac{3}{4} = \frac{3}{2} \times \frac{3}{4} = \frac{9}{8} $$
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <!-- División de fracciones -->
+                    <div class="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800/50 rounded-xl overflow-hidden shadow-sm">
+                        <h3 class="bg-indigo-100/70 dark:bg-indigo-900/40 text-indigo-900 dark:text-indigo-200 font-bold text-center py-3 text-lg border-b border-indigo-200 dark:border-indigo-800/50">
+                            División de fracciones
+                        </h3>
+                        <!-- Cambiado a 4 columnas para incluir Mixtas -->
+                        <div class="p-3 sm:p-4 grid grid-cols-1 md:grid-cols-4 gap-4 divide-y md:divide-y-0 md:divide-x divide-indigo-200 dark:divide-indigo-800/50">
+                            
+                            <!-- Fracción entre fracción -->
+                            <div class="text-center space-y-2">
+                                <span class="block text-slate-800 dark:text-slate-200 text-sm font-medium mb-2">Fracción entre fracción</span>
+                                <div class="text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                    $$ \frac{a}{b} \div \frac{c}{d} = \frac{ad}{bc} $$
+                                </div>
+                                <div>
+                                    <div class="mt-1 border border-slate-300 dark:border-slate-600 rounded p-1.5 inline-block bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-200">
+                                        Ej: $$ \frac{1}{4} \div \frac{2}{3} = \frac{3}{8} $$
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fracción entre entero -->
+                            <div class="text-center space-y-2 pt-4 md:pt-0">
+                                <span class="block text-slate-800 dark:text-slate-200 text-sm font-medium mb-2">Fracción entre entero</span>
+                                <div class="text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                    $$ \frac{a}{b} \div c = \frac{a}{bc} $$
+                                </div>
+                                <div>
+                                    <div class="mt-1 border border-slate-300 dark:border-slate-600 rounded p-1.5 inline-block bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-200">
+                                        Ej: $$ \frac{5}{2} \div 3 = \frac{5}{6} $$
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entero entre fracción -->
+                            <div class="text-center space-y-2 pt-4 md:pt-0">
+                                <span class="block text-slate-800 dark:text-slate-200 text-sm font-medium mb-2">Entero entre fracción</span>
+                                <div class="text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                    $$ a \div \frac{b}{c} = \frac{ac}{b} $$
+                                </div>
+                                <div>
+                                    <div class="mt-1 border border-slate-300 dark:border-slate-600 rounded p-1.5 inline-block bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-200">
+                                        Ej: $$ 7 \div \frac{5}{4} = \frac{28}{5} $$
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fracción Mixta -->
+                            <div class="text-center space-y-2 pt-4 md:pt-0">
+                                <span class="block text-slate-800 dark:text-slate-200 text-sm font-medium mb-2">Con fracción mixta</span>
+                                <div class="text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                                    $$ A\frac{b}{c} \rightarrow \text{Impropia} $$
+                                </div>
+                                <div>
+                                    <div class="mt-1 border border-slate-300 dark:border-slate-600 rounded p-1.5 inline-block bg-white dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-200">
+                                        Ej: $$ 2\frac{1}{3} \div \frac{1}{2} = \frac{7}{3} \cdot \frac{2}{1} = \frac{14}{3} $$
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia1-container"></div>
+        </section>
+
+        <!-- GUÍA DIDÁCTICA II -->
+        <section id="tab-guia2" class="space-y-6 hidden">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-briefcase text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Problemas de Aplicación
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>Lee cuidadosamente el problema, plantea la ecuación matemática transformando enteros y fracciones mixtas a fracciones impropias, resuelve y simplifica el resultado final.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia2-container"></div>
+        </section>
+
+        <!-- SIMULADOR EXAMEN -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Simulador de Examen
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve en tu libreta aplicando las reglas de conversión y simplifica a su mínima expresión (ej: 7/4 o entero).</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container"></div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Sección 4.3 Operaciones con fracciones &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <script>
+        const exercisesGuia1 = [
+            {
+                id: 1,
+                title: "Ejemplo 1: Multiplicación de 3 fracciones",
+                problem: "$$\\frac{12}{15} \\cdot \\frac{5}{8} \\cdot \\frac{14}{9}$$",
+                steps: [
+                    {
+                        title: "Multiplicar directo",
+                        content: "Multiplicamos los numeradores entre sí y los denominadores entre sí.<br><br>$$ \\frac{12 \\cdot 5 \\cdot 14}{15 \\cdot 8 \\cdot 9} = \\frac{840}{1080} $$"
+                    },
+                    {
+                        title: "Simplificación por MCD (Tabla de Factorización)",
+                        content: "Reducimos la fracción encontrando el MCD de 840 y 1080:<br>$$ \\begin{array}{cc|c} 840 & 1080 & 2 \\\\ 420 & 540 & 2 \\\\ 210 & 270 & 2 \\\\ 105 & 135 & 3 \\\\ 35 & 45 & 5 \\\\ 7 & 9 & \\end{array} $$<br>MCD $= 2 \\cdot 2 \\cdot 2 \\cdot 3 \\cdot 5 = 120$<br><br>Dividimos numerador y denominador entre 120:<br>$$ \\frac{840 \\div 120}{1080 \\div 120} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{7}{9} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2: Multiplicación con mixtas (4 fracciones)",
+                problem: "$$2\\frac{1}{4} \\cdot \\frac{8}{9} \\cdot 1\\frac{1}{2} \\cdot \\frac{5}{6}$$",
+                steps: [
+                    {
+                        title: "Convertir mixtas a impropias",
+                        content: "$$ 2\\frac{1}{4} = \\frac{9}{4}, \\quad 1\\frac{1}{2} = \\frac{3}{2} $$<br>La operación queda: $$\\frac{9}{4} \\cdot \\frac{8}{9} \\cdot \\frac{3}{2} \\cdot \\frac{5}{6}$$"
+                    },
+                    {
+                        title: "Multiplicar directo",
+                        content: "$$ \\frac{9 \\cdot 8 \\cdot 3 \\cdot 5}{4 \\cdot 9 \\cdot 2 \\cdot 6} = \\frac{1080}{432} $$"
+                    },
+                    {
+                        title: "Simplificación por MCD",
+                        content: "Buscamos el MCD de 1080 y 432:<br>$$ \\begin{array}{cc|c} 1080 & 432 & 2 \\\\ 540 & 216 & 2 \\\\ 270 & 108 & 2 \\\\ 135 & 54 & 3 \\\\ 45 & 18 & 3 \\\\ 15 & 6 & 3 \\\\ 5 & 2 & \\end{array} $$<br>MCD $= 2^3 \\cdot 3^3 = 216$<br><br>$$ \\frac{1080 \\div 216}{432 \\div 216} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{5}{2} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3: Divisiones sucesivas (3 fracciones)",
+                problem: "$$\\frac{16}{21} \\div \\frac{4}{7} \\div \\frac{8}{15}$$",
+                steps: [
+                    {
+                        title: "Invertir los divisores",
+                        content: "Para divisiones sucesivas, la primera fracción se queda igual, y se multiplican por los inversos de todas las fracciones divisoras.<br>$$ \\frac{16}{21} \\cdot \\frac{7}{4} \\cdot \\frac{15}{8} $$"
+                    },
+                    {
+                        title: "Multiplicar directo",
+                        content: "$$ \\frac{16 \\cdot 7 \\cdot 15}{21 \\cdot 4 \\cdot 8} = \\frac{1680}{672} $$"
+                    },
+                    {
+                        title: "Simplificación por MCD",
+                        content: "Calculamos el MCD de 1680 y 672:<br>$$ \\begin{array}{cc|c} 1680 & 672 & 2 \\\\ 840 & 336 & 2 \\\\ 420 & 168 & 2 \\\\ 210 & 84 & 2 \\\\ 105 & 42 & 3 \\\\ 35 & 14 & 7 \\\\ 5 & 2 & \\end{array} $$<br>MCD $= 2^4 \\cdot 3 \\cdot 7 = 336$<br><br>$$ \\frac{1680 \\div 336}{672 \\div 336} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{5}{2} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4: Multiplicación combinada (Mixtas y Enteros)",
+                problem: "$$3\\frac{3}{4} \\cdot 2 \\cdot 1\\frac{1}{5} \\cdot \\frac{3}{10}$$",
+                steps: [
+                    {
+                        title: "Convertir a impropias y agregar denominador",
+                        content: "$$ 3\\frac{3}{4} = \\frac{15}{4}, \\quad 2 = \\frac{2}{1}, \\quad 1\\frac{1}{5} = \\frac{6}{5} $$<br>Operación: $$\\frac{15}{4} \\cdot \\frac{2}{1} \\cdot \\frac{6}{5} \\cdot \\frac{3}{10}$$"
+                    },
+                    {
+                        title: "Multiplicar directo",
+                        content: "$$ \\frac{15 \\cdot 2 \\cdot 6 \\cdot 3}{4 \\cdot 1 \\cdot 5 \\cdot 10} = \\frac{540}{200} $$"
+                    },
+                    {
+                        title: "Simplificación por MCD",
+                        content: "MCD de 540 y 200:<br>$$ \\begin{array}{cc|c} 540 & 200 & 2 \\\\ 270 & 100 & 2 \\\\ 135 & 50 & 5 \\\\ 27 & 10 & \\end{array} $$<br>MCD $= 2 \\cdot 2 \\cdot 5 = 20$<br><br>$$ \\frac{540 \\div 20}{200 \\div 20} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{27}{10} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5: División con mixtas complejas",
+                problem: "$$5\\frac{1}{3} \\div 1\\frac{5}{7}$$",
+                steps: [
+                    {
+                        title: "Convertir a fracciones impropias",
+                        content: "$$ 5\\frac{1}{3} = \\frac{16}{3}, \\quad 1\\frac{5}{7} = \\frac{12}{7} $$<br>La operación queda: $$\\frac{16}{3} \\div \\frac{12}{7}$$"
+                    },
+                    {
+                        title: "Multiplicar por el inverso",
+                        content: "$$ \\frac{16}{3} \\cdot \\frac{7}{12} = \\frac{112}{36} $$"
+                    },
+                    {
+                        title: "Simplificación por MCD",
+                        content: "MCD de 112 y 36:<br>$$ \\begin{array}{cc|c} 112 & 36 & 2 \\\\ 56 & 18 & 2 \\\\ 28 & 9 & \\end{array} $$<br>MCD $= 4$<br><br>$$ \\frac{112 \\div 4}{36 \\div 4} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{28}{9} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Ejemplo 6: Operaciones Combinadas (Paréntesis)",
+                problem: "$$\\left( 4\\frac{1}{6} \\cdot \\frac{4}{5} \\right) \\div 1\\frac{1}{3}$$",
+                steps: [
+                    {
+                        title: "Resolver el paréntesis",
+                        content: "$$ 4\\frac{1}{6} = \\frac{25}{6} $$. <br> Multiplicamos: $$ \\frac{25}{6} \\cdot \\frac{4}{5} = \\frac{100}{30} $$"
+                    },
+                    {
+                        title: "Dividir el resultado",
+                        content: "El divisor es $1\\frac{1}{3} = \\frac{4}{3}$.<br> Operación: $$ \\frac{100}{30} \\div \\frac{4}{3} = \\frac{100}{30} \\cdot \\frac{3}{4} $$<br>$$ = \\frac{300}{120} $$"
+                    },
+                    {
+                        title: "Simplificación por MCD (Tabla de Factorización)",
+                        content: "Calculamos el MCD de 300 y 120:<br>$$ \\begin{array}{cc|c} 300 & 120 & 2 \\\\ 150 & 60 & 2 \\\\ 75 & 30 & 3 \\\\ 25 & 10 & 5 \\\\ 5 & 2 & \\end{array} $$<br>MCD $= 2 \\cdot 2 \\cdot 3 \\cdot 5 = 60$<br><br>$$ \\frac{300 \\div 60}{120 \\div 60} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{5}{2} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Ejemplo 7: Múltiples grupos y divisiones",
+                problem: "$$\\left( 2\\frac{1}{4} \\cdot 1\\frac{3}{5} \\right) \\div \\left( 1\\frac{1}{2} \\cdot \\frac{4}{7} \\right)$$",
+                steps: [
+                    {
+                        title: "Convertir a impropias",
+                        content: "$$ \\left( \\frac{9}{4} \\cdot \\frac{8}{5} \\right) \\div \\left( \\frac{3}{2} \\cdot \\frac{4}{7} \\right) $$"
+                    },
+                    {
+                        title: "Resolver cada paréntesis (Multiplicar directo)",
+                        content: "Primer paréntesis: $$ \\frac{9 \\cdot 8}{4 \\cdot 5} = \\frac{72}{20} $$ <br>Segundo paréntesis: $$ \\frac{3 \\cdot 4}{2 \\cdot 7} = \\frac{12}{14} $$"
+                    },
+                    {
+                        title: "Dividir y simplificar por MCD",
+                        content: "Dividimos multiplicando por el inverso: $$ \\frac{72}{20} \\div \\frac{12}{14} = \\frac{72}{20} \\cdot \\frac{14}{12} = \\frac{1008}{240} $$ <br>Calculamos el MCD de 1008 y 240:<br>$$ \\begin{array}{cc|c} 1008 & 240 & 2 \\\\ 504 & 120 & 2 \\\\ 252 & 60 & 2 \\\\ 126 & 30 & 2 \\\\ 63 & 15 & 3 \\\\ 21 & 5 & \\end{array} $$<br>MCD $= 2^4 \\cdot 3 = 48$<br><br>$$ \\frac{1008 \\div 48}{240 \\div 48} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{21}{5} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 8,
+                title: "Ejemplo 8: Fracción compleja (Castillo)",
+                problem: "$$\\frac{ 1\\frac{1}{4} \\cdot \\frac{6}{7} }{ 2\\frac{1}{2} \\div 3 }$$",
+                steps: [
+                    {
+                        title: "Convertir a fracciones impropias",
+                        content: "Numerador principal: $$ 1\\frac{1}{4} = \\frac{5}{4} \\rightarrow \\frac{5}{4} \\cdot \\frac{6}{7} $$ <br>Denominador principal: $$ 2\\frac{1}{2} = \\frac{5}{2} \\rightarrow \\frac{5}{2} \\div \\frac{3}{1} $$"
+                    },
+                    {
+                        title: "Resolver numerador y denominador",
+                        content: "Arriba: $$ \\frac{5 \\cdot 6}{4 \\cdot 7} = \\frac{30}{28} $$ <br>Abajo (invertimos divisor): $$ \\frac{5}{2} \\cdot \\frac{1}{3} = \\frac{5}{6} $$"
+                    },
+                    {
+                        title: "División principal y simplificación por MCD",
+                        content: "Extremo por extremo y medio por medio: <br>$$ \\frac{30/28}{5/6} = \\frac{30 \\cdot 6}{28 \\cdot 5} = \\frac{180}{140} $$ <br>Calculamos el MCD de 180 y 140:<br>$$ \\begin{array}{cc|c} 180 & 140 & 2 \\\\ 90 & 70 & 2 \\\\ 45 & 35 & 5 \\\\ 9 & 7 & \\end{array} $$<br>MCD $= 2 \\cdot 2 \\cdot 5 = 20$<br><br>$$ \\frac{180 \\div 20}{140 \\div 20} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{9}{7} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 9,
+                title: "Ejemplo 9: Jerarquía de Operaciones",
+                problem: "$$3\\frac{1}{3} \\div \\left( \\frac{5}{6} \\cdot 1\\frac{1}{2} \\right) \\cdot \\frac{2}{5}$$",
+                steps: [
+                    {
+                        title: "Resolver paréntesis",
+                        content: "Convertimos $1\\frac{1}{2} = \\frac{3}{2}$. <br>Multiplicamos en el paréntesis: $$ \\frac{5}{6} \\cdot \\frac{3}{2} = \\frac{15}{12} $$"
+                    },
+                    {
+                        title: "Aplicar operaciones (Izquierda a Derecha)",
+                        content: "Sustituyendo el paréntesis y la mixta a impropia ($3\\frac{1}{3} = \\frac{10}{3}$): <br>$$ \\frac{10}{3} \\div \\frac{15}{12} \\cdot \\frac{2}{5} $$ <br>Primero la división (multiplicando por el inverso): $$ \\frac{10}{3} \\cdot \\frac{12}{15} = \\frac{120}{45} $$"
+                    },
+                    {
+                        title: "Multiplicación final y simplificación por MCD",
+                        content: "Multiplicamos el resultado por la última fracción:<br>$$ \\frac{120}{45} \\cdot \\frac{2}{5} = \\frac{240}{225} $$ <br>MCD de 240 y 225:<br>$$ \\begin{array}{cc|c} 240 & 225 & 3 \\\\ 80 & 75 & 5 \\\\ 16 & 15 & \\end{array} $$<br>MCD $= 3 \\cdot 5 = 15$<br><br>$$ \\frac{240 \\div 15}{225 \\div 15} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{16}{15} \\)</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 10,
+                title: "Ejemplo 10: Reto de divisiones simultáneas",
+                problem: "$$\\left( 4\\frac{1}{5} \\div 1\\frac{1}{6} \\right) \\cdot \\left( 2\\frac{1}{3} \\div \\frac{3}{4} \\right)$$",
+                steps: [
+                    {
+                        title: "Convertir todas las mixtas",
+                        content: "$$ \\left( \\frac{21}{5} \\div \\frac{7}{6} \\right) \\cdot \\left( \\frac{7}{3} \\div \\frac{3}{4} \\right) $$"
+                    },
+                    {
+                        title: "Efectuar las divisiones de cada grupo",
+                        content: "Primer grupo invirtiendo: $$ \\frac{21}{5} \\cdot \\frac{6}{7} = \\frac{126}{35} $$ <br>Segundo grupo invirtiendo: $$ \\frac{7}{3} \\cdot \\frac{4}{3} = \\frac{28}{9} $$"
+                    },
+                    {
+                        title: "Multiplicar directo y simplificar por MCD",
+                        content: "Multiplicamos ambos resultados: $$ \\frac{126}{35} \\cdot \\frac{28}{9} = \\frac{3528}{315} $$ <br>Calculamos el MCD de 3528 y 315:<br>$$ \\begin{array}{cc|c} 3528 & 315 & 3 \\\\ 1176 & 105 & 3 \\\\ 392 & 35 & 7 \\\\ 56 & 5 & \\end{array} $$<br>MCD $= 3 \\cdot 3 \\cdot 7 = 63$<br><br>$$ \\frac{3528 \\div 63}{315 \\div 63} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{56}{5} \\)</span></div>"
+                    }
+                ]
+            }
+        ];
+
+        const exercisesGuia2 = [
+            {
+                id: 1,
+                title: "Problema 1: Volumen de un contenedor",
+                problem: "Un contenedor tiene un largo de $2\\frac{1}{2}$ m, un ancho de $1\\frac{3}{4}$ m y una altura de $1\\frac{1}{5}$ m. ¿Cuál es el volumen total?",
+                steps: [
+                    {
+                        title: "Planteamiento y conversión",
+                        content: "El volumen es el producto de las tres dimensiones: $$2\\frac{1}{2} \\cdot 1\\frac{3}{4} \\cdot 1\\frac{1}{5}$$<br>Convertimos: $$ \\frac{5}{2} \\cdot \\frac{7}{4} \\cdot \\frac{6}{5} $$"
+                    },
+                    {
+                        title: "Multiplicar directo",
+                        content: "$$ \\frac{5 \\cdot 7 \\cdot 6}{2 \\cdot 4 \\cdot 5} = \\frac{210}{40} $$"
+                    },
+                    {
+                        title: "Simplificar",
+                        content: "Dividimos entre 10:<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: \\( \\frac{21}{4} \\) m³</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Problema 2: Producción en la fábrica",
+                problem: "Una máquina procesa $18\\frac{3}{4}$ kg de materia prima cada hora. Si trabaja durante $3\\frac{1}{5}$ horas, y el producto se empaca en cajas de $1\\frac{1}{2}$ kg, ¿cuántas cajas se llenan?",
+                steps: [
+                    {
+                        title: "Planteamiento general",
+                        content: "Primero obtenemos el total producido multiplicando tasa por tiempo, luego lo dividimos por la capacidad de la caja.<br>$$ \\left( 18\\frac{3}{4} \\cdot 3\\frac{1}{5} \\right) \\div 1\\frac{1}{2} $$"
+                    },
+                    {
+                        title: "Conversión e inversión",
+                        content: "$$ \\left( \\frac{75}{4} \\cdot \\frac{16}{5} \\right) \\div \\frac{3}{2} $$<br>Convertimos la división en multiplicación invirtiendo la última fracción:<br>$$ \\frac{75}{4} \\cdot \\frac{16}{5} \\cdot \\frac{2}{3} $$"
+                    },
+                    {
+                        title: "Multiplicar y simplificar",
+                        content: "$$ \\frac{75 \\cdot 16 \\cdot 2}{4 \\cdot 5 \\cdot 3} = \\frac{2400}{60} $$<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: 40 cajas</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Problema 3: Recorrido en etapas",
+                problem: "Un corredor completa una ruta de $42$ km. Corre los primeros $\\frac{2}{3}$ de la ruta, luego camina $\\frac{1}{4}$ del resto. ¿Cuántos kilómetros caminó?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Si corrió $\\frac{2}{3}$, le falta por recorrer $\\frac{1}{3}$ de los $42$ km.<br>La cantidad que caminó es $\\frac{1}{4}$ de esa tercera parte: $$ \\frac{1}{4} \\cdot \\left( \\frac{1}{3} \\cdot 42 \\right) $$"
+                    },
+                    {
+                        title: "Operación",
+                        content: "Expresamos 42 como fracción:<br>$$ \\frac{1}{4} \\cdot \\frac{1}{3} \\cdot \\frac{42}{1} = \\frac{42}{12} $$"
+                    },
+                    {
+                        title: "Simplificar",
+                        content: "El MCD de 42 y 12 es 6.<br>$$ \\frac{42 \\div 6}{12 \\div 6} $$ <div class='text-center mt-3 mb-1'><span class='result-box-notebook'>Resultado: \\( \\frac{7}{2} \\) km</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Problema 4: Reparto de herencia",
+                problem: "Un terreno de $45\\frac{1}{2}$ hectáreas se dividirá equitativamente entre $3$ hermanos y $4$ primos (7 personas en total). ¿Qué fracción de hectárea le tocará a cada persona?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Dividimos el área total entre las 7 personas: $$ 45\\frac{1}{2} \\div 7 $$"
+                    },
+                    {
+                        title: "Conversión e inversión",
+                        content: "$$ \\frac{91}{2} \\div \\frac{7}{1} = \\frac{91}{2} \\cdot \\frac{1}{7} $$"
+                    },
+                    {
+                        title: "Multiplicar y simplificar",
+                        content: "$$ \\frac{91}{14} $$<br>El MCD de 91 y 14 es 7.<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: \\( \\frac{13}{2} \\) hectáreas</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Problema 5: Confección de uniformes",
+                problem: "Un sastre tiene $22\\frac{3}{4}$ m de tela. Si cada camisa utiliza $1\\frac{3}{4}$ m de tela, ¿cuántas camisas completas puede confeccionar?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Se trata de dividir el total de tela entre la cantidad requerida por camisa: $$ 22\\frac{3}{4} \\div 1\\frac{3}{4} $$"
+                    },
+                    {
+                        title: "Conversión e inversión",
+                        content: "$$ \\frac{91}{4} \\div \\frac{7}{4} = \\frac{91}{4} \\cdot \\frac{4}{7} $$"
+                    },
+                    {
+                        title: "Multiplicar y simplificar",
+                        content: "$$ \\frac{364}{28} = 13 $$<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: 13 camisas</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Problema 6: Distancia en carretera",
+                problem: "Un auto viaja a una velocidad constante de $75\\frac{1}{2}$ km/h. ¿Qué distancia recorrerá en $2\\frac{2}{5}$ horas?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "La distancia es igual a velocidad por tiempo: $$ 75\\frac{1}{2} \\cdot 2\\frac{2}{5} $$"
+                    },
+                    {
+                        title: "Conversión y multiplicación",
+                        content: "$$ \\frac{151}{2} \\cdot \\frac{12}{5} = \\frac{1812}{10} $$"
+                    },
+                    {
+                        title: "Simplificación",
+                        content: "Dividimos entre 2.<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: \\( \\frac{906}{5} \\) km</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "Problema 7: Envasado de líquidos",
+                problem: "Se envasan $120$ litros de perfume en pequeños frascos de $\\frac{3}{8}$ de litro. ¿Cuántos frascos se llenan en total?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Dividimos el total de litros entre la capacidad del frasco: $$ 120 \\div \\frac{3}{8} $$"
+                    },
+                    {
+                        title: "Inversión y multiplicación",
+                        content: "Expresamos 120 como fracción y multiplicamos por el inverso: $$ \\frac{120}{1} \\cdot \\frac{8}{3} $$"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "$$ \\frac{960}{3} = 320 $$<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: 320 frascos</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 8,
+                title: "Problema 8: Fracción de una cantidad",
+                problem: "En una escuela, $\\frac{3}{5}$ de los $450$ alumnos son mujeres. De ellas, exactamente $\\frac{1}{3}$ usan lentes. ¿Cuántas mujeres usan lentes en la escuela?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Buscamos $\\frac{1}{3}$ de $\\frac{3}{5}$ del total de $450$ alumnos: $$ \\frac{1}{3} \\cdot \\left( \\frac{3}{5} \\cdot 450 \\right) $$"
+                    },
+                    {
+                        title: "Multiplicación de fracciones",
+                        content: "$$ \\frac{1}{3} \\cdot \\frac{3}{5} \\cdot \\frac{450}{1} = \\frac{1350}{15} $$"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "$$ 1350 \\div 15 = 90 $$<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: 90 mujeres usan lentes</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 9,
+                title: "Problema 9: Llenado de un depósito",
+                problem: "Un grifo vierte $4\\frac{1}{2}$ litros de agua por minuto. ¿Cuánto tiempo tardará en llenar por completo un depósito de $67\\frac{1}{2}$ litros?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Se divide la capacidad total entre la tasa de llenado: $$ 67\\frac{1}{2} \\div 4\\frac{1}{2} $$"
+                    },
+                    {
+                        title: "Conversión e inversión",
+                        content: "$$ \\frac{135}{2} \\div \\frac{9}{2} = \\frac{135}{2} \\cdot \\frac{2}{9} $$"
+                    },
+                    {
+                        title: "Multiplicar y simplificar",
+                        content: "$$ \\frac{270}{18} = 15 $$<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: 15 minutos</span></div>"
+                    }
+                ]
+            },
+            {
+                id: 10,
+                title: "Problema 10: Costo de un producto",
+                problem: "Se compran $3\\frac{1}{2}$ kg de carne de res a un precio de $\\$120$ el kilogramo. ¿Cuánto se pagará en total?",
+                steps: [
+                    {
+                        title: "Planteamiento",
+                        content: "Multiplicamos la cantidad por el precio unitario: $$ 3\\frac{1}{2} \\cdot 120 $$"
+                    },
+                    {
+                        title: "Conversión y multiplicación",
+                        content: "$$ \\frac{7}{2} \\cdot \\frac{120}{1} = \\frac{840}{2} $$"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "$$ \\frac{840}{2} = 420 $$<br><br><div class='text-center mt-2'><span class='result-box-notebook'>Resultado: $420</span></div>"
+                    }
+                ]
+            }
+        ];
+
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Multiplicación)",
+                problem: "Efectúa y simplifica: $3\\frac{1}{3} \\cdot \\frac{9}{10} \\cdot 1\\frac{1}{4}$",
+                type: "text",
+                answer: "15/4",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Impropias: $\\frac{10}{3} \\cdot \\frac{9}{10} \\cdot \\frac{5}{4}$", 
+                        "2. Multiplicar: $\\frac{450}{120}$", 
+                        "3. MCD(450, 120) = 30",
+                        "4. Simplificar: $\\frac{15}{4}$"] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (División Sucesiva)",
+                problem: "Resuelve y simplifica: $4\\frac{1}{2} \\div 1\\frac{4}{5} \\div \\frac{5}{8}$",
+                type: "text",
+                answer: "4",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Impropias: $\\frac{9}{2} \\div \\frac{9}{5} \\div \\frac{5}{8}$", 
+                        "2. Invertir divisores: $\\frac{9}{2} \\cdot \\frac{5}{9} \\cdot \\frac{8}{5}$", 
+                        "3. Multiplicar: $\\frac{360}{90}$",
+                        "4. Simplificar: 4"] }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Combinada Paréntesis)",
+                problem: "Resuelve: $\\left( 2\\frac{2}{5} \\cdot 1\\frac{7}{8} \\right) \\div 1\\frac{1}{2}$",
+                type: "text",
+                answer: "3",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Paréntesis: $\\frac{12}{5} \\cdot \\frac{15}{8} = \\frac{180}{40} = \\frac{9}{2}$",
+                        "2. División: $\\frac{9}{2} \\div \\frac{3}{2}$",
+                        "3. Invertir: $\\frac{9}{2} \\cdot \\frac{2}{3} = \\frac{18}{6}$",
+                        "4. Simplificar: 3"] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Castillo/Fracción Compleja)",
+                problem: "Simplifica: $$\\frac{ 1\\frac{3}{5} \\div \\frac{4}{7} }{ 2\\frac{1}{3} \\cdot \\frac{6}{5} }$$",
+                type: "text",
+                answer: "1",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Numerador: $\\frac{8}{5} \\div \\frac{4}{7} = \\frac{8}{5} \\cdot \\frac{7}{4} = \\frac{56}{20}$",
+                        "2. Denominador: $\\frac{7}{3} \\cdot \\frac{6}{5} = \\frac{42}{15}$",
+                        "3. Principal: $\\frac{56}{20} \\div \\frac{42}{15} = \\frac{56}{20} \\cdot \\frac{15}{42}$",
+                        "4. Resultado: $\\frac{840}{840} = 1$"] }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Aplicación: Receta)",
+                problem: "Una receta requiere $1\\frac{1}{4}$ tazas de azúcar. Si queremos preparar $\\frac{2}{5}$ de la receta, ¿cuánta azúcar necesitamos?",
+                type: "text",
+                answer: "1/2",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Planteamiento: $1\\frac{1}{4} \\cdot \\frac{2}{5}$",
+                        "2. Impropia: $\\frac{5}{4} \\cdot \\frac{2}{5}$",
+                        "3. Multiplicar: $\\frac{10}{20}$",
+                        "4. Simplificar: $\\frac{1}{2}$ taza"] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Aplicación: Tela)",
+                problem: "Se tienen $18$ metros de cinta. ¿Cuántos moños de $\\frac{3}{4}$ de metro se pueden elaborar?",
+                type: "text",
+                answer: "24",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Planteamiento: $18 \\div \\frac{3}{4}$",
+                        "2. Invertir: $\\frac{18}{1} \\cdot \\frac{4}{3}$",
+                        "3. Multiplicar: $\\frac{72}{3}$",
+                        "4. Dividir: 24 moños"] }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Aplicación: Combustible)",
+                problem: "Un camión consume $1\\frac{1}{8}$ litros de diésel por kilómetro. ¿Cuántos litros consumirá en un viaje de $400$ km?",
+                type: "text",
+                answer: "450",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Planteamiento: $1\\frac{1}{8} \\cdot 400$",
+                        "2. Impropia: $\\frac{9}{8} \\cdot \\frac{400}{1}$",
+                        "3. Multiplicar: $\\frac{3600}{8}$",
+                        "4. Dividir: 450 litros"] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Múltiples grupos)",
+                problem: "Resuelve: $\\left( 3\\frac{1}{5} \\cdot \\frac{5}{8} \\right) \\div \\left( 1\\frac{1}{4} \\cdot \\frac{2}{3} \\right)$",
+                type: "text",
+                answer: "12/5",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Parént 1: $\\frac{16}{5} \\cdot \\frac{5}{8} = \\frac{80}{40} = \\frac{2}{1}$",
+                        "2. Parént 2: $\\frac{5}{4} \\cdot \\frac{2}{3} = \\frac{10}{12} = \\frac{5}{6}$",
+                        "3. División: $\\frac{2}{1} \\div \\frac{5}{6} = \\frac{2}{1} \\cdot \\frac{6}{5}$",
+                        "4. Resultado: $\\frac{12}{5}$"] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Jerarquía)",
+                problem: "Efectúa de izquierda a derecha: $2\\frac{1}{4} \\div 1\\frac{1}{2} \\cdot 3\\frac{1}{3}$",
+                type: "text",
+                answer: "5",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Impropias: $\\frac{9}{4} \\div \\frac{3}{2} \\cdot \\frac{10}{3}$",
+                        "2. División: $\\frac{9}{4} \\cdot \\frac{2}{3} = \\frac{18}{12} = \\frac{3}{2}$",
+                        "3. Multiplicar: $\\frac{3}{2} \\cdot \\frac{10}{3} = \\frac{30}{6}$",
+                        "4. Dividir: 5"] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Aplicación: Recorrido y Fracción)",
+                problem: "Se pavimentará $\\frac{4}{5}$ de una calle que mide $2\\frac{1}{2}$ km. ¿Cuántos km se pavimentarán en total?",
+                type: "text",
+                answer: "2",
+                steps: [
+                    { title: "Procedimiento", lines: [
+                        "1. Planteamiento: $\\frac{4}{5} \\cdot 2\\frac{1}{2}$",
+                        "2. Impropia: $\\frac{4}{5} \\cdot \\frac{5}{2}$",
+                        "3. Multiplicar: $\\frac{20}{10}$",
+                        "4. Dividir: 2 km"] }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // LÓGICA DE LA INTERFAZ
+        // ==========================================
+        
+        let examState = {
+            answered: 0,
+            correct: 0,
+            incorrect: 0
+        };
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun text-amber-400 text-base' : 'fa-solid fa-moon text-slate-700 text-base';
+            document.getElementById('theme-text').textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun text-amber-400 text-base';
+                document.getElementById('theme-text').textContent = 'Modo Claro';
+            }
+        }
+
+        function switchTab(tabId) {
+            ['guia1', 'guia2', 'examen'].forEach(id => {
+                document.getElementById(`tab-${id}`).classList.add('hidden');
+                const btn = document.getElementById(`btn-tab-${id}`);
+                
+                // Reiniciar estilos de todos los botones
+                btn.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+            });
+            
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-tab-${tabId}`);
+            
+            // Estilos específicos para el botón activo
+            if (tabId === 'guia1') {
+                activeBtn.className = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            } else if (tabId === 'guia2') {
+                activeBtn.className = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            } else if (tabId === 'examen') {
+                activeBtn.className = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-amber-600 text-white shadow-md";
+            }
+        }
+
+        // ==========================================
+        // RENDERIZADO DE GUÍAS Y BOTONERA
+        // ==========================================
+        function createExerciseCard(ex, prefix) {
+            const card = document.createElement('div');
+            card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col h-full";
+            
+            let stepsHtml = '';
+            ex.steps.forEach((step, index) => {
+                const stepId = `${prefix}-step-${ex.id}-${index}`;
+                stepsHtml += `
+                    <div id="${stepId}" class="step-item mb-2 bg-slate-50 dark:bg-slate-700/50 rounded-lg px-4 border-l-4 border-teal-500 overflow-x-auto">
+                        <h4 class="font-bold text-teal-700 dark:text-teal-400 text-sm mb-2 pt-1 border-b border-slate-200 dark:border-slate-600 pb-1">${index + 1}. ${step.title}</h4>
+                        <div class="text-slate-700 dark:text-slate-300 text-sm md:text-base overflow-x-auto py-1">${step.content}</div>
+                    </div>
+                `;
+            });
+
+            const totalSteps = ex.steps.length;
+
+            card.innerHTML = `
+                <div class="absolute top-0 left-0 w-1.5 h-full bg-teal-500 rounded-l-xl opacity-80"></div>
+                <div class="flex justify-between items-start mb-4 pl-2">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <span class="bg-teal-100 dark:bg-teal-900/60 text-teal-700 dark:text-teal-400 w-8 h-8 rounded-full flex items-center justify-center text-sm">${ex.id}</span>
+                        ${ex.title}
+                    </h3>
+                </div>
+                <div class="bg-slate-100/80 dark:bg-slate-900/50 p-4 rounded-lg mb-5 text-center overflow-x-auto border border-slate-200 dark:border-slate-700/50 flex justify-center">
+                    <div class="text-lg md:text-xl font-medium text-slate-800 dark:text-slate-200 mx-auto w-full">${ex.problem}</div>
+                </div>
+                
+                <div class="pl-2 flex-grow space-y-1" id="steps-container-${prefix}-${ex.id}" data-current-step="0">
+                    ${stepsHtml}
+                </div>
+                
+                <!-- Botonera estilo versión 4 -->
+                <div class="mt-4 pt-3 pl-2 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                    <button id="btn-next-${prefix}-${ex.id}" onclick="showNextStep('${prefix}', ${ex.id}, ${totalSteps})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                        <i id="btn-next-icon-${prefix}-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                        <span id="btn-next-text-${prefix}-${ex.id}">${totalSteps === 1 ? 'Ver Paso 1' : 'Ver Paso 1 de ' + totalSteps}</span>
+                    </button>
+                    <button id="btn-all-${prefix}-${ex.id}" onclick="showAllSteps('${prefix}', ${ex.id}, ${totalSteps})" class="flex-1 py-2.5 px-4 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Ver Todo</span>
+                    </button>
+                    <button id="btn-reset-${prefix}-${ex.id}" onclick="resetSteps('${prefix}', ${ex.id}, ${totalSteps})" class="hidden py-2.5 px-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-semibold text-sm transition-all shadow-sm">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        // ==========================================
+        // CONTROL DE PASOS
+        // ==========================================
+        function updateButtons(prefix, id, current, totalSteps) {
+            const btnText = document.getElementById(`btn-next-text-${prefix}-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${prefix}-${id}`);
+            const btnNext = document.getElementById(`btn-next-${prefix}-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${prefix}-${id}`);
+            const btnAll = document.getElementById(`btn-all-${prefix}-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = totalSteps === 1 ? `Ver Paso 1` : `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+                if (btnAll) btnAll.classList.remove('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+                if (btnAll) btnAll.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+                if (btnAll) btnAll.classList.add('hidden');
+            }
+        }
+
+        function showNextStep(prefix, exId, totalSteps) {
+            const container = document.getElementById(`steps-container-${prefix}-${exId}`);
+            let currentStep = parseInt(container.getAttribute('data-current-step'));
+            
+            if (currentStep < totalSteps) {
+                const stepEl = document.getElementById(`${prefix}-step-${exId}-${currentStep}`);
+                stepEl.classList.add('visible');
+                currentStep++;
+                container.setAttribute('data-current-step', currentStep);
+                
+                updateButtons(prefix, exId, currentStep, totalSteps);
+                
+                setTimeout(() => { if (window.MathJax) MathJax.typesetPromise([stepEl]); }, 50);
+            } else {
+                // If it's already showing all steps, clicking the button again will hide the solution
+                resetSteps(prefix, exId, totalSteps);
+            }
+        }
+
+        function showAllSteps(prefix, exId, totalSteps) {
+            const container = document.getElementById(`steps-container-${prefix}-${exId}`);
+            container.setAttribute('data-current-step', totalSteps);
+            
+            let promises = [];
+            for (let i = 0; i < totalSteps; i++) {
+                const stepEl = document.getElementById(`${prefix}-step-${exId}-${i}`);
+                stepEl.classList.add('visible');
+                promises.push(stepEl);
+            }
+            
+            updateButtons(prefix, exId, totalSteps, totalSteps);
+            
+            setTimeout(() => { if (window.MathJax) MathJax.typesetPromise(promises); }, 50);
+        }
+
+        function resetSteps(prefix, exId, totalSteps) {
+            const container = document.getElementById(`steps-container-${prefix}-${exId}`);
+            container.setAttribute('data-current-step', 0);
+            
+            for (let i = 0; i < totalSteps; i++) {
+                document.getElementById(`${prefix}-step-${exId}-${i}`).classList.remove('visible');
+            }
+            
+            updateButtons(prefix, exId, 0, totalSteps);
+        }
+
+        // ==========================================
+        // RENDERIZADO EXAMEN Y VERIFICACIÓN
+        // ==========================================
+        function createExamCard(ex) {
+            const card = document.createElement('div');
+            card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 sm:p-6 shadow-sm relative overflow-hidden group";
+            card.id = `exam-card-${ex.id}`;
+            
+            let stepsHtml = ex.steps[0].lines.map(line => `<div class="mb-1">${line}</div>`).join('');
+
+            card.innerHTML = `
+                <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-500 rounded-l-xl opacity-80"></div>
+                
+                <div class="flex justify-between items-start mb-3 pl-2">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <span class="bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-400 w-8 h-8 rounded-full flex items-center justify-center text-sm">${ex.id}</span>
+                        ${ex.title}
+                    </h3>
+                    <div id="status-icon-${ex.id}" class="text-2xl hidden"></div>
+                </div>
+                
+                <div class="bg-slate-100/80 dark:bg-slate-900/50 p-4 rounded-lg mb-5 text-center overflow-x-auto border border-slate-200 dark:border-slate-700/50 min-h-[80px] flex items-center justify-center">
+                    <div class="text-lg md:text-xl font-medium text-slate-800 dark:text-slate-200 mx-auto w-full">${ex.problem}</div>
+                </div>
+                
+                <div class="pl-2 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Tu Respuesta (Usa "/" para fracciones):</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-${ex.id}" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all font-mono text-lg" placeholder="Ej: 7/4 o 3">
+                            <button onclick="checkAnswer(${ex.id}, '${ex.answer}')" id="btn-check-${ex.id}" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold transition-colors shadow-sm whitespace-nowrap">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="feedback-${ex.id}" class="hidden p-4 rounded-lg text-sm border-l-4"></div>
+                    
+                    <div id="exam-solution-${ex.id}" class="step-item bg-slate-50 dark:bg-slate-700/50 rounded-lg px-4 border-l-4 border-slate-400 overflow-x-auto">
+                        <h4 class="font-bold text-slate-700 dark:text-slate-300 text-sm mb-2 pt-1 border-b border-slate-200 dark:border-slate-600 pb-1">Procedimiento:</h4>
+                        <div class="text-slate-700 dark:text-slate-300 text-sm overflow-x-auto font-mono leading-relaxed py-1">${stepsHtml}</div>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function checkAnswer(id, correctAnswer) {
+            const inputEl = document.getElementById(`input-${id}`);
+            let userAnswer = inputEl.value.trim().replace(/\s+/g, '');
+            
+            if (userAnswer === "") {
+                alert("Por favor, ingresa una respuesta antes de calificar.");
+                inputEl.focus();
+                return;
+            }
+            
+            const btnEl = document.getElementById(`btn-check-${id}`);
+            const feedbackEl = document.getElementById(`feedback-${id}`);
+            const iconEl = document.getElementById(`status-icon-${id}`);
+            const cardEl = document.getElementById(`exam-card-${id}`);
+            const solutionEl = document.getElementById(`exam-solution-${id}`);
+            
+            const isCorrect = userAnswer === correctAnswer;
+            
+            inputEl.disabled = true;
+            btnEl.disabled = true;
+            btnEl.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            iconEl.classList.remove('hidden');
+            feedbackEl.classList.remove('hidden');
+            solutionEl.classList.add('visible');
+            
+            if (isCorrect) {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+                feedbackEl.className = "p-4 rounded-lg text-sm md:text-base border-l-4 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-200 font-medium";
+                feedbackEl.innerHTML = `¡Correcto! <span class="result-box-notebook ml-2">${correctAnswer}</span>`;
+                cardEl.classList.add('border-emerald-500/50', 'dark:border-emerald-500/50');
+                examState.correct++;
+            } else {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+                feedbackEl.className = "p-4 rounded-lg text-sm md:text-base border-l-4 border-rose-500 bg-rose-50 dark:bg-rose-900/20 text-rose-800 dark:text-rose-200 font-medium";
+                feedbackEl.innerHTML = `Incorrecto. Tu respuesta: <strong>${userAnswer}</strong>. La correcta es: <span class="result-box-notebook ml-2">${correctAnswer}</span>`;
+                cardEl.classList.add('border-rose-500/50', 'dark:border-rose-500/50');
+                examState.incorrect++;
+            }
+            
+            examState.answered++;
+            updateScoreboard();
+            
+            setTimeout(() => { if (window.MathJax) MathJax.typesetPromise([solutionEl]); }, 50);
+        }
+
+        function updateScoreboard() {
+            document.getElementById('score-answered').textContent = `${examState.answered} / 10`;
+            document.getElementById('score-correct').textContent = examState.correct;
+            document.getElementById('score-incorrect').textContent = examState.incorrect;
+            
+            const grade = (examState.correct / 10) * 10;
+            const gradeEl = document.getElementById('score-grade');
+            gradeEl.textContent = `${grade.toFixed(1)} / 10`;
+            
+            gradeEl.className = "text-base sm:text-xl font-extrabold ";
+            if (grade >= 8) gradeEl.className += "text-emerald-400";
+            else if (grade >= 6) gradeEl.className += "text-amber-400";
+            else gradeEl.className += "text-rose-400";
+        }
+
+        function resetExam() {
+            if (confirm("¿Estás seguro de reiniciar el simulador? Se perderá tu progreso.")) {
+                examState = { answered: 0, correct: 0, incorrect: 0 };
+                
+                const container = document.getElementById('exam-container');
+                container.innerHTML = '';
+                examProblems.forEach(ex => container.appendChild(createExamCard(ex)));
+                
+                updateScoreboard();
+                document.getElementById('score-grade').className = "text-base sm:text-xl font-extrabold text-amber-400";
+                
+                setTimeout(() => { if (window.MathJax) MathJax.typesetPromise([container]); }, 100);
+            }
+        }
+
+        // ==========================================
+        // INICIALIZACIÓN
+        // ==========================================
+        window.onload = () => {
+            initTheme();
+            
+            const guia1Container = document.getElementById('guia1-container');
+            exercisesGuia1.forEach(ex => guia1Container.appendChild(createExerciseCard(ex, 'g1')));
+            
+            const guia2Container = document.getElementById('guia2-container');
+            exercisesGuia2.forEach(ex => guia2Container.appendChild(createExerciseCard(ex, 'g2')));
+            
+            const examContainer = document.getElementById('exam-container');
+            examProblems.forEach(ex => examContainer.appendChild(createExamCard(ex)));
+            
+            switchTab('guia1');
+            
+            // Allow MathJax time to initialize before first render
+            setTimeout(() => {
+                if (window.MathJax) MathJax.typesetPromise();
+            }, 500);
+        };
+    </script>
+</body>
+</html>
