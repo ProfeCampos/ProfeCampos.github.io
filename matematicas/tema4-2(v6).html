@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección 4.2: Equivalencia y Simplificación de Fracciones | Guía Didáctica y Simulador</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" href="../m2s2/logoprofecampos.jpeg" type="image/jpeg">
+    <link rel="shortcut icon" href="cecyte_logo.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        .step-item {
+            transition: max-height 0.35s ease-out, opacity 0.35s ease-out, transform 0.35s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-8px);
+            visibility: hidden;
+            margin: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border-top-width: 0 !important;
+            border-bottom-width: 0 !important;
+        }
+        .step-item.visible {
+            opacity: 1;
+            max-height: 1200px;
+            transform: translateY(0);
+            visibility: visible;
+            margin-top: 0.5rem !important;
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+            border-top-width: 1px !important;
+            border-bottom-width: 1px !important;
+        }
+        .result-box-notebook {
+            border: 3px double #059669;
+            background-color: rgba(16, 185, 129, 0.08);
+            padding: 4px 16px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 800;
+        }
+        /* Ajuste para las tablas de factorizacion estilo cuaderno */
+        .math-table-container {
+            display: flex;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#080d1a] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-300 pt-16">
+
+    <!-- Panel de Calificación Superior Flotante (Sticky Scoreboard) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 dark:bg-[#0b1329]/95 backdrop-blur border-b border-teal-500/30 text-white py-2 px-4 shadow-lg transition-all">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-amber-400 text-base sm:text-lg"></i>
+                <span class="font-bold tracking-wide uppercase text-slate-300 hidden xs:inline">Simulador de Examen:</span>
+            </div>
+            
+            <div class="flex items-center gap-4 sm:gap-8 font-semibold">
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Calificación</span>
+                    <span id="score-grade" class="text-base sm:text-xl font-extrabold text-amber-400">0.0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Respondidos</span>
+                    <span id="score-answered" class="text-slate-200">0 / 10</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Aciertos</span>
+                    <span id="score-correct" class="text-emerald-400 font-bold">0</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-slate-400 text-[10px] block uppercase tracking-wider">Errores</span>
+                    <span id="score-incorrect" class="text-rose-400 font-bold">0</span>
+                </div>
+            </div>
+
+            <div>
+                <button onclick="resetExam()" class="px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded text-xs font-semibold transition-all flex items-center gap-1 shadow-sm">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="hidden sm:inline">Reiniciar Examen</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado Dinámico -->
+    <header class="bg-slate-200 dark:bg-[#0b1329] border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-300 mt-2">
+        <div class="max-w-7xl mx-auto space-y-4">
+            
+            <!-- Volver al Temario Principal -->
+            <div class="flex justify-start">
+                <a href="unidad4.html" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-teal-700 dark:text-teal-400 hover:text-teal-900 dark:hover:text-teal-200 transition-colors bg-teal-100/70 dark:bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-800">
+                    ← Volver a la Unidad 4
+                </a>
+            </div>
+
+            <!-- Bloque Superior: Logo Izq - Títulos y Botón Centro - Logo Der -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logocecyte.jpg" alt="Logo CECyTEM" class="h-20 sm:h-28 w-auto rounded-xl bg-white p-1.5 shadow-md object-contain border border-slate-200 dark:border-transparent">
+                </div>
+
+                <div class="text-center space-y-1 flex-grow">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-teal-600 dark:text-teal-400 tracking-tight">
+                        Sección: 4.2 Equivalencia y simplificación
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold text-slate-800 dark:text-white">
+                        Guía Interactiva y Simulador de Examen (Unidad 4)
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        CECyTEM 05 Guacamayas — M.C. Edgar Campos Díaz
+                    </p>
+
+                    <div class="pt-3 flex justify-center">
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" class="px-4 py-2 bg-slate-300 hover:bg-slate-400/70 dark:bg-[#1e293b] dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-lg text-xs sm:text-sm font-semibold transition-all border border-slate-400 dark:border-slate-700 shadow-sm flex items-center gap-2">
+                            <i id="theme-icon" class="fa-solid fa-moon text-slate-700 text-base"></i>
+                            <span id="theme-text">Modo Oscuro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                    <img src="../m2s2/logoprofecampos.jpeg" alt="Logo Profe Campos" class="h-20 sm:h-28 w-20 sm:w-28 rounded-xl object-cover border border-slate-300 dark:border-slate-700 shadow-md">
+                </div>
+            </div>
+
+            <hr class="border-slate-300 dark:border-slate-800/80 my-2">
+
+            <!-- Navegación por Pestañas -->
+            <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+                <button id="btn-tab-guia1" onclick="switchTab('guia1')" class="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md">
+                    Guía Didáctica I: Fracciones equivalentes
+                </button>
+                <button id="btn-tab-guia2" onclick="switchTab('guia2')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Guía Didáctica II: Simplificación de fracciones
+                </button>
+                <button id="btn-tab-examen" onclick="switchTab('examen')" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60">
+                    Simulador de Examen
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-xl flex-shrink-0"></i>
+                <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <strong>Instrucciones:</strong> Haz clic en <strong>"Ver Paso"</strong> para desplegar la explicación detallada de cada procedimiento. Resuelve los ejercicios en tu libreta antes de verificar la solución final.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- SECCIÓN 1: GUÍA DIDÁCTICA I (FRACCIONES EQUIVALENTES) -->
+        <section id="tab-guia1" class="space-y-6">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-equals text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Concepto de Fracción Equivalente
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>
+                        Las <strong>fracciones equivalentes</strong> son aquellas que se expresan de manera diferente, pero representan exactamente la misma cantidad numéricamente.
+                    </p>
+                    <div class="p-4 bg-teal-50 dark:bg-teal-950/40 border-l-4 border-teal-500 rounded-r-lg space-y-2">
+                        <h4 class="font-bold text-teal-800 dark:text-teal-300 text-sm uppercase tracking-wide">
+                            <i class="fa-solid fa-check-double mr-1"></i> Criterios para Comprobar la Equivalencia:
+                        </h4>
+                        <ul class="list-disc list-inside text-xs sm:text-sm text-teal-900 dark:text-teal-200 space-y-1.5 font-medium">
+                            <li><strong>Multiplicación Cruzada (Productos Cruzados):</strong> Dos fracciones $\frac{a}{b}$ y $\frac{c}{d}$ son equivalentes si y solo si $a \cdot d = b \cdot c$.</li>
+                            <li><strong>Ampliación (Amplificación):</strong> El valor de una fracción no se altera al multiplicar tanto el numerador como el denominador por un mismo número entero distinto de cero ($k \neq 0$): <br><span class="block text-center font-bold my-1">$$\frac{a}{b} = \frac{a \times k}{b \times k}$$</span></li>
+                            <li><strong>Fracciones Mixtas:</strong> Para comprobar la equivalencia de fracciones mixtas, es indispensable convertirlas primero a fracciones impropias o simplificar sus partes fraccionarias antes de efectuar los productos cruzados.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 border-b-2 border-teal-500/40 pb-2">
+                <i class="fa-solid fa-list-check text-teal-600 dark:text-teal-400 text-xl"></i>
+                <h3 class="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">
+                    5 Ejemplos de Fracciones Equivalentes (Basados en el Ejercicio 30)
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia1-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: GUÍA DIDÁCTICA II (SIMPLIFICACIÓN DE FRACCIONES) -->
+        <section id="tab-guia2" class="space-y-6 hidden">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4 pb-2 border-b border-teal-500/40">
+                    <i class="fa-solid fa-compress text-teal-600 dark:text-teal-400 text-2xl"></i>
+                    <h2 class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">
+                        Lección: Simplificación de Fracciones
+                    </h2>
+                </div>
+                <div class="space-y-3 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+                    <p>
+                        El valor de una fracción no se altera cuando al numerador y denominador se les divide entre el mismo número. A este procedimiento de reducción se le conoce como <strong>simplificación de una fracción</strong>.
+                    </p>
+                    <div class="grid grid-cols-1 gap-4 pt-1">
+                        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 rounded-r-lg">
+                            <h4 class="font-bold text-emerald-800 dark:text-emerald-300 text-sm uppercase tracking-wide">
+                                <i class="fa-solid fa-layer-group mr-1"></i> Método Práctico: Factorización de Divisores Comunes
+                            </h4>
+                            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1">
+                                Se colocan el numerador y el denominador alineados. Se traza una línea vertical y se divide sucesivamente entre los factores primos comunes (2, 3, 5, 7...) hasta que ya no haya divisores compartidos. El resultado de la última fila forma la fracción irreducible.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 border-b-2 border-teal-500/40 pb-2">
+                <i class="fa-solid fa-calculator text-teal-600 dark:text-teal-400 text-xl"></i>
+                <h3 class="text-lg sm:text-xl font-bold text-teal-600 dark:text-teal-400">
+                    5 Ejemplos de Simplificación de Fracciones (Basados en el Ejercicio 31)
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="guia2-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: SIMULADOR DE EXAMEN INTERACTIVO -->
+        <section id="tab-examen" class="space-y-6 hidden">
+            <div class="flex items-center gap-3 mb-6 pb-2 border-b-2 border-amber-500/40">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        Simulador de Examen Interactivo
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Resuelve minuciosamente en tu libreta, ingresa tu respuesta y verifica la solución. Basado exclusivamente en Ejercicios 30 y 31.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exam-container">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-[#060a14] border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-500 transition-colors mt-8">
+        Módulo: Matemáticas Simplificadas - Sección 4.2 Equivalencia y Simplificación &copy; CECyTEM - Profe Campos
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // DATA SECCIÓN 1: GUÍA DIDÁCTICA I (FRACCIONES EQUIVALENTES)
+        const exercisesGuia1 = [
+            {
+                id: 1,
+                title: "Ejemplo 1: Comprobación de Fracciones Propias",
+                problem: "¿Son equivalentes las fracciones $\\frac{14}{35}$ y $\\frac{26}{65}$?",
+                steps: [
+                    {
+                        title: "Planteamiento de productos cruzados",
+                        content: "Para determinar la equivalencia, multiplicamos de forma cruzada:<br>" +
+                                 "<div class=\"my-2 text-center font-mono font-bold text-sm sm:text-base text-teal-700 dark:text-teal-300\">" +
+                                 "$$(14)(65) \\quad \\text{y} \\quad (35)(26)$$" +
+                                 "</div>"
+                    },
+                    {
+                        title: "Cálculo aritmético y comparación de resultados",
+                        content: "Efectuamos los productos requeridos:<br>• $14 \\times 65 = 910$<br>• $35 \\times 26 = 910$<br><br>Dado que $910 = 910$, coinciden exactamente."
+                    }
+                ],
+                result: "$$\\text{SÍ SON EQUIVALENTES}$$"
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2: Comprobación entre Fracción Mixta e Impropia",
+                problem: "¿Son equivalentes $2\\frac{5}{8}$ y $\\frac{105}{40}$?",
+                steps: [
+                    {
+                        title: "Conversión de la fracción mixta a impropia",
+                        content: "Primero transformamos la fracción mixta $2\\frac{5}{8}$ a fracción impropia:<br>" +
+                                 "$$2\\frac{5}{8} = \\frac{(2 \\times 8) + 5}{8} = \\frac{21}{8}$$"
+                    },
+                    {
+                        title: "Prueba de productos cruzados",
+                        content: "Comparamos $\\frac{21}{8}$ con $\\frac{105}{40}$:<br>" +
+                                 "• $21 \\times 40 = 840$<br>• $8 \\times 105 = 840$<br><br>Como $840 = 840$, se confirma la igualdad."
+                    }
+                ],
+                result: "$$\\text{SÍ SON EQUIVALENTES}$$"
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3: Comprobación entre dos Fracciones Mixtas",
+                problem: "Indica si $3\\frac{4}{7}$ y $3\\frac{20}{35}$ son equivalentes.",
+                steps: [
+                    {
+                        title: "Transformación a impropias",
+                        content: "Convertimos ambas a impropias:<br>" +
+                                 "• $3\\frac{4}{7} = \\frac{25}{7}$<br>" +
+                                 "• $3\\frac{20}{35} = \\frac{125}{35}$"
+                    },
+                    {
+                        title: "Evaluación de productos cruzados",
+                        content: "Multiplicamos de manera cruzada $\\frac{25}{7}$ y $\\frac{125}{35}$:<br>" +
+                                 "• $(25)(35) = 875$<br>" +
+                                 "• $(7)(125) = 875$<br><br>Como $875 = 875$, son la misma cantidad."
+                    }
+                ],
+                result: "$$\\text{SÍ SON EQUIVALENTES}$$"
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4: Equivalencia entre Entero e Impropia",
+                problem: "¿Es equivalente el entero $7$ con la fracción $\\frac{112}{16}$?",
+                steps: [
+                    {
+                        title: "Representación racional del número entero",
+                        content: "Expresamos el entero $7$ como fracción colocándole denominador $1$:<br>" +
+                                 "$$7 = \\frac{7}{1}$$"
+                    },
+                    {
+                        title: "Prueba de productos cruzados",
+                        content: "Comparamos $\\frac{7}{1}$ con $\\frac{112}{16}$:<br>" +
+                                 "• Producto cruzado: $(7)(16) = 112$ y $(1)(112) = 112$.<br>Son equivalentes."
+                    }
+                ],
+                result: "$$\\text{SÍ SON EQUIVALENTES}$$"
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5: Demostración de No Equivalencia",
+                problem: "Determina si $1\\frac{5}{12}$ es equivalente a $\\frac{52}{36}$.",
+                steps: [
+                    {
+                        title: "Conversión de la fracción mixta a impropia",
+                        content: "Convertimos $1\\frac{5}{12}$ a fracción impropia:<br>" +
+                                 "$$1\\frac{5}{12} = \\frac{17}{12}$$"
+                    },
+                    {
+                        title: "Multiplicación cruzada",
+                        content: "Comparamos $\\frac{17}{12}$ y $\\frac{52}{36}$:<br>" +
+                                 "• $(17)(36) = 612$<br>" +
+                                 "• $(12)(52) = 624$<br><br>Observamos que $612 \\neq 624$."
+                    }
+                ],
+                result: "$$\\text{NO SON EQUIVALENTES}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 2: GUÍA DIDÁCTICA II (SIMPLIFICACIÓN DE FRACCIONES TABULAR)
+        const exercisesGuia2 = [
+            {
+                id: 1,
+                title: "Ejemplo 1: Simplificación de Fracción",
+                problem: "Simplifica la fracción $\\frac{36}{24}$.",
+                steps: [
+                    {
+                        title: "Obtenemos los divisores comunes del Numerador y Denominador",
+                        content: "Colocamos ambos números y extraemos sus divisores comunes (mitad, tercera, etc.) hasta que ya no tengan divisores compartidos:<br>" +
+                                 "<div class='math-table-container'>$$\\begin{array}{cc|c} 36 & 24 & 2 \\\\ 18 & 12 & 2 \\\\ 9 & 6 & 3 \\\\ \\hline 3 & 2 & \\end{array}$$</div>"
+                    },
+                    {
+                        title: "Resultado de la simplificación",
+                        content: "Los números de la última fila forman la fracción simplificada."
+                    }
+                ],
+                result: "$$\\frac{36}{24} = \\frac{3}{2}$$"
+            },
+            {
+                id: 2,
+                title: "Ejemplo 2: Simplificación de tres cifras",
+                problem: "Simplifica la fracción $\\frac{168}{252}$.",
+                steps: [
+                    {
+                        title: "Extraemos divisores comunes",
+                        content: "<div class='math-table-container'>$$\\begin{array}{cc|c} 168 & 252 & 2 \\\\ 84 & 126 & 2 \\\\ 42 & 63 & 3 \\\\ 14 & 21 & 7 \\\\ \\hline 2 & 3 & \\end{array}$$</div>"
+                    },
+                    {
+                        title: "Resultado de la simplificación",
+                        content: "La fracción resultante se toma de la última fila (numerador izquierdo, denominador derecho)."
+                    }
+                ],
+                result: "$$\\frac{168}{252} = \\frac{2}{3}$$"
+            },
+            {
+                id: 3,
+                title: "Ejemplo 3: Simplificación con primos mayores",
+                problem: "Simplifica la fracción $\\frac{273}{364}$.",
+                steps: [
+                    {
+                        title: "Extraemos divisores comunes",
+                        content: "Probamos dividir entre primos como 2, 3, 5, y notamos que el 7 es el primer divisor común:<br>" +
+                                 "<div class='math-table-container'>$$\\begin{array}{cc|c} 273 & 364 & 7 \\\\ 39 & 52 & 13 \\\\ \\hline 3 & 4 & \\end{array}$$</div>"
+                    },
+                    {
+                        title: "Resultado",
+                        content: "El resultado es 3/4."
+                    }
+                ],
+                result: "$$\\frac{273}{364} = \\frac{3}{4}$$"
+            },
+            {
+                id: 4,
+                title: "Ejemplo 4: Simplificación con ceros y cincos",
+                problem: "Simplifica la fracción $\\frac{540}{225}$.",
+                steps: [
+                    {
+                        title: "Extraemos divisores comunes",
+                        content: "Empezamos dividiendo entre 3 o 5:<br>" +
+                                 "<div class='math-table-container'>$$\\begin{array}{cc|c} 540 & 225 & 3 \\\\ 180 & 75 & 3 \\\\ 60 & 25 & 5 \\\\ \\hline 12 & 5 & \\end{array}$$</div>"
+                    },
+                    {
+                        title: "Resultado de la simplificación",
+                        content: "Los números de la última fila forman la fracción simplificada (12/5)."
+                    }
+                ],
+                result: "$$\\frac{540}{225} = \\frac{12}{5}$$"
+            },
+            {
+                id: 5,
+                title: "Ejemplo 5: Proceso largo de simplificación",
+                problem: "Simplifica la fracción $\\frac{396}{540}$.",
+                steps: [
+                    {
+                        title: "Extraemos divisores comunes",
+                        content: "<div class='math-table-container'>$$\\begin{array}{cc|c} 396 & 540 & 2 \\\\ 198 & 270 & 2 \\\\ 99 & 135 & 3 \\\\ 33 & 45 & 3 \\\\ \\hline 11 & 15 & \\end{array}$$</div>"
+                    },
+                    {
+                        title: "Resultado de la simplificación",
+                        content: "La fila inferior indica el final del procedimiento."
+                    }
+                ],
+                result: "$$\\frac{396}{540} = \\frac{11}{15}$$"
+            }
+        ];
+
+        // DATA SECCIÓN 3: SIMULADOR DE EXAMEN (Sólo comprobar equivalencia y simplificar)
+        const examProblems = [
+            {
+                id: 1,
+                title: "Reactivo 1 (Comprobar Equivalencia)",
+                problem: "¿Son equivalentes las fracciones $\\frac{3}{5}$ y $\\frac{12}{20}$?",
+                type: "choice",
+                options: ["Sí, son equivalentes", "No son equivalentes"],
+                answer: 0,
+                steps: [
+                    { title: "1.- Multiplicar cruzado", lines: ["$(3)(20) = 60$", "$(5)(12) = 60$", "Al ser iguales ($60 = 60$), **SÍ son equivalentes**."] }
+                ]
+            },
+            {
+                id: 2,
+                title: "Reactivo 2 (Comprobar Equivalencia)",
+                problem: "¿Son equivalentes las fracciones $\\frac{7}{8}$ y $\\frac{21}{26}$?",
+                type: "choice",
+                options: ["Sí, son equivalentes", "No son equivalentes"],
+                answer: 1,
+                steps: [
+                    { title: "1.- Multiplicar cruzado", lines: ["$(7)(26) = 182$", "$(8)(21) = 168$", "Al ser distintos ($182 \\neq 168$), **NO son equivalentes**."] }
+                ]
+            },
+            {
+                id: 3,
+                title: "Reactivo 3 (Comprobar Equivalencia con Mixtas)",
+                problem: "¿Son equivalentes las fracciones $2\\frac{1}{4}$ y $\\frac{18}{8}$?",
+                type: "choice",
+                options: ["Sí, son equivalentes", "No son equivalentes"],
+                answer: 0,
+                steps: [
+                    { title: "1.- Convertir y multiplicar cruzado", lines: ["$2\\frac{1}{4} = \\frac{9}{4}$", "$(9)(8) = 72$", "$(4)(18) = 72$", "**SÍ son equivalentes**."] }
+                ]
+            },
+            {
+                id: 4,
+                title: "Reactivo 4 (Identificar Equivalencia)",
+                problem: "¿Cuál de los siguientes pares de fracciones SÍ son equivalentes?",
+                type: "choice",
+                options: [
+                    "\\( \\frac{4}{7} \\) y \\( \\frac{28}{42} \\)",
+                    "\\( \\frac{12}{15} \\) y \\( \\frac{4}{5} \\)",
+                    "\\( \\frac{3}{8} \\) y \\( \\frac{21}{57} \\)"
+                ],
+                answer: 1,
+                steps: [
+                    { title: "1.- Revisar productos cruzados", lines: ["Opción B: $(12)(5) = 60$ y $(15)(4) = 60$.", "Por lo tanto, $\\frac{12}{15}$ y $\\frac{4}{5}$ son equivalentes."] }
+                ]
+            },
+            {
+                id: 5,
+                title: "Reactivo 5 (Comprobar Equivalencia)",
+                problem: "¿Son equivalentes las fracciones $1\\frac{2}{3}$ y $\\frac{15}{9}$?",
+                type: "choice",
+                options: ["Sí, son equivalentes", "No son equivalentes"],
+                answer: 0,
+                steps: [
+                    { title: "1.- Convertir y multiplicar cruzado", lines: ["$1\\frac{2}{3} = \\frac{5}{3}$", "$(5)(9) = 45$", "$(3)(15) = 45$", "**SÍ son equivalentes**."] }
+                ]
+            },
+            {
+                id: 6,
+                title: "Reactivo 6 (Simplificación)",
+                problem: "Simplifica la fracción $\\frac{48}{72}$. (Ingresa el resultado en formato a/b)",
+                answer: "2/3",
+                type: "text",
+                steps: [
+                    { title: "1.- Obtenemos los MCD del Numerador y denominador", lines: ["<div class='math-table-container'>$$\\begin{array}{cc|c} 48 & 72 & 2 \\\\ 24 & 36 & 2 \\\\ 12 & 18 & 2 \\\\ 6 & 9 & 3 \\\\ \\boxed{2} & \\boxed{3} & \\end{array}$$</div>"] },
+                    { title: "2.-", lines: ["El resultado es $$\\boxed{\\frac{2}{3}}$$"] }
+                ]
+            },
+            {
+                id: 7,
+                title: "Reactivo 7 (Simplificación)",
+                problem: "Simplifica la fracción $\\frac{120}{150}$. (Ingresa el resultado en formato a/b)",
+                answer: "4/5",
+                type: "text",
+                steps: [
+                    { title: "1.- Obtenemos los MCD del Numerador y denominador", lines: ["<div class='math-table-container'>$$\\begin{array}{cc|c} 120 & 150 & 2 \\\\ 60 & 75 & 3 \\\\ 20 & 25 & 5 \\\\ \\boxed{4} & \\boxed{5} & \\end{array}$$</div>"] },
+                    { title: "2.-", lines: ["El resultado es $$\\boxed{\\frac{4}{5}}$$"] }
+                ]
+            },
+            {
+                id: 8,
+                title: "Reactivo 8 (Simplificación)",
+                problem: "Simplifica la fracción $\\frac{60}{84}$. (Ingresa el resultado en formato a/b)",
+                answer: "5/7",
+                type: "text",
+                steps: [
+                    { title: "1.- Obtenemos los MCD del Numerador y denominador", lines: ["<div class='math-table-container'>$$\\begin{array}{cc|c} 60 & 84 & 2 \\\\ 30 & 42 & 2 \\\\ 15 & 21 & 3 \\\\ \\boxed{5} & \\boxed{7} & \\end{array}$$</div>"] },
+                    { title: "2.-", lines: ["El resultado es $$\\boxed{\\frac{5}{7}}$$"] }
+                ]
+            },
+            {
+                id: 9,
+                title: "Reactivo 9 (Simplificación)",
+                problem: "Simplifica la fracción $\\frac{105}{135}$. (Ingresa el resultado en formato a/b)",
+                answer: "7/9",
+                type: "text",
+                steps: [
+                    { title: "1.- Obtenemos los MCD del Numerador y denominador", lines: ["<div class='math-table-container'>$$\\begin{array}{cc|c} 105 & 135 & 3 \\\\ 35 & 45 & 5 \\\\ \\boxed{7} & \\boxed{9} & \\end{array}$$</div>"] },
+                    { title: "2.-", lines: ["El resultado es $$\\boxed{\\frac{7}{9}}$$"] }
+                ]
+            },
+            {
+                id: 10,
+                title: "Reactivo 10 (Simplificación)",
+                problem: "Simplifica la fracción $\\frac{144}{216}$. (Ingresa el resultado en formato a/b)",
+                answer: "2/3",
+                type: "text",
+                steps: [
+                    { title: "1.- Obtenemos los MCD del Numerador y denominador", lines: ["<div class='math-table-container'>$$\\begin{array}{cc|c} 144 & 216 & 2 \\\\ 72 & 108 & 2 \\\\ 36 & 54 & 2 \\\\ 18 & 27 & 3 \\\\ 6 & 9 & 3 \\\\ \\boxed{2} & \\boxed{3} & \\end{array}$$</div>"] },
+                    { title: "2.-", lines: ["El resultado es $$\\boxed{\\frac{2}{3}}$$"] }
+                ]
+            }
+        ];
+
+        // ESTADOS DE PASOS Y EXAMEN
+        const currentStepStateGuia1 = {};
+        const currentStepStateGuia2 = {};
+        let examUserStates = {};
+
+        // CAMBIO DE PESTAÑAS
+        function switchTab(tab) {
+            const guia1Tab = document.getElementById('tab-guia1');
+            const guia2Tab = document.getElementById('tab-guia2');
+            const examenTab = document.getElementById('tab-examen');
+
+            const btnGuia1 = document.getElementById('btn-tab-guia1');
+            const btnGuia2 = document.getElementById('btn-tab-guia2');
+            const btnExamen = document.getElementById('btn-tab-examen');
+
+            const activeClass = "px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-teal-600 text-white shadow-md";
+            const inactiveClass = "px-5 py-2.5 rounded-lg font-semibold text-sm transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/60 dark:hover:bg-slate-800/60";
+
+            guia1Tab.classList.add('hidden');
+            guia2Tab.classList.add('hidden');
+            examenTab.classList.add('hidden');
+
+            btnGuia1.className = inactiveClass;
+            btnGuia2.className = inactiveClass;
+            btnExamen.className = inactiveClass;
+
+            if (tab === 'guia1') {
+                guia1Tab.classList.remove('hidden');
+                btnGuia1.className = activeClass;
+            } else if (tab === 'guia2') {
+                guia2Tab.classList.remove('hidden');
+                btnGuia2.className = activeClass;
+            } else {
+                examenTab.classList.remove('hidden');
+                btnExamen.className = activeClass;
+            }
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // MODO CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-slate-700 text-base';
+                text.innerText = 'Modo Oscuro';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-amber-400 text-base';
+                text.innerText = 'Modo Claro';
+            }
+        }
+
+        function getGuiaContext(section) {
+            if (section === 'guia1') {
+                return { exList: exercisesGuia1, stateDict: currentStepStateGuia1, prefix: 'g1' };
+            } else {
+                return { exList: exercisesGuia2, stateDict: currentStepStateGuia2, prefix: 'g2' };
+            }
+        }
+
+        // CONTROL DE PASOS DE GUÍAS
+        function nextStepGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            let current = stateDict[id] || 0;
+            
+            if (current < maxStage) {
+                current++;
+                stateDict[id] = current;
+                
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${current}`);
+                if (stepElem) {
+                    stepElem.classList.add('visible');
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([stepElem]).catch(err => console.error(err));
+                    }
+                }
+            } else {
+                resetStepsGuia(section, id);
+                return;
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function resetStepsGuia(section, id) {
+            const { exList, stateDict, prefix } = getGuiaContext(section);
+
+            const ex = exList.find(e => e.id === id);
+            if (!ex) return;
+            
+            const totalSteps = ex.steps.length;
+            const maxStage = totalSteps + 1;
+            
+            stateDict[id] = 0;
+            
+            for (let i = 1; i <= maxStage; i++) {
+                const stepElem = document.getElementById(`step-${prefix}-${id}-${i}`);
+                if (stepElem) {
+                    stepElem.classList.remove('visible');
+                }
+            }
+            
+            updateStepUIGuia(section, id, ex, prefix);
+        }
+
+        function updateStepUIGuia(section, id, ex, prefix) {
+            const { stateDict } = getGuiaContext(section);
+
+            const totalSteps = ex.steps.length;
+            const current = stateDict[id] || 0;
+            
+            const btnText = document.getElementById(`btn-next-text-${prefix}-${id}`);
+            const btnIcon = document.getElementById(`btn-next-icon-${prefix}-${id}`);
+            const btnNext = document.getElementById(`btn-next-${prefix}-${id}`);
+            const btnReset = document.getElementById(`btn-reset-${prefix}-${id}`);
+            
+            if (current === 0) {
+                btnText.innerText = totalSteps === 1 ? `Ver Paso 1` : `Ver Paso 1 de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-shoe-prints";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.add('hidden');
+            } else if (current < totalSteps) {
+                btnText.innerText = `Siguiente: Paso ${current + 1} de ${totalSteps}`;
+                btnIcon.className = "fa-solid fa-arrow-right";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else if (current === totalSteps) {
+                btnText.innerText = `Ver Resultado Final`;
+                btnIcon.className = "fa-solid fa-trophy";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            } else {
+                btnText.innerText = `Ocultar Solución`;
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnNext.className = "flex-1 py-2.5 px-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm";
+                if (btnReset) btnReset.classList.remove('hidden');
+            }
+        }
+
+        function renderGuiaGeneric(section, exList, containerId, prefix) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            const { stateDict } = getGuiaContext(section);
+
+            exList.forEach(ex => {
+                stateDict[ex.id] = 0;
+                const totalSteps = ex.steps.length;
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 shadow-sm transition-colors flex flex-col justify-start h-max hover:shadow-md";
+
+                let stepsHTML = '';
+                ex.steps.forEach((step, idx) => {
+                    const stepNum = idx + 1;
+                    stepsHTML += `
+                        <div id="step-${prefix}-${ex.id}-${stepNum}" class="step-item bg-slate-50 dark:bg-slate-900/80 border-l-4 border-teal-500 dark:border-teal-400 border-y border-r border-slate-200 dark:border-slate-700 p-3 rounded-r-lg shadow-xs">
+                            <p class="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-right text-teal-500"></i> Paso ${stepNum}: ${step.title}
+                            </p>
+                            <div class="text-slate-800 dark:text-slate-200 text-sm font-medium">
+                                ${step.content}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const resultStepNum = totalSteps + 1;
+                stepsHTML += `
+                    <div id="step-${prefix}-${ex.id}-${resultStepNum}" class="step-item bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-500 border-y border-r border-emerald-300 dark:border-emerald-800 p-3.5 rounded-r-lg text-center shadow-xs">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-1">
+                            <i class="fa-solid fa-trophy mr-1 text-amber-500"></i> Solución Final
+                        </span>
+                        <div class="result-box-notebook text-base sm:text-lg text-emerald-900 dark:text-emerald-200 mt-1">
+                            ${ex.result}
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    <div class="border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-2">
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-pencil text-teal-600 dark:text-teal-400"></i>
+                            ${ex.title}
+                        </h3>
+                    </div>
+                    
+                    <div class="flex-grow flex flex-col justify-center items-center py-2.5 px-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700 mb-2 text-center">
+                        <span class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">${ex.problem}</span>
+                    </div>
+
+                    <div id="steps-container-${prefix}-${ex.id}" class="space-y-1">
+                        ${stepsHTML}
+                    </div>
+
+                    <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700/50 flex flex-wrap sm:flex-nowrap gap-2">
+                        <button id="btn-next-${prefix}-${ex.id}" onclick="nextStepGuia('${section}', ${ex.id})" class="flex-1 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-lg font-semibold text-sm transition-all flex justify-center items-center gap-2 shadow-sm">
+                            <i id="btn-next-icon-${prefix}-${ex.id}" class="fa-solid fa-shoe-prints"></i>
+                            <span id="btn-next-text-${prefix}-${ex.id}">${totalSteps === 1 ? 'Ver Paso 1' : 'Ver Paso 1 de ' + totalSteps}</span>
+                        </button>
+                        <button id="btn-reset-${prefix}-${ex.id}" onclick="resetStepsGuia('${section}', ${ex.id})" class="hidden py-2.5 px-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-semibold text-sm transition-all shadow-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // SIMULADOR DE EXAMEN
+        function renderExam() {
+            const container = document.getElementById('exam-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            examProblems.forEach((p) => {
+                examUserStates[p.id] = { answered: false, isCorrect: false };
+
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm transition-colors flex flex-col justify-between";
+
+                let inputHTML = '';
+                if (p.type === 'choice') {
+                    inputHTML = `<div class="space-y-2 mt-3">`;
+                    p.options.forEach((opt, idx) => {
+                        inputHTML += `
+                            <label class="flex items-center gap-3 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer text-sm font-semibold transition-all">
+                                <input type="radio" name="exam-opt-${p.id}" value="${idx}" class="w-4 h-4 text-teal-600 focus:ring-teal-500">
+                                <span class="text-slate-800 dark:text-slate-200">${opt}</span>
+                            </label>
+                        `;
+                    });
+                    inputHTML += `</div>`;
+                } else if (p.type === 'text') {
+                    inputHTML = `
+                        <div class="mt-3">
+                            <input type="text" id="exam-input-${p.id}" placeholder="Ejemplo: 2/3" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        </div>
+                    `;
+                } else {
+                    inputHTML = `
+                        <div class="mt-3">
+                            <input type="number" id="exam-input-${p.id}" placeholder="Ingresa tu respuesta numérica" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        </div>
+                    `;
+                }
+
+                let stepsHTML = '';
+                p.steps.forEach((st, idx) => {
+                    stepsHTML += `
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900/90 border-l-4 border-amber-500 rounded-r-lg text-xs sm:text-sm font-medium space-y-1">
+                            <p class="font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">${st.title}</p>
+                            ${st.lines.map(l => `<p class="text-slate-700 dark:text-slate-200">${l}</p>`).join('')}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2 mb-3">
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature text-amber-500"></i> ${p.title}
+                            </h3>
+                            <span id="exam-badge-${p.id}" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Pendiente</span>
+                        </div>
+
+                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-2">${p.problem}</p>
+                        ${inputHTML}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/50 space-y-3">
+                        <button id="exam-btn-${p.id}" onclick="checkExamAnswer(${p.id})" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold rounded-lg text-sm transition-all shadow-sm flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Calificar Reactivo</span>
+                        </button>
+
+                        <div id="exam-feedback-${p.id}" class="hidden p-3 rounded-lg text-xs sm:text-sm font-bold"></div>
+
+                        <div id="exam-solution-${p.id}" class="hidden space-y-2 mt-2">
+                            ${stepsHTML}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function checkExamAnswer(id) {
+            const p = examProblems.find(item => item.id === id);
+            if (!p) return;
+
+            const badge = document.getElementById(`exam-badge-${id}`);
+            const btn = document.getElementById(`exam-btn-${id}`);
+            const feedback = document.getElementById(`exam-feedback-${id}`);
+            const solution = document.getElementById(`exam-solution-${id}`);
+
+            let userVal = null;
+            let isCorrect = false;
+
+            if (p.type === 'choice') {
+                const selected = document.querySelector(`input[name="exam-opt-${id}"]:checked`);
+                if (!selected) {
+                    alert("Por favor selecciona una opción antes de calificar.");
+                    return;
+                }
+                userVal = parseInt(selected.value);
+                isCorrect = (userVal === p.answer);
+            } else if (p.type === 'text') {
+                const input = document.getElementById(`exam-input-${id}`);
+                if (!input || input.value.trim() === '') {
+                    alert("Por favor ingresa una respuesta válida.");
+                    return;
+                }
+                userVal = input.value.trim().replace(/\s+/g, '');
+                isCorrect = (userVal.toLowerCase() === p.answer.toLowerCase());
+            } else {
+                const input = document.getElementById(`exam-input-${id}`);
+                if (!input || input.value.trim() === '') {
+                    alert("Por favor ingresa un número.");
+                    return;
+                }
+                userVal = parseFloat(input.value.trim());
+                isCorrect = (Math.abs(userVal - p.answer) < 0.001);
+            }
+
+            examUserStates[id].answered = true;
+            examUserStates[id].isCorrect = isCorrect;
+
+            btn.disabled = true;
+            btn.className = "w-full py-2.5 bg-slate-400 dark:bg-slate-700 text-slate-200 font-bold rounded-lg text-sm cursor-not-allowed opacity-80 flex justify-center items-center gap-2";
+
+            feedback.classList.remove('hidden');
+            solution.classList.remove('hidden');
+
+            if (isCorrect) {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-400";
+                badge.innerText = "¡Correcto!";
+                feedback.className = "p-3 rounded-lg text-xs sm:text-sm font-bold bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-800";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5 text-base"></i> Excelente. Tu respuesta es totalmente correcta.`;
+            } else {
+                badge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border border-rose-400";
+                badge.innerText = "Incorrecto";
+                feedback.className = "p-3 rounded-lg text-xs sm:text-sm font-bold bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-200 border border-rose-300 dark:border-rose-800";
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5 text-base"></i> Respuesta incorrecta. Revisa el procedimiento solución adjunto.`;
+            }
+
+            updateScoreboard();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([solution]).catch(err => console.error(err));
+            }
+        }
+
+        function updateScoreboard() {
+            let total = examProblems.length;
+            let answeredCount = 0;
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            Object.keys(examUserStates).forEach(k => {
+                const st = examUserStates[k];
+                if (st.answered) {
+                    answeredCount++;
+                    if (st.isCorrect) correctCount++;
+                    else incorrectCount++;
+                }
+            });
+
+            const grade = (correctCount / total) * 10;
+
+            document.getElementById('score-grade').innerText = `${grade.toFixed(1)} / 10`;
+            document.getElementById('score-answered').innerText = `${answeredCount} / ${total}`;
+            document.getElementById('score-correct').innerText = `${correctCount}`;
+            document.getElementById('score-incorrect').innerText = `${incorrectCount}`;
+        }
+
+        function resetExam() {
+            renderExam();
+            updateScoreboard();
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        }
+
+        // INICIALIZACIÓN
+        document.addEventListener("DOMContentLoaded", () => {
+            renderGuiaGeneric('guia1', exercisesGuia1, 'guia1-container', 'g1');
+            renderGuiaGeneric('guia2', exercisesGuia2, 'guia2-container', 'g2');
+            renderExam();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.error(err));
+            }
+        });
+    </script>
+</body>
+</html>
